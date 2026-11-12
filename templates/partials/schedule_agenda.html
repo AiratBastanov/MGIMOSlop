@@ -1,0 +1,5 @@
+<div class="schedule-agenda" data-schedule-agenda>
+{% for day in days %}
+{% if day.date == selected_date %}{% include 'partials/agenda_day.html' with view='day' %}
+{% else %}<details class="other-day"><summary><span>{{ day.date|date:'j E, D' }}</span><span class="support">{{ day.count_label }}{% if day.changes %} · Есть изменения{% endif %}{% if day.markers %} · Перенос или отмена{% endif %}</span></summary>{% include 'partials/agenda_day.html' with view='day' %}</details>{% endif %}
+{% endfor %}</div>

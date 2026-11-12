@@ -1,0 +1,13 @@
+# Один Caddy на узле приложения. Заменить домен и static path перед публикацией.
+cabinet.example.invalid {
+    handle_path /static/* {
+        root * /srv/deanery/current/staticfiles
+        file_server
+    }
+    handle {
+        reverse_proxy 127.0.0.1:8000 {
+            # Overwrite visitor metadata with the actual immediate client address.
+            header_up X-Deanery-Client-IP {remote_host}
+        }
+    }
+}

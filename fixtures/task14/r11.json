@@ -1,0 +1,1136 @@
+{
+  "schema_version": 4,
+  "subset": "s4_studies_v4",
+  "dataset_id": "s1-schedule",
+  "dataset_revision": 11,
+  "parent_revision": 10,
+  "provenance": "synthetic",
+  "prepared_by": "TASK14 local synthetic results",
+  "preparation_reason": "18 дополнительных вымышленных результатов student_a, два прошлых периода; существующие записи сохранены.",
+  "source_as_of": "2026-11-10T18:26:34.825980+00:00",
+  "valid_from": "2026-11-04T21:00:00+00:00",
+  "valid_until": "2026-12-06T21:00:00+00:00",
+  "operations": [
+    {
+      "operation": "create",
+      "entity_type": "period",
+      "record": {
+        "source_id": "P-T14-2025-autumn",
+        "name": "Осень 2025 (демо)",
+        "date_from": "2025-09-01",
+        "date_until": "2026-02-01",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "period",
+      "record": {
+        "source_id": "P-T14-2026-spring",
+        "name": "Весна 2026 (демо)",
+        "date_from": "2026-02-01",
+        "date_until": "2026-09-01",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-01",
+        "name": "История международных отношений",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-01",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-01",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-01"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-01",
+        "enrollment_id": "EN-T14-A-01",
+        "result_kind": "grade",
+        "grade": 5,
+        "pass_status": null,
+        "recorded_at": "2026-01-12T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-01"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-02",
+        "name": "Введение в экономическую теорию",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-02",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-02",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-02"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-02",
+        "enrollment_id": "EN-T14-A-02",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-01-14T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-02"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-03",
+        "name": "Математические методы в социальных исследованиях",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-03",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-03",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-03"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-03",
+        "enrollment_id": "EN-T14-A-03",
+        "result_kind": "grade",
+        "grade": 3,
+        "pass_status": null,
+        "recorded_at": "2026-01-16T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-03"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-04",
+        "name": "Английский язык: академическое письмо",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-04",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-04",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-04"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-04",
+        "enrollment_id": "EN-T14-A-04",
+        "result_kind": "grade",
+        "grade": 5,
+        "pass_status": null,
+        "recorded_at": "2026-01-19T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-04"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-05",
+        "name": "Информационные технологии и цифровая грамотность",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-05",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-05",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-05"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-05",
+        "enrollment_id": "EN-T14-A-05",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2025-12-22T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-05"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-06",
+        "name": "Основы правоведения",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-06",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-06",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-06"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-06",
+        "enrollment_id": "EN-T14-A-06",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-01-21T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-06"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-07",
+        "name": "Культура речи и деловое общение",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-07",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-07",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-07"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-07",
+        "enrollment_id": "EN-T14-A-07",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2025-12-24T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-07"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-08",
+        "name": "Социология",
+        "period_id": "P-T14-2025-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-08",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-08",
+        "period_id": "P-T14-2025-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-08"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-08",
+        "enrollment_id": "EN-T14-A-08",
+        "result_kind": "grade",
+        "grade": 3,
+        "pass_status": null,
+        "recorded_at": "2026-01-23T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-08"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-09",
+        "name": "Микроэкономика и поведение потребителей",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-09",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-09",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-09"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-09",
+        "enrollment_id": "EN-T14-A-09",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-06-08T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-09"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-10",
+        "name": "Теория вероятностей и математическая статистика",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-10",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-10",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-10"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-10",
+        "enrollment_id": "EN-T14-A-10",
+        "result_kind": "grade",
+        "grade": 3,
+        "pass_status": null,
+        "recorded_at": "2026-06-10T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-10"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-11",
+        "name": "Политическая география современного мира",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-11",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-11",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-11"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-11",
+        "enrollment_id": "EN-T14-A-11",
+        "result_kind": "grade",
+        "grade": 5,
+        "pass_status": null,
+        "recorded_at": "2026-06-15T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-11"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-12",
+        "name": "Международное публичное право: основы и источники",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-12",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-12",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-12"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-12",
+        "enrollment_id": "EN-T14-A-12",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-06-17T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-12"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-13",
+        "name": "Второй иностранный язык: французский",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-13",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-13",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-13"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-13",
+        "enrollment_id": "EN-T14-A-13",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2026-06-01T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-13"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-14",
+        "name": "Английский язык: устная коммуникация",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-14",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-14",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-14"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-14",
+        "enrollment_id": "EN-T14-A-14",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-06-19T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-14"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-15",
+        "name": "Методология исследовательской работы",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-15",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-15",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-15"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-15",
+        "enrollment_id": "EN-T14-A-15",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2026-06-03T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-15"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-16",
+        "name": "История экономических учений",
+        "period_id": "P-T14-2026-spring",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-16",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-16",
+        "period_id": "P-T14-2026-spring",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-16"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-16",
+        "enrollment_id": "EN-T14-A-16",
+        "result_kind": "grade",
+        "grade": 5,
+        "pass_status": null,
+        "recorded_at": "2026-06-22T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-16"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-17",
+        "name": "Финансовый учёт: вводный модуль",
+        "period_id": "P-2026-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-17",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-17",
+        "period_id": "P-2026-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-17"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-17",
+        "enrollment_id": "EN-T14-A-17",
+        "result_kind": "grade",
+        "grade": 2,
+        "pass_status": null,
+        "recorded_at": "2026-11-06T12:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-17"
+    },
+    {
+      "operation": "create",
+      "entity_type": "requirement",
+      "record": {
+        "source_id": "REQ-T14-A-17",
+        "enrollment_id": "EN-T14-A-17",
+        "result_id": "FR-T14-A-17",
+        "reason": "Повторно представить расчёт баланса по вводному модулю. Демонстрационное открытое требование источника.",
+        "status": "open",
+        "opened_at": "2026-11-06T12:00:00+03:00",
+        "due_at": null,
+        "closed_at": null,
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-REQ-T14-A-17"
+    },
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-T14-A-18",
+        "name": "Практикум по межкультурной коммуникации",
+        "period_id": "P-2026-autumn",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-T14-A-18",
+        "student_id": "SP-A",
+        "course_id": "C-T14-A-18",
+        "period_id": "P-2026-autumn",
+        "status": "active",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-EN-T14-A-18"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-T14-A-18",
+        "enrollment_id": "EN-T14-A-18",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "failed",
+        "recorded_at": "2026-11-06T14:00:00+03:00",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-FR-T14-A-18"
+    },
+    {
+      "operation": "create",
+      "entity_type": "requirement",
+      "record": {
+        "source_id": "REQ-T14-A-18",
+        "enrollment_id": "EN-T14-A-18",
+        "result_id": "FR-T14-A-18",
+        "reason": "Представить итоговый разбор учебного кейса. Демонстрационное открытое требование источника.",
+        "status": "open",
+        "opened_at": "2026-11-06T14:00:00+03:00",
+        "due_at": null,
+        "closed_at": null,
+        "record_revision": 1,
+        "source_updated_at": "2026-11-10T18:26:34.825980+00:00"
+      },
+      "event_id": "EV-REQ-T14-A-18"
+    }
+  ],
+  "coverage": [
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-23",
+      "date_until": "2026-11-24",
+      "completeness": "complete",
+      "active_ids": [
+        "L-S1-23"
+      ],
+      "active_count": 1
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-24",
+      "date_until": "2026-11-25",
+      "completeness": "complete",
+      "active_ids": [],
+      "active_count": 0
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-25",
+      "date_until": "2026-11-26",
+      "completeness": "partial",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-26",
+      "date_until": "2026-11-27",
+      "completeness": "unknown",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-EK11",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-B-1107-1",
+        "L-B-1107-2",
+        "L-B-1107-3",
+        "L-B-1109-1",
+        "L-B-1109-2",
+        "L-B-1110-1",
+        "L-B-1110-2",
+        "L-B-1111-1",
+        "L-B-1111-2",
+        "L-B-1112-1",
+        "L-B-1112-2",
+        "L-B-1113-1",
+        "L-B-1113-2",
+        "L-B-1116-1",
+        "L-B-1116-2",
+        "L-B-1117-1",
+        "L-B-1117-2",
+        "L-B-1118-1",
+        "L-B-1118-2",
+        "L-B-1119-1",
+        "L-B-1119-2",
+        "L-B-1120-1",
+        "L-B-1120-2",
+        "L-B-1123-1",
+        "L-B-1123-2",
+        "L-B-1124-1",
+        "L-B-1124-2",
+        "L-B-1125-1",
+        "L-B-1125-2",
+        "L-B-1126-1",
+        "L-B-1126-2",
+        "L-B-1127-1",
+        "L-B-1127-2",
+        "L-B-1130-1",
+        "L-B-1130-2",
+        "L-B-1201-1",
+        "L-B-1201-2",
+        "L-B-1202-1",
+        "L-B-1202-2",
+        "L-B-1203-1",
+        "L-B-1203-2",
+        "L-B-1204-1",
+        "L-B-1204-2",
+        "L-B-1206-1"
+      ],
+      "active_count": 44
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-MB21",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-A-1107-1",
+        "L-A-1107-2",
+        "L-A-1107-3",
+        "L-A-1109-1",
+        "L-A-1109-2",
+        "L-A-1110-1",
+        "L-A-1110-2",
+        "L-A-1111-1",
+        "L-A-1111-2",
+        "L-A-1112-1",
+        "L-A-1112-2",
+        "L-A-1113-1",
+        "L-A-1113-2",
+        "L-A-1116-1",
+        "L-A-1116-2",
+        "L-A-1117-1",
+        "L-A-1117-2",
+        "L-A-1118-1",
+        "L-A-1118-2",
+        "L-A-1119-1",
+        "L-A-1119-2",
+        "L-A-1120-1",
+        "L-A-1120-2",
+        "L-A-1123-1",
+        "L-A-1123-2",
+        "L-A-1124-1",
+        "L-A-1124-2",
+        "L-A-1125-1",
+        "L-A-1125-2",
+        "L-A-1126-1",
+        "L-A-1126-2",
+        "L-A-1127-1",
+        "L-A-1128-1",
+        "L-A-1130-1",
+        "L-A-1130-2",
+        "L-A-1201-1",
+        "L-A-1201-2",
+        "L-A-1202-1",
+        "L-A-1202-2",
+        "L-A-1203-1",
+        "L-A-1203-2",
+        "L-A-1204-1",
+        "L-A-1204-2",
+        "L-A-1206-1",
+        "L-S2-23"
+      ],
+      "active_count": 45
+    }
+  ],
+  "academic_coverage": [
+    {
+      "entity_type": "enrollment",
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-B-ECON",
+        "EN-B-HIST",
+        "EN-B-MATH",
+        "EN-B-MICRO"
+      ],
+      "record_count": 4
+    },
+    {
+      "entity_type": "final_result",
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-B-HIST",
+        "FR-B-MATH"
+      ],
+      "record_count": 2
+    },
+    {
+      "entity_type": "requirement",
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [],
+      "record_count": 0
+    },
+    {
+      "entity_type": "assessment",
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-B-MICRO",
+        "AS-B-PAST"
+      ],
+      "record_count": 2
+    },
+    {
+      "entity_type": "enrollment",
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-A-DATA",
+        "EN-A-ECON",
+        "EN-A-LANG",
+        "EN-A-LAW",
+        "EN-A-NEG",
+        "EN-T14-A-17",
+        "EN-T14-A-18"
+      ],
+      "record_count": 7
+    },
+    {
+      "entity_type": "final_result",
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-A-DATA",
+        "FR-A-ECON",
+        "FR-A-LANG",
+        "FR-A-NEG",
+        "FR-T14-A-17",
+        "FR-T14-A-18"
+      ],
+      "record_count": 6
+    },
+    {
+      "entity_type": "requirement",
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "REQ-A-APPENDIX",
+        "REQ-A-CALC",
+        "REQ-A-FAIL",
+        "REQ-T14-A-17",
+        "REQ-T14-A-18"
+      ],
+      "record_count": 5
+    },
+    {
+      "entity_type": "assessment",
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-A-DATA",
+        "AS-A-LANG",
+        "AS-A-LAW",
+        "AS-A-PAST"
+      ],
+      "record_count": 4
+    },
+    {
+      "entity_type": "enrollment",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2025-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-T14-A-01",
+        "EN-T14-A-02",
+        "EN-T14-A-03",
+        "EN-T14-A-04",
+        "EN-T14-A-05",
+        "EN-T14-A-06",
+        "EN-T14-A-07",
+        "EN-T14-A-08"
+      ],
+      "record_count": 8
+    },
+    {
+      "entity_type": "final_result",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2025-autumn",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-T14-A-01",
+        "FR-T14-A-02",
+        "FR-T14-A-03",
+        "FR-T14-A-04",
+        "FR-T14-A-05",
+        "FR-T14-A-06",
+        "FR-T14-A-07",
+        "FR-T14-A-08"
+      ],
+      "record_count": 8
+    },
+    {
+      "entity_type": "requirement",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2025-autumn",
+      "completeness": "complete",
+      "record_ids": [],
+      "record_count": 0
+    },
+    {
+      "entity_type": "enrollment",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2026-spring",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-T14-A-09",
+        "EN-T14-A-10",
+        "EN-T14-A-11",
+        "EN-T14-A-12",
+        "EN-T14-A-13",
+        "EN-T14-A-14",
+        "EN-T14-A-15",
+        "EN-T14-A-16"
+      ],
+      "record_count": 8
+    },
+    {
+      "entity_type": "final_result",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2026-spring",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-T14-A-09",
+        "FR-T14-A-10",
+        "FR-T14-A-11",
+        "FR-T14-A-12",
+        "FR-T14-A-13",
+        "FR-T14-A-14",
+        "FR-T14-A-15",
+        "FR-T14-A-16"
+      ],
+      "record_count": 8
+    },
+    {
+      "entity_type": "requirement",
+      "student_id": "SP-A",
+      "period_id": "P-T14-2026-spring",
+      "completeness": "complete",
+      "record_ids": [],
+      "record_count": 0
+    }
+  ],
+  "content_sha256": "189ab0e1b43258ff5f495b80680a7f1f836e3f5b95e5e08454c3e7095bdbf7e6"
+}

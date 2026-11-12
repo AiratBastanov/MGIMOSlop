@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load academic_presentation %}
+{% block title %}Учёба · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container academic-container">
+{% include "partials/study_header.html" %}
+{% include "partials/study_tabs.html" %}
+{% if view == 'assessments' and periods|length > 1 %}<form class="period-picker" method="get" action="/study/"><label for="study-period">Учебный период</label><select name="period" id="study-period">{% for option in periods %}<option value="{{ option.source_id }}" {% if option.id == period.id %}selected{% endif %}>{{ option.name }}</option>{% endfor %}</select><input type="hidden" name="view" value="assessments"><button type="submit" class="button-secondary">Открыть</button></form>{% endif %}
+{% if source.update_message %}<p class="data-state source-warning">{{ source.update_message }}</p>{% endif %}
+{% if view == 'results' %}
+  {% if summary.message %}<p class="data-state academic-warning">{{ summary.message }}</p>{% endif %}
+  <div class="study-tools"><a class="button-secondary all-results-link" href="/study/?view=results&amp;period=all&amp;filter=assessed" {% if study_filter == 'assessed' and is_all_periods %}aria-current="page"{% endif %}>Все оценки</a><p class="support">Внесённые учебные итоги. Отзывы о ваших работах — в материалах.</p></div>
+  <details class="study-options"><summary>Фильтры</summary><form class="study-filter-form" method="get" action="/study/"><input type="hidden" name="view" value="results"><div><label for="study-period">Период</label><select name="period" id="study-period"><option value="all" {% if is_all_periods %}selected{% endif %}>Все доступные периоды</option>{% for option in periods %}<option value="{{ option.source_id }}" {% if option.id == period.id and not is_all_periods %}selected{% endif %}>{{ option.name }}</option>{% endfor %}</select></div><div><label for="study-filter">Показать</label><select name="filter" id="study-filter"><option value="all" {% if study_filter == 'all' %}selected{% endif %}>Все дисциплины</option><option value="assessed" {% if study_filter == 'assessed' %}selected{% endif %}>Все оценки</option><option value="open" {% if study_filter == 'open' %}selected{% endif %}>Открытые требования</option><option value="overdue" {% if study_filter == 'overdue' %}selected{% endif %}>Срок прошёл</option><option value="unentered" {% if study_filter == 'unentered' %}selected{% endif %}>Итог не внесён</option></select></div><button type="submit" class="button-secondary">Применить</button></form>
+</details>
+  {% if study_filter != 'all' %}<p class="active-study-filter">{{ period.name }} · {{ filtered_count }}. Показаны: {% if study_filter == 'assessed' %}все внесённые оценки и зачёты{% elif study_filter == 'open' %}дисциплины с открытыми требованиями{% elif study_filter == 'overdue' %}требования с прошедшим сроком{% else %}дисциплины без итога{% endif %}.</p>{% endif %}
+  <section id="study-results" data-page-section="Результаты по дисциплинам" class="course-list" aria-label="Результаты по дисциплинам">
+    {% for course in courses %}{% if is_all_periods %}{% ifchanged course.period_name %}<h2 class="results-period-heading">{{ course.period_name }}</h2>{% endifchanged %}{% endif %}<article class="course-row {% if course.has_open %}has-requirement{% endif %}"><div class="course-heading"><h2 id="course-{{ course.id }}" data-page-section="{{ course.course_name }}"><a href="{{ course.url }}">{{ course.course_name }}</a></h2><div class="course-result result-{{ course.result|result_tone }}">{% if course.result %}<span class="mini-label">Учебный итог</span><strong {% if course.result.kind == 'grade' %}class="numeric-grade"{% endif %}>{{ course.result_label }}</strong>{% else %}<span>{{ course.result_label }}</span>{% endif %}</div></div>
+    {% if is_all_periods %}<p class="course-period">{{ course.period_name }}</p>{% endif %}
+    {% if course.open_requirements %}<div class="course-requirements"><p class="requirement-heading">Открытое требование{% if course.open_requirements|length > 1 %} · {{ course.open_requirements|length }}{% endif %}</p>{% for requirement in course.open_requirements %}{% include 'partials/requirement.html' %}{% endfor %}</div>{% endif %}
+    </article>{% empty %}{% if study_filter != 'all' %}<p class="data-state">{% if summary.complete %}Дисциплин по этому фильтру нет.{% else %}В известных записях совпадений нет. Из-за неполноты или срока действия источника это не подтверждает отсутствие требований.{% endif %}</p>{% elif not summary.complete %}<p class="quiet-empty">В принятом источнике нет доступных записей для этого периода.</p>{% endif %}{% endfor %}
+  </section>
+
+{% else %}
+  {% if assessment_message %}<p class="data-state academic-warning">{{ assessment_message }}</p>{% endif %}
+  <section id="session-upcoming" data-page-section="Предстоящие события" class="assessment-list" aria-labelledby="upcoming-title"><div class="section-rule"><h2 id="upcoming-title">Предстоящие события</h2></div>
+  {% for assessment in upcoming_assessments %}{% include 'partials/assessment.html' %}{% empty %}<p class="data-state">{% if assessment_complete %}Предстоящих событий сессии в этом периоде нет.{% else %}В сохранённых сведениях предстоящие события не указаны. Полный актуальный список не подтверждён.{% endif %}</p>{% endfor %}</section>
+  <details id="session-past" data-page-section="Прошедшие события" class="past-assessments" {% if not upcoming_assessments and past_assessments %}open{% endif %}><summary>Прошедшие события · {{ past_assessments|length }}</summary><div class="disclosure-body">{% for assessment in past_assessments %}{% include 'partials/assessment.html' %}{% empty %}<p class="quiet-empty">В доступных записях прошедших событий нет.</p>{% endfor %}</div></details>
+  <p class="below-note">Дата экзамена или зачёта сама по себе не меняет итог и не создаёт учебное требование.</p>
+{% endif %}
+{% include 'partials/source_info.html' with source_messages_shown=True %}
+</div>
+{% endblock %}

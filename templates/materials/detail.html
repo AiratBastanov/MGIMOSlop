@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Мой материал · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}<div class="content-container academic-container">
+<a class="text-link back-link" href="/study/materials/">Мои материалы</a>
+<header class="planner-heading"><div><p class="eyebrow">Учёба · Работа с преподавателем</p><h1>Мой материал</h1></div></header>
+<div data-component="material"><p role="status">Открываем редактор…</p></div>
+{% include 'workspaces/viewed.html' %}</div>
+{% endblock %}

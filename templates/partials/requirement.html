@@ -1,0 +1,4 @@
+<div class="requirement {% if requirement.overdue %}is-overdue{% endif %}">
+  <p class="requirement-reason">{{ requirement.reason }}</p>
+  <p class="requirement-deadline">{% if requirement.status == 'closed' %}<span class="requirement-closed">Закрыто{% if requirement.closed_at %} · {{ requirement.closed_exact }}{% endif %}</span><br>{% if requirement.due_at %}Срок: {{ requirement.due_exact }}{% else %}Срок не указан{% endif %}{% else %}<strong>{{ requirement.due_label }}</strong>{% if requirement.due_at %} · <time datetime="{{ requirement.due_at|date:'c' }}">{{ requirement.due_exact }}</time>{% endif %}{% endif %}</p>
+</div>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load academic_presentation %}
+{% block title %}Результат дисциплины · Студенческий кабинет{% endblock %}
+{% block content %}
+<a class="text-link back-link" href="/study/{% if period %}?period={{ period.source_id|urlencode }}{% endif %}">К результатам</a>
+<header class="detail-heading"><p class="eyebrow">Учёба{% if period %} <span class="heading-divider" aria-hidden="true">/</span> {{ period.name }}{% endif %}</p><h1>{{ enrollment.course_name }}</h1></header>
+{% if summary.message %}<p class="data-state academic-warning">{{ summary.message }}</p>{% elif source.message %}<p class="data-state academic-warning">{{ source.message }}</p>{% endif %}
+{% if source.update_message %}<p class="data-state source-warning">{{ source.update_message }}</p>{% endif %}
+<section class="result-detail" aria-labelledby="recorded-result-title"><h2 id="recorded-result-title">Итог по дисциплине</h2><p class="detail-result {% if enrollment.result %}result-{{ enrollment.result|result_tone }}{% endif %}">{{ enrollment.result_label }}</p>{% if enrollment.result %}<p class="publication">Дата результата: {{ enrollment.result.recorded_exact }}</p>{% endif %}</section>
+<section class="requirements-detail" id="requirements" aria-labelledby="requirements-title"><div class="section-rule"><h2 id="requirements-title">Открытые требования</h2></div>{% for requirement in enrollment.open_requirements %}{% include 'partials/requirement.html' %}{% empty %}<p class="quiet-empty">{% if summary.complete %}Открытых требований по этой дисциплине нет.{% else %}В сохранённых сведениях открытые требования не указаны. Полнота актуальных данных не подтверждена.{% endif %}</p>{% endfor %}</section>
+<details class="academic-history" id="history"><summary>Полная история результата и требований</summary><div class="disclosure-body">{% for item in history %}<article class="academic-history-entry"><p class="publication"><time datetime="{{ item.published_at|date:'c' }}">{{ item.published_at|date:'d.m.Y, H:i' }} МСК</time></p><h3>{{ item.title }}</h3>{% if item.before or item.kind == 'enrollment' %}{% include 'partials/compact_change.html' %}{% endif %}{% include 'partials/academic_payload.html' %}<p class="support">{{ item.reason }}</p>{% if item.is_historical %}<p class="historical-note">Историческая редакция. Текущие сведения показаны выше.</p>{% endif %}</article>{% empty %}<p class="quiet-empty">История изменений пока не содержит записей.</p>{% endfor %}</div></details>
+{% include 'partials/source_info.html' with source_messages_shown=True %}
+{% endblock %}

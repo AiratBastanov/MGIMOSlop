@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Материалы · Учёба{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container academic-container">
+{% include "partials/study_header.html" %}
+{% include "partials/study_tabs.html" with view="materials" %}
+{% include "workspaces/material_tabs.html" %}
+<div class="materials-action"><div><h2>От идеи до отзыва</h2><p>Сохраните черновик, отправьте преподавателю и получите обратную связь.</p></div>{% if assignments %}<a class="button-primary" href="/study/materials/new/">Создать материал</a>{% endif %}</div>
+{% if materials %}<div class="material-list" id="my-materials" data-page-section="Ваши работы">{% for item in materials %}<article class="material-row"><div><p class="eyebrow">{{ item.course }}</p><h3 id="material-{{ forloop.counter }}" data-page-section="{{ item.title }}"><a href="{{ item.url }}">{{ item.title }}</a></h3><p><strong>{{ item.status }}</strong>{% if item.number %} · отправлена версия {{ item.number }}{% endif %}</p><p class="support">Сохранено {{ item.updated_at|date:'d.m.Y H:i' }} МСК</p></div></article>{% endfor %}</div>{% else %}<section class="material-empty"><p class="eyebrow">Место для ваших работ</p><h2>Начните с первого черновика</h2><p>Текст, ссылка или контактная почта — доступный формат подскажут условия преподавателя.</p></section>{% endif %}
+{% if not assignments %}<p class="support">Сейчас нет доступных назначений преподавателей для вашей группы и дисциплин. Сохранённые материалы остаются в списке.</p>{% endif %}
+<p class="form-note">Отзывы к материалам не заменяют официальные оценки и не закрывают учебные требования.</p>
+</div>
+{% endblock %}

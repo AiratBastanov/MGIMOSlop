@@ -1,0 +1,636 @@
+{
+  "schema_version": 4,
+  "subset": "s4_studies_v4",
+  "dataset_id": "s1-schedule",
+  "dataset_revision": 8,
+  "parent_revision": 7,
+  "provenance": "synthetic",
+  "prepared_by": "Codex TASK05",
+  "preparation_reason": "Фиксированные вымышленные итоги, требования и сессия обоих существующих студентов; developer validation",
+  "source_as_of": "2026-11-07T16:44:24.326203+00:00",
+  "valid_from": "2026-11-05T00:00:00+03:00",
+  "valid_until": "2026-12-07T00:00:00+03:00",
+  "operations": [
+    {
+      "operation": "create",
+      "entity_type": "course",
+      "record": {
+        "source_id": "C-A-LAW",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "name": "Право международной торговли",
+        "period_id": "P-2026-autumn"
+      }
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-A-NEG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-A",
+        "course_id": "C-A-NEG",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-A-NEG"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-A-LANG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-A",
+        "course_id": "C-A-LANG",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-A-LANG"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-A-DATA",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-A",
+        "course_id": "C-A-DATA",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-A-DATA"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-A-ECON",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-A",
+        "course_id": "C-S1",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-A-ECON"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-A-LAW",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-A",
+        "course_id": "C-A-LAW",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-A-LAW"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-B-HIST",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-B",
+        "course_id": "C-B-HIST",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-B-HIST"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-B-MATH",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-B",
+        "course_id": "C-B-MATH",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-B-MATH"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-B-MICRO",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-B",
+        "course_id": "C-B-MICRO",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-B-MICRO"
+    },
+    {
+      "operation": "create",
+      "entity_type": "enrollment",
+      "record": {
+        "source_id": "EN-B-ECON",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "student_id": "SP-B",
+        "course_id": "C-S1",
+        "period_id": "P-2026-autumn",
+        "status": "active"
+      },
+      "event_id": "EV-S4-CREATE-EN-B-ECON"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-A-NEG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-NEG",
+        "result_kind": "grade",
+        "grade": 5,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-A-NEG"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-A-LANG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-LANG",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-A-LANG"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-A-DATA",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-DATA",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-A-DATA"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-A-ECON",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_kind": "grade",
+        "grade": 2,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-A-ECON"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-B-HIST",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-B-HIST",
+        "result_kind": "grade",
+        "grade": 4,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-B-HIST"
+    },
+    {
+      "operation": "create",
+      "entity_type": "final_result",
+      "record": {
+        "source_id": "FR-B-MATH",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-B-MATH",
+        "result_kind": "pass_fail",
+        "grade": null,
+        "pass_status": "passed",
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "event_id": "EV-S4-CREATE-FR-B-MATH"
+    },
+    {
+      "operation": "create",
+      "entity_type": "requirement",
+      "record": {
+        "source_id": "REQ-A-FAIL",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_id": "FR-A-ECON",
+        "reason": "В источнике зафиксирована неудовлетворительная итоговая оценка 2 по прикладной экономике.",
+        "status": "open",
+        "opened_at": "2026-11-07T16:44:24.326203+00:00",
+        "due_at": "2026-11-10T18:00:00+03:00",
+        "closed_at": null
+      },
+      "event_id": "EV-S4-CREATE-REQ-A-FAIL"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-A-PAST",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-NEG",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-06T14:00:00+03:00",
+        "ends_at": "2026-11-06T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-A-NEG",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "event_id": "EV-S4-CREATE-AS-A-PAST"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-A-LAW",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LAW",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-09T14:00:00+03:00",
+        "ends_at": "2026-11-09T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-S1",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "event_id": "EV-S4-CREATE-AS-A-LAW"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-A-LANG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LANG",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-11T14:00:00+03:00",
+        "ends_at": "2026-11-11T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-A-LANG",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "pass_fail"
+      },
+      "event_id": "EV-S4-CREATE-AS-A-LANG"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-A-DATA",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-DATA",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-14T14:00:00+03:00",
+        "ends_at": "2026-11-14T15:30:00+03:00",
+        "room": null,
+        "location_status": "not_provided",
+        "instructor_id": null,
+        "instructor_status": "not_provided",
+        "status": "active",
+        "assessment_kind": "pass_fail"
+      },
+      "event_id": "EV-S4-CREATE-AS-A-DATA"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-B-MICRO",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-B-MICRO",
+        "group_id": "G-EK11",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-10T10:40:00+03:00",
+        "ends_at": "2026-11-10T12:10:00+03:00",
+        "room": "409",
+        "location_status": "provided",
+        "instructor_id": "I-B-MICRO",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "event_id": "EV-S4-CREATE-AS-B-MICRO"
+    },
+    {
+      "operation": "create",
+      "entity_type": "assessment",
+      "record": {
+        "source_id": "AS-B-PAST",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-B-HIST",
+        "group_id": "G-EK11",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-06T10:40:00+03:00",
+        "ends_at": "2026-11-06T12:10:00+03:00",
+        "room": "408",
+        "location_status": "provided",
+        "instructor_id": "I-B-HIST",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "event_id": "EV-S4-CREATE-AS-B-PAST"
+    }
+  ],
+  "coverage": [
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-23",
+      "date_until": "2026-11-24",
+      "completeness": "complete",
+      "active_ids": [
+        "L-S1-23"
+      ],
+      "active_count": 1
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-24",
+      "date_until": "2026-11-25",
+      "completeness": "complete",
+      "active_ids": [],
+      "active_count": 0
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-25",
+      "date_until": "2026-11-26",
+      "completeness": "partial",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-26",
+      "date_until": "2026-11-27",
+      "completeness": "unknown",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-MB21",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-A-1107-1",
+        "L-A-1107-2",
+        "L-A-1107-3",
+        "L-A-1109-1",
+        "L-A-1109-2",
+        "L-A-1110-1",
+        "L-A-1110-2",
+        "L-A-1111-1",
+        "L-A-1111-2",
+        "L-A-1112-1",
+        "L-A-1112-2",
+        "L-A-1113-1",
+        "L-A-1113-2",
+        "L-A-1116-1",
+        "L-A-1116-2",
+        "L-A-1117-1",
+        "L-A-1117-2",
+        "L-A-1118-1",
+        "L-A-1118-2",
+        "L-A-1119-1",
+        "L-A-1119-2",
+        "L-A-1120-1",
+        "L-A-1120-2",
+        "L-A-1123-1",
+        "L-A-1123-2",
+        "L-A-1124-1",
+        "L-A-1124-2",
+        "L-A-1125-1",
+        "L-A-1125-2",
+        "L-A-1126-1",
+        "L-A-1126-2",
+        "L-A-1127-1",
+        "L-A-1128-1",
+        "L-A-1130-1",
+        "L-A-1130-2",
+        "L-A-1201-1",
+        "L-A-1201-2",
+        "L-A-1202-1",
+        "L-A-1202-2",
+        "L-A-1203-1",
+        "L-A-1203-2",
+        "L-A-1204-1",
+        "L-A-1204-2",
+        "L-A-1206-1",
+        "L-S2-23"
+      ],
+      "active_count": 45
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-EK11",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-B-1107-1",
+        "L-B-1107-2",
+        "L-B-1107-3",
+        "L-B-1109-1",
+        "L-B-1109-2",
+        "L-B-1110-1",
+        "L-B-1110-2",
+        "L-B-1111-1",
+        "L-B-1111-2",
+        "L-B-1112-1",
+        "L-B-1112-2",
+        "L-B-1113-1",
+        "L-B-1113-2",
+        "L-B-1116-1",
+        "L-B-1116-2",
+        "L-B-1117-1",
+        "L-B-1117-2",
+        "L-B-1118-1",
+        "L-B-1118-2",
+        "L-B-1119-1",
+        "L-B-1119-2",
+        "L-B-1120-1",
+        "L-B-1120-2",
+        "L-B-1123-1",
+        "L-B-1123-2",
+        "L-B-1124-1",
+        "L-B-1124-2",
+        "L-B-1125-1",
+        "L-B-1125-2",
+        "L-B-1126-1",
+        "L-B-1126-2",
+        "L-B-1127-1",
+        "L-B-1127-2",
+        "L-B-1130-1",
+        "L-B-1130-2",
+        "L-B-1201-1",
+        "L-B-1201-2",
+        "L-B-1202-1",
+        "L-B-1202-2",
+        "L-B-1203-1",
+        "L-B-1203-2",
+        "L-B-1204-1",
+        "L-B-1204-2",
+        "L-B-1206-1"
+      ],
+      "active_count": 44
+    }
+  ],
+  "content_sha256": "8803f85975bde2e337106bf42ad49ea4e7a46b174550d19dc35d5d62b89f1aa8",
+  "academic_coverage": [
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "enrollment",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-A-DATA",
+        "EN-A-ECON",
+        "EN-A-LANG",
+        "EN-A-LAW",
+        "EN-A-NEG"
+      ],
+      "record_count": 5
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "final_result",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-A-DATA",
+        "FR-A-ECON",
+        "FR-A-LANG",
+        "FR-A-NEG"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "requirement",
+      "completeness": "complete",
+      "record_ids": [
+        "REQ-A-FAIL"
+      ],
+      "record_count": 1
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "assessment",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-A-DATA",
+        "AS-A-LANG",
+        "AS-A-LAW",
+        "AS-A-PAST"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "enrollment",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-B-ECON",
+        "EN-B-HIST",
+        "EN-B-MATH",
+        "EN-B-MICRO"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "final_result",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-B-HIST",
+        "FR-B-MATH"
+      ],
+      "record_count": 2
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "requirement",
+      "completeness": "complete",
+      "record_ids": [],
+      "record_count": 0
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "assessment",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-B-MICRO",
+        "AS-B-PAST"
+      ],
+      "record_count": 2
+    }
+  ]
+}

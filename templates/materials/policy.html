@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Условия приёма · Преподаватель{% endblock %}
+{% block content %}
+<a class="text-link back-link" href="/teacher/">Материалы студентов</a>
+<div class="request-form-page"><header class="detail-heading"><p class="eyebrow">{{ assignment.group }} · {{ assignment.period }}</p><h1>{{ assignment.course }}</h1><p>{% if policy_version %}Сохранены условия версии {{ policy_version }}{% else %}Настройте приём материалов{% endif %}</p></header>
+{% include 'materials/error.html' %}
+<form method="post" action="{{ assignment.settings_url }}" novalidate>{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}"><input type="hidden" name="expected_version" value="{{ policy_version }}">{% include 'materials/fields.html' %}<p class="form-note">Изменения действуют при следующих отправках. Прежние версии работ сохраняют условия, по которым были приняты. Почта — контакт студента; сообщения автоматически не отправляются.</p>{% if not edit_conflict %}<button type="submit">Сохранить условия</button>{% endif %}</form></div>
+{% endblock %}

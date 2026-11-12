@@ -1,0 +1,6 @@
+<article class="assessment-row {% if assessment.status == 'cancelled' %}is-cancelled{% endif %}">
+  <div class="assessment-date"><time datetime="{{ assessment.starts_at|date:'c' }}"><strong>{{ assessment.date|date:'j E' }}</strong><span>{{ assessment.time_label }}</span></time><span class="support">{{ assessment.date|date:'Y' }} · МСК</span></div>
+  <div class="assessment-body"><p class="eyebrow">{{ assessment.kind_label }}{% if assessment.status == 'cancelled' %} · Отменён{% endif %}</p><h3><a href="{{ assessment.url }}">{{ assessment.course_name }}</a></h3><p class="lesson-meta"><span>{{ assessment.room_label }}</span><span>{% if assessment.instructor_person %}{% include 'partials/person.html' with person=assessment.instructor_person %}{% else %}{{ assessment.instructor_name }}{% endif %}</span></p>
+  {% if assessment.change %}<div class="assessment-change">{% if assessment.status != 'cancelled' %}<p class="change-tag">{{ assessment.change.title }}</p>{% endif %}{% if not compact %}{% with item=assessment.change %}{% include 'partials/compact_change.html' %}{% endwith %}{% endif %}</div>{% endif %}
+  </div>
+</article>

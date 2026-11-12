@@ -1,0 +1,12 @@
+{% if role == 'teacher' %}
+<a href="/teacher/" {% if section == 'teacher_home' %}aria-current="page"{% endif %}>Обзор</a>
+<a href="/teacher/courses/" {% if section == 'teacher_courses' or section == 'teacher' %}aria-current="page"{% endif %}>Дисциплины</a>
+<a href="/teacher/schedule/" {% if section == 'teacher_schedule' %}aria-current="page"{% endif %}>Расписание</a>
+<a href="/teacher/review/" {% if section == 'teacher_review' %}aria-current="page"{% endif %}>Проверка</a>
+{% else %}
+<a href="/staff/" {% if section == 'staff_home' %}aria-current="page"{% endif %}>Обзор</a>
+<a href="/staff/requests/" {% if section == 'staff_requests' or section == 'staff_request_detail' %}aria-current="page"{% endif %}>Заявки</a>
+<a href="/staff/notices/" {% if section == 'staff_notices' %}aria-current="page"{% endif %}>Объявления</a>
+<a href="/staff/groups/" {% if section == 'staff_groups' or section == 'resources' %}aria-current="page"{% endif %}>Группы</a>
+{% endif %}
+<a href="/notifications/" {% if section == 'notifications' %}aria-current="page"{% endif %}>Входящие <span class="count" {% if not unread %}hidden{% endif %}>{{ unread }}</span></a>

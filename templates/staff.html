@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Кабинет сотрудника · Студенческий кабинет{% endblock %}
+{% block content %}<div class="profile-layout"><header class="profile-identity"><p class="eyebrow">Кабинет сотрудника</p><h1>{{ name }}</h1><p class="profile-subtitle">Сотрудник по работе с заявками</p></header><section class="profile-education" aria-labelledby="scope-title"><div class="section-rule"><h2 id="scope-title">Область обслуживания</h2></div><dl class="profile-details"><div><dt>Факультет</dt><dd>{{ faculty }}</dd></div><div><dt>Доступ сейчас</dt><dd>Собственный профиль и область обслуживания</dd></div></dl><p class="below-note">Работа с заявками пока не включена.</p></section></div>{% endblock %}

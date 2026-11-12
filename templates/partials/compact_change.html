@@ -1,0 +1,2 @@
+{% if item.context_labels %}<p class="event-context">{% for label in item.context_labels %}<span>{{ label }}</span>{% endfor %}</p>{% endif %}
+{% if item.differences %}<dl class="change-diff">{% for difference in item.differences %}<div><dt>{{ difference.label }}</dt><dd><span class="diff-before"><span class="diff-label">Было: </span>{{ difference.before }}</span><strong class="diff-after"><span class="diff-label">Стало: </span>{{ difference.after }}</strong></dd></div>{% endfor %}</dl>{% elif item.before or item.after %}{% include 'partials/change_pair.html' %}{% endif %}

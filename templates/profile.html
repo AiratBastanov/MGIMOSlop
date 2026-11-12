@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Профиль · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container student-profile">
+  <header class="profile-intro">
+    <div class="profile-portrait">{% include 'partials/person.html' with avatar_only=True %}</div>
+    <div><p class="eyebrow">Ваш профиль</p><h1>{{ name }}</h1><p class="profile-subtitle">{{ group }} · {{ year }} курс</p><p class="support">Демонстрационный студенческий кабинет</p></div>
+    <a class="button-secondary" href="/profile/edit/">Редактировать профиль</a>
+  </header>
+  <div class="student-profile-grid">
+    <section class="profile-education" aria-labelledby="education-title"><h2 id="education-title">Обучение</h2><dl class="profile-details"><div><dt>Факультет</dt><dd>{{ faculty }}</dd></div><div><dt>Программа</dt><dd>{{ programme }}</dd></div></dl><p class="below-note">Учебные сведения доступны только для чтения и поступают из проверенного источника.</p></section>
+    <section class="profile-contacts" aria-labelledby="contacts-title"><h2 id="contacts-title">Контакты и видимость</h2><p class="support">Здесь показаны ваши личные настройки. Одногруппники видят только опубликованные контакты.</p><dl class="profile-details">
+      <div><dt>Почта</dt><dd>{% if preferences.contact_email %}{{ preferences.contact_email }}<span class="profile-setting-note">{% if preferences.email_verified_at %}Подтверждена{% else %}Не подтверждена{% endif %} · {% if preferences.share_email and preferences.email_verified_at %}видна группе{% else %}не опубликована{% endif %}</span>{% else %}Не указана{% endif %}</dd></div>
+      <div><dt>Телефон</dt><dd>{% if preferences.directory_phone %}{{ preferences.directory_phone }}<span class="profile-setting-note">{% if preferences.share_phone %}Виден группе{% else %}Не опубликован{% endif %}</span>{% else %}Не указан{% endif %}</dd></div>
+      <div><dt>Фото</dt><dd>{% if not person.avatar_url %}Не загружено · {% endif %}{{ preferences.get_photo_audience_display }}</dd></div>
+    </dl></section>
+    <section class="profile-notifications" aria-labelledby="profile-notifications-title"><h2 id="profile-notifications-title">Уведомления</h2><p>В кабинете — доступны всегда.</p><p>{% if preferences.email_enabled %}Почта — {% if not preferences.contact_email %}нужно указать адрес{% elif not preferences.email_verified_at %}ожидает подтверждения адреса{% else %}включена{% endif %}.{% else %}Почта — выключена.{% endif %}</p><p class="support">Выбранные темы для почты: {% if preferences.email_requests %}заявки{% if preferences.email_academic or preferences.email_announcements %}, {% endif %}{% endif %}{% if preferences.email_academic %}учёба и расписание{% if preferences.email_announcements %}, {% endif %}{% endif %}{% if preferences.email_announcements %}объявления{% endif %}{% if not preferences.email_requests and not preferences.email_academic and not preferences.email_announcements %}не выбраны{% endif %}. Изменить их можно в редактировании профиля.</p></section>
+  </div>
+</div>
+{% endblock %}

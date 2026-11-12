@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block title %}Уведомления · Студенческий кабинет{% endblock %}
+{% block content %}
+{{ component_data|json_script:'component-props' }}
+<div data-component="inbox" data-props="component-props"><p role="status">Загружаем уведомления…</p></div>
+{% endblock %}

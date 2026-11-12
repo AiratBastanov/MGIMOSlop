@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Занятие · Студенческий кабинет{% endblock %}
+{% block content %}
+<a class="text-link back-link" href="/schedule/?date={{ lesson.date|date:'Y-m-d' }}">К расписанию на {{ lesson.date|date:'j E' }}</a>
+<header class="detail-heading"><p class="eyebrow">Занятие <span class="heading-divider" aria-hidden="true">/</span> {{ group }}</p><h1>{{ lesson.course_name }}</h1></header>
+<section class="lesson-current" aria-labelledby="current-title"><div class="current-time"><p class="eyebrow" id="current-title">Текущие сведения</p><p class="detail-date">{{ lesson.date|date:'j E Y' }}</p><p class="detail-time">{{ lesson.time_label }}</p><p>{{ lesson.date|date:'l' }} · МСК</p></div><div class="current-info">{% if lesson.status == 'cancelled' %}<p class="change-tag">Занятие отменено</p>{% endif %}<dl><div><dt>Место</dt><dd>{{ lesson.room_label }}</dd></div><div><dt>Преподаватель</dt><dd>{% include 'partials/person.html' with person=lesson.instructor_person %}</dd></div></dl><p class="support">{{ lesson.status_label }}</p></div></section>
+<section class="history-section" aria-labelledby="history-title"><div class="section-rule"><h2 id="history-title">История изменений</h2><span class="support">От раннего к последнему</span></div><p class="below-note">Здесь сохранены сведения на момент каждого изменения. Текущее время и место занятия указаны выше.</p>
+{% for item in history %}<article class="history-entry"><div class="history-date"><span class="history-dot" aria-hidden="true"></span><time datetime="{{ item.published_at|date:'c' }}">{{ item.published_at|date:'d.m.Y' }}<span>{{ item.published_at|date:'H:i' }} МСК</span></time></div><div class="history-body"><h3>{{ item.title }}</h3>{% include 'partials/change_pair.html' %}<p class="support">{{ item.reason }}</p></div></article>{% empty %}<p class="data-state">Изменений этого занятия ещё не было.</p>{% endfor %}</section>
+{% include 'partials/source_info.html' %}
+{% endblock %}

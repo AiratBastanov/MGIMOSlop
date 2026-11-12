@@ -1,0 +1,24 @@
+.venv/
+.local/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+staticfiles/
+*.dump
+*.log
+!docs/evidence/**/*.log
+*.zip
+*.7z
+*.tar
+*.gz
+*.sqlite3
+*.har
+*trace*.zip
+node_modules/
+.pytest_cache/
+.ruff_cache/
+# Зависимости сборки; готовый static/frontend входит в поставку.
+frontend/node_modules/
+frontend/.vite/

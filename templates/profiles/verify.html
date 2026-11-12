@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block title %}Подтверждение почты{% endblock %}{% block content %}
+<h1>Подтвердить адрес</h1><p>Адрес будет привязан к вашему текущему аккаунту. Ссылка действует один час.</p>
+<form method="post">{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}"><input type="hidden" name="token" value="{{ token }}" data-sensitive-draft><button class="button-primary" type="submit">Подтвердить адрес</button></form>
+{% endblock %}

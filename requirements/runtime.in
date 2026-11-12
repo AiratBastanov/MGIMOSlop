@@ -1,0 +1,6 @@
+Django>=5.2,<5.3
+django-axes==9.0.0
+psycopg[binary]>=3.3,<3.4
+tzdata
+Pillow==13.0.0
+pypdf==7.0.0

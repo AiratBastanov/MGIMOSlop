@@ -1,0 +1,156 @@
+{
+  "basis": "Независимо указанные разработчиком контрольные факты фиксированного набора. Не human approval.",
+  "accepted_revision": 7,
+  "preserve": {
+    "L-S1-23": {
+      "room": "318",
+      "record_revision": 2
+    },
+    "L-S2-23": {
+      "room": "312",
+      "record_revision": 2
+    }
+  },
+  "lessons": {
+    "L-A-1123-1": {
+      "date": "2026-11-24",
+      "start": "14:00",
+      "end": "15:30",
+      "room": "318",
+      "record_revision": 3,
+      "status": "active",
+      "instructor_id": "I-A-NEG"
+    },
+    "L-A-1125-1": {
+      "date": "2026-11-26",
+      "start": "14:00",
+      "end": "15:30",
+      "room": "220",
+      "record_revision": 2,
+      "status": "active",
+      "instructor_id": "I-A-LANG"
+    },
+    "L-A-1124-1": {
+      "date": "2026-11-24",
+      "start": "09:00",
+      "end": "10:30",
+      "room": "201",
+      "record_revision": 2,
+      "status": "active",
+      "instructor_id": "I-A-SUB"
+    },
+    "L-A-1127-2": {
+      "date": "2026-11-27",
+      "start": "10:40",
+      "end": "12:10",
+      "room": "202",
+      "record_revision": 2,
+      "status": "cancelled",
+      "instructor_id": "I-A-LANG"
+    },
+    "L-B-1124-1": {
+      "date": "2026-11-24",
+      "start": "10:40",
+      "end": "12:10",
+      "room": "409",
+      "record_revision": 2,
+      "status": "active",
+      "instructor_id": "I-B-HIST"
+    }
+  },
+  "active_days": {
+    "G-MB21": {
+      "2026-11-07": [
+        "L-A-1107-1",
+        "L-A-1107-2",
+        "L-A-1107-3"
+      ],
+      "2026-11-08": [],
+      "2026-11-23": [
+        "L-A-1123-2",
+        "L-S2-23"
+      ],
+      "2026-11-24": [
+        "L-A-1124-1",
+        "L-A-1124-2",
+        "L-A-1123-1"
+      ],
+      "2026-11-25": [
+        "L-A-1125-2"
+      ],
+      "2026-11-26": [
+        "L-A-1126-1",
+        "L-A-1126-2",
+        "L-A-1125-1"
+      ],
+      "2026-11-27": [
+        "L-A-1127-1"
+      ],
+      "2026-11-28": [
+        "L-A-1128-1"
+      ],
+      "2026-11-30": [
+        "L-A-1130-1",
+        "L-A-1130-2"
+      ],
+      "2026-12-06": [
+        "L-A-1206-1"
+      ],
+      "2026-12-07": []
+    },
+    "G-EK11": {
+      "2026-11-07": [
+        "L-B-1107-1",
+        "L-B-1107-2",
+        "L-B-1107-3"
+      ],
+      "2026-11-08": [],
+      "2026-11-23": [
+        "L-B-1123-1",
+        "L-B-1123-2"
+      ],
+      "2026-11-28": [],
+      "2026-11-30": [
+        "L-B-1130-1",
+        "L-B-1130-2"
+      ],
+      "2026-12-06": [
+        "L-B-1206-1"
+      ],
+      "2026-12-07": []
+    }
+  },
+  "history": {
+    "L-A-1123-1": [
+      "EV-A-ROOM",
+      "EV-A-ROOM-THEN-MOVE"
+    ],
+    "L-A-1125-1": [
+      "EV-A-MOVE"
+    ],
+    "L-A-1124-1": [
+      "EV-A-INSTRUCTOR"
+    ],
+    "L-A-1127-2": [
+      "EV-A-CANCEL"
+    ]
+  },
+  "announcements": {
+    "ANN-WITHDRAW": "withdrawn",
+    "ANN-FUTURE": "published",
+    "ANN-ARCHIVE": "published"
+  },
+  "coverage": {
+    "date_from": "2026-11-07",
+    "date_until_exclusive": "2026-12-07",
+    "complete_groups": [
+      "G-MB21",
+      "G-EK11"
+    ],
+    "outside_date_has_no_complete_empty_claim": "2026-12-07"
+  },
+  "deadlines": {
+    "ANN-A-DEADLINE": "2026-11-10T18:00:00+03:00",
+    "ANN-B-DEADLINE": "2026-11-25T15:00:00+03:00"
+  }
+}

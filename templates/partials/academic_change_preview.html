@@ -1,0 +1,5 @@
+<article><p class="eyebrow">{{ item.title }}</p><h3><a href="{{ item.target_url }}">{{ item.current.course_name }}</a></h3>
+{% if item.kind == 'requirement' %}{% with requirement=item.after %}{% include 'partials/requirement.html' %}{% endwith %}
+{% elif item.kind == 'result' %}<p>{{ item.summary }}</p>{% if item.current.has_open %}<p class="requirement-heading">Есть открытые требования</p>{% for requirement in item.current.open_requirements %}{% include 'partials/requirement.html' %}{% endfor %}{% endif %}
+{% elif item.kind == 'assessment' %}<p>{{ item.current.date|date:'j E Y' }} · {{ item.current.time_label }} МСК</p><p class="support">{{ item.current.room_label }} · {% if item.current.instructor_person %}{% include 'partials/person.html' with person=item.current.instructor_person %}{% else %}{{ item.current.instructor_name }}{% endif %}</p>
+{% endif %}</article>

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Объявление · Студенческий кабинет{% endblock %}
+{% block content %}
+<a class="text-link back-link" href="/notifications/">К уведомлениям</a>
+<div class="announcement-layout"><aside class="announcement-dates"><p class="eyebrow">Объявление</p><p class="publication">Опубликовано</p><time datetime="{{ announcement.published_at|date:'c' }}">{{ announcement.published_at|date:'j E Y' }}<br>{{ announcement.published_at|date:'H:i' }} МСК</time></aside>
+<article class="announcement-body"><h1>{{ announcement.title }}</h1>{% if announcement.status_label and announcement.status_label != 'Опубликовано' %}<p class="data-state">{{ announcement.status_label }}</p>{% endif %}{% if announcement.deadline_label %}<p class="deadline-copy">{{ announcement.deadline_label }} · {{ announcement.due_exact }}</p>{% endif %}{% if announcement.body %}<div class="prose">{{ announcement.body|linebreaks }}</div>{% endif %}{% if announcement.visible_until %}<p class="publication">Публикация доступна в активной ленте до {{ announcement.visible_until|date:'j E Y, H:i' }} МСК.</p>{% endif %}</article></div>
+{% include 'partials/source_info.html' %}
+{% endblock %}

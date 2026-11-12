@@ -1,0 +1,1 @@
+<article class="news-item"><h3><a href="{{ item.url }}">{{ item.title }}</a></h3>{% if item.due_at %}<p class="attention-deadline">Срок объявления · {{ item.due_exact }}</p>{% endif %}<p class="support">{{ item.attribution|default:"Учебный источник" }}</p><p>{{ item.body|truncatechars:120 }}</p></article>

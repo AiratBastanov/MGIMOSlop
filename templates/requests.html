@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Заявки · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="requests-workspace content-container academic-container">
+<header class="planner-heading request-heading"><div><h1>{% if role == 'staff' %}Очередь заявок{% else %}Мои заявки{% endif %}</h1>{% if role == 'staff' %}<p class="weekday">{{ faculty }}</p>{% endif %}</div>{% if role == 'student' %}<a class="button-primary" href="/requests/new/">Новая заявка</a>{% endif %}</header>
+<form class="request-filter role-filters" method="get">{% if role == "staff" %}{% include "workspaces/staff_request_filters.html" %}{% endif %}<div><label for="status-filter">Статус</label><select id="status-filter" name="status">{% for filter in status_filters %}<option value="{{ filter.value }}" {% if status_filter == filter.value %}selected{% endif %}>{{ filter.label }}</option>{% endfor %}</select></div><button class="button-secondary" type="submit">Показать</button></form>
+<div class="section-rule request-list-heading"><h2>Найдено заявок: {{ request_count }}</h2></div>
+{% if page_notice %}<p class="form-note" role="status">{{ page_notice }}</p>{% endif %}
+<div class="request-list">
+{% for item in requests %}<article class="request-row">
+<div class="request-row-meta"><p class="request-reference">№ {{ item.reference }}</p><span class="request-status status-{{ item.status }}">{{ item.status_label }}</span></div>
+<h2><a href="{% if role == 'staff' %}{{ item.staff_url }}{% else %}{{ item.url }}{% endif %}" aria-label="{{ item.type_label }} № {{ item.reference }}">{{ item.type_label }}</a></h2>{% if role == 'staff' %}<p class="request-applicant">{{ item.applicant_name }} · {{ item.applicant_group }}</p>{% endif %}
+{% if item.clarification_label %}<p class="clarification-indicator">{{ item.clarification_label }}</p>{% endif %}<p class="publication">Подана <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:'d.m.Y, H:i' }} МСК</time></p>
+</article>{% empty %}<section class="request-empty"><h2>{% if status_filter != 'all' %}Заявок с таким статусом нет{% elif role == 'staff' %}Очередь пуста{% else %}Вы ещё не подавали заявки{% endif %}</h2><p>{% if status_filter != 'all' %}Выберите другой статус или откройте полный доступный список.{% else %}Здесь появятся номер и сохранённый статус обращения.{% endif %}</p>{% if status_filter != 'all' %}<a class="text-link" href="{% if role == 'staff' %}/staff/requests/{% else %}/requests/{% endif %}?status=all">Все заявки</a>{% endif %}</section>{% endfor %}
+</div>
+{% include "partials/pagination.html" %}
+</div>
+{% endblock %}

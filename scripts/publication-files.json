@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "public_instructions": [
+    "# Работа с проектом «Цифровой деканат»",
+    "",
+    "Это конкурсный прототип на вымышленных данных. Начните с README.md, docs/SETUP.md и docs/ARCHITECTURE.md. Сообщения, документация и интерфейс — на русском.",
+    "",
+    "- Сохраняйте Django/PostgreSQL и React/TypeScript/Vite, действующие миграции, учебную историю и действия пользователей. Не заполняйте БД при старте или чтении страницы.",
+    "- Проверяйте владельца, роль и аудиторию на сервере. Используйте существующие сервисы для заявок, материалов, уточнений и публикаций. Результат работы не является официальной оценкой.",
+    "- Секреты, локальная конфигурация, пароли, файлы БД и приватные вложения не входят в Git. Используйте только синтетические данные.",
+    "- Помощник работает со справкой и разрешёнными темами. Не давайте модели доступ к личным записям и операциям. Работа приложения не зависит от наличия модели.",
+    "- Сохраняйте немодальные панели, пять мобильных разделов, текстовые статусы и контекст сеанса. Не добавляйте декоративные стрелки или chevrons.",
+    "- Проверяйте затронутое поведение и зависимости по docs/VALIDATION.md. Браузерные проверки с изменениями выполняйте только на отдельном демо; не сбрасывайте рабочие данные.",
+    "- Git push, размещение сайта, внешняя почта и изменение видимости требуют разрешения для соответствующего задания. Указание репозитория само по себе не разрешает будущие операции.",
+    "- Публичное дерево собирается по scripts/publication-files.json. Полная история разработки и закрытые результаты проверок хранятся отдельно; эта выборка не выдаётся за исходную историю.",
+    ""
+  ],
+  "include": [
+    "manage.py", "README.md", "AGENTS.md", ".env.example", ".gitignore", ".gitattributes",
+    "accounts/**/*.py", "data_import/**/*.py", "deanery/**/*.py", "materials/**/*.py",
+    "notifications/**/*.py", "profiles/**/*.py", "student_requests/**/*.py", "studies/**/*.py", "workspaces/**/*.py",
+    "templates/**/*.html", "static/**/*", "fixtures/**/*.json", "requirements/*.txt", "requirements/*.in",
+    "frontend/src/**/*", "frontend/package.json", "frontend/package-lock.json", "frontend/tsconfig.json", "frontend/vite.config.ts",
+    "tests/*.py", "deploy/*.example", "deploy/gunicorn.conf.py", "deploy/README.md",
+    "scripts/create_local_database.py", "scripts/run_tests.py", "scripts/export_publication.py", "scripts/publication-files.json",
+    "scripts/verify_publication.py", "scripts/verify_demo.py", "scripts/render_creation_process.py",
+    "docs/SETUP.md", "docs/DEMO.md", "docs/ARCHITECTURE.md", "docs/AI_ASSISTANT.md",
+    "docs/DEVELOPMENT_PROCESS.md", "docs/VALIDATION.md", "docs/THIRD_PARTY_NOTICES.md", "docs/RIGHTS.md",
+    "docs/creation-process.html", "docs/creation-process.pdf", "docs/images/*", "docs/licenses/**/*"
+  ],
+  "exclude": ["**/__pycache__/**", "**/*.pyc", "tests/*_browser.py", "tests/test_task11_components.py", "tests/test_task15.py", "docs/licenses/TASK12_ASSISTANT.md"]
+}

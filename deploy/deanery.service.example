@@ -1,0 +1,19 @@
+[Unit]
+Description=Student portal (competition concept)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=deanery
+Group=deanery
+WorkingDirectory=/srv/deanery/current
+EnvironmentFile=/etc/deanery.env
+ExecStart=/srv/deanery/current/.venv/bin/gunicorn -c deploy/gunicorn.conf.py deanery.wsgi:application
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

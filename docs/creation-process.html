@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="История создания конкурсного прототипа «Цифровой деканат»: задача, инструменты, подлинные итерации, защита и вклад человека.">
+<title>Цифровой деканат — процесс создания</title>
+<style>
+@font-face{font-family:Golos;src:url('../static/fonts/GolosText-Regular.woff2') format('woff2');font-weight:400}
+@font-face{font-family:Golos;src:url('../static/fonts/GolosText-SemiBold.woff2') format('woff2');font-weight:600 800}
+@page{size:A4;margin:0}
+*{box-sizing:border-box}html{background:#dce6f1}body{margin:0;color:#18304e;font:10.5pt/1.48 Golos,Arial,sans-serif}
+.sheet{width:210mm;height:297mm;padding:15mm 17mm 19mm;margin:8mm auto;background:#fff;position:relative;break-after:page;box-shadow:0 2px 18px #19325120}
+.sheet:last-child{break-after:auto}.page-body{height:100%}h1,h2,h3,p,figure,blockquote,table,ol,ul{margin:0 0 4mm}h1{font-size:31pt;line-height:1.12;letter-spacing:-.8px;margin:6mm 0}h2{font-size:23pt;line-height:1.2;margin:4mm 0 6mm}h3{font-size:13pt;line-height:1.3;margin-top:5mm}.eyebrow{font-size:9pt;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:#456383}.lead{font-size:12pt;line-height:1.5}.muted,figcaption{color:#52677f}figcaption{font-size:9pt;line-height:1.4;margin-top:2mm}figure img{display:block;width:100%;height:auto;border:1px solid #c5d3e2}.screen{margin:5mm 0}.screen img{max-height:119mm;object-fit:contain;object-position:left center;background:#eef4fb}.cols{display:grid;grid-template-columns:1fr 1fr;gap:8mm}.phones{display:flex;justify-content:center;gap:10mm;margin:5mm 0}.phones figure{width:64mm}.phones img{width:64mm;height:auto}.phone-copy{display:grid;grid-template-columns:72mm 1fr;gap:8mm}.phone-copy img{width:72mm}.phone-copy p{font-size:10pt}.note{background:#edf3fb;border-left:3px solid #285eae;padding:4mm 5mm;margin:5mm 0}.note p:last-child{margin-bottom:0}blockquote{border-left:2px solid #b7c8dd;padding:2mm 4mm;font-size:10pt;color:#214b7f}blockquote p:last-child{margin:0}.quote-label{font-size:8.5pt;font-weight:600;margin-bottom:1mm}table{width:100%;border-collapse:collapse;font-size:9.5pt}th,td{vertical-align:top;text-align:left;padding:2.8mm 2mm;border-bottom:1px solid #d3deea}th{background:#e9f0f8;font-weight:600}td:first-child{width:40mm;font-weight:600}a{color:#2059a4;text-decoration:underline;text-underline-offset:2px}code{font:9pt Consolas,monospace;background:#edf2f8;padding:0 1mm;overflow-wrap:anywhere}.contents{display:grid;grid-template-columns:1fr 1fr;gap:2mm 8mm;font-size:10pt;margin:5mm 0}.footer{position:absolute;bottom:9mm;left:17mm;right:17mm;border-top:1px solid #cbd7e4;padding-top:3mm;display:flex;justify-content:space-between;font-size:8.5pt;color:#57708a}.footer a{color:inherit}.small{font-size:9.5pt}.compact p{margin-bottom:3mm}
+p,figure,blockquote,table{margin-bottom:3mm}.screen img{max-height:114mm}th,td{padding-top:2.5mm;padding-bottom:2.5mm}
+body{line-height:1.44}.sheet{padding-top:14mm;padding-bottom:18mm}h2{margin-bottom:5mm}
+#service .screen img{max-height:110mm}
+@media print{html{background:white}.sheet{margin:0;box-shadow:none}a{color:#2059a4}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media screen and (max-width:820px){.sheet{margin:4mm auto}}
+</style>
+</head>
+<body>
+<section class="sheet" id="problem"><div class="page-body">
+<p class="eyebrow">Конкурсный прототип · история создания · 12 ноября 2026</p>
+<h1>Цифровой<br>деканат</h1>
+<p class="lead">Учебный день, результаты и обращения — в одном кабинете студента.</p>
+<p>Студенту нужно сопоставить расписание, учебные условия и статус обращения. Проектная гипотеза — собрать эти действия в связанном личном пространстве. Интервью и измерение эффекта внедрения не проводились.</p>
+<figure class="screen"><img src="images/student-today.png" alt="Текущий кабинет студента: следующий урок, день и открытые требования"><figcaption>12 ноября. Настоящий Chrome, 1366 × 900. Все люди и учебные записи вымышлены. Просроченное требование видно вместе с причиной.</figcaption></figure>
+<p>Пять разделов: <strong>Сегодня, Расписание, Учёба, Заявки, Уведомления.</strong> Вход и профиль задают владельца. На телефоне основная навигация остаётся внизу; «Сегодня» связывает ближайшее занятие с важными изменениями.</p>
+<nav class="contents" aria-label="Содержание"><a href="#tools">Инструменты и задания · 2</a><a href="#early">Развитие интерфейса · 3</a><a href="#correction">Ошибка и исправление · 4</a><a href="#teacher">Преподаватель · 5</a><a href="#service">Факультетская служба · 6</a><a href="#protection">Хранение и защита · 7</a><a href="#assistant">Необязательный ИИ · 8</a><a href="#people">Человек и проверка · 9</a></nav>
+</div><footer class="footer"><span>Не официальный сервис вуза</span><span>1</span></footer></section>
+
+<section class="sheet" id="tools"><div class="page-body">
+<p class="eyebrow">От требования к работающему коду</p><h2>Инструменты и их роль</h2>
+<p>История составлена по сохранённым заданиям, исходникам, снимкам и проверкам. Точные версии исторических моделей и IDE не реконструируются. В одной ранней записи Codex указан <code>gpt-6-astra</code>; остальные сессии не получают это имя задним числом.</p>
+<table><thead><tr><th>Инструмент</th><th>Действительное применение</th></tr></thead><tbody>
+<tr><td>ChatGPT</td><td>Исследование, английские задания для Codex, разбор результатов и формулирование исправлений.</td></tr>
+<tr><td>Codex</td><td>Код, команды, данные, документы и проверки. Ограниченные независимые агенты отдельно разбирали доступ, источник и интерфейс.</td></tr>
+<tr><td>PowerShell, Git, rg, Python</td><td>Файлы, поиск, история изменений, изолированные зависимости через venv/pip, воспроизводимые команды.</td></tr>
+<tr><td>Django, PostgreSQL, psycopg, Axes</td><td>Вход, права, хранение, импорт, транзакции и ограничение попыток входа.</td></tr>
+<tr><td>React, TypeScript, Vite</td><td>Календарь, материалы, формы, уведомления и помощник; проверка типов и готовая сборка для Django.</td></tr>
+<tr><td>Playwright, Chrome/CDP, Firefox</td><td>Настоящие страницы, клавиатура, DOM, снимки и эмуляция размеров экрана. Для записей и просмотра также использовались ffmpeg и просмотр изображений.</td></tr>
+<tr><td>Web и справочники</td><td>Первичные технические документы и исследование интерфейсов. Refero, UIWiki, Impeccable — справочные материалы, без переноса их изображений и кода.</td></tr>
+<tr><td>Docker/Linux, Gunicorn, Caddy</td><td>Ранние локальные проверки установки и HTTPS-схемы. Текущая полная установка проверена на Windows.</td></tr>
+<tr><td>Ollama, Qwen</td><td>Необязательный выбор темы справки в готовом продукте. Это отдельная функция, не описание способа разработки.</td></tr>
+<tr><td>pypdf, PDFium, Pillow</td><td>Проверка файлов и документа; PDF создаётся браузерной печатью. Иллюстрации процесса не генерировались.</td></tr>
+</tbody></table>
+<p class="small">Ранее процесс Sites применялся для локального просмотра checkout; размещения через Sites не было. Полная история и старый большой документ сохранены в рабочем архиве. Публичная выборка не выдаётся за исходную Git-историю.</p>
+<div class="note"><p><strong>Рабочий цикл:</strong> требование пользователя → реализация → настоящий запуск → проверка доступа и интерфейса → исправление. Неудачный прогон сохранялся как наблюдение, а не превращался в успешный отчёт.</p></div>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>2</span></footer></section>
+
+<section class="sheet" id="early"><div class="page-body">
+<p class="eyebrow">Подлинная промежуточная версия</p><h2>Сначала связать данные,<br>затем уточнить подачу</h2>
+<p>Первый работающий кабинет уже связывал вход с собственной учебной информацией. Дальнейшие изменения касались ясности: уменьшить повторение и оставить рядом факт, причину и доступное действие.</p>
+<figure class="screen"><img src="images/early-profile.png" alt="Исторический профиль со светлым оформлением"><figcaption>7 ноября. Подлинный ранний профиль. Снимок сохранён без реконструкции и косметического исправления.</figcaption></figure>
+<p class="quote-label">Дословный фрагмент задания об упрощении интерфейса</p>
+<blockquote>Reduce repetition and competing emphasis, while keeping necessary information understandable and visible.</blockquote>
+<p>Русское пояснение: уменьшить повторение и конкурирующие акценты, сохранив нужную информацию. Это пояснение документа, а не новый фрагмент исходного диалога.</p>
+<p>Пользователь затем определил тёмно-синие и голубые поверхности, компактность при обычном масштабе, фиксированные инструменты справа и отказ от декоративных стрелок. Текущая версия следует этим решениям; ранняя светлая версия показана как этап развития.</p>
+<p class="quote-label">Дословный фрагмент следующего задания</p>
+<blockquote>Important status must not depend on color alone.</blockquote>
+<p>Статус обозначается словами. Цвет помогает заметить отсутствие итога, просрочку или решение, но не несёт единственное объяснение.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>3</span></footer></section>
+
+<section class="sheet" id="correction"><div class="page-body">
+<p class="eyebrow">Что не получилось с первого раза</p><h2>Крупный текст сломал навигацию</h2>
+<p>При увеличении базового текста до 200% счётчик перекрывал подпись мобильного раздела. Обычного масштаба для проверки оказалось недостаточно. Компоновку изменили с учётом переноса текста и отдельно проверили строки списков.</p>
+<div class="phones"><figure><img src="images/navigation-before.png" alt="До: счётчик перекрывает Уведомления"><figcaption><strong>7 ноября, ранняя ошибка.</strong><br>Ширина 360 px, текст 200%.</figcaption></figure><figure><img src="images/navigation-after.png" alt="После: подписи навигации переносятся без наложения"><figcaption><strong>12 ноября, текущая версия.</strong><br>360 px, базовый текст 32 px.</figcaption></figure></div>
+<p class="small">Слева — подлинная ранняя ошибка, справа — новая проверка после последующих доработок. Разделы различаются: сравнивается навигация при увеличенном тексте, а не одинаковые записи.</p>
+<h3>Ещё одно исправление: чтение при проверке сеанса</h3>
+<p>Фоновая проверка доступа могла скрывать документ и закрывать инструменты. Обычную проверку отделили от настоящего скрытия и сброса. Панели стали немодальными, а ввод и прокрутка сохраняются, пока доступ действителен.</p>
+<p class="quote-label">Дословный фрагмент задания о положении панели</p>
+<blockquote>Open each panel next to its button, normally above or to its left with viewport collision handling.</blockquote>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>4</span></footer></section>
+
+<section class="sheet" id="teacher"><div class="page-body">
+<p class="eyebrow">Связанные рабочие места</p><h2>Преподаватель видит<br>точную отправленную версию</h2>
+<p>Студенческое ядро дополнено отдельной identity преподавателя и назначением на дисциплину, группу и период. Материалы, задания и очередь проверки строятся в этой области доступа.</p>
+<figure class="screen"><img src="images/teacher-workspace.png" alt="Текущее рабочее место преподавателя"><figcaption>12 ноября. Настоящий Chrome. В очереди — отправленные работы собственных групп; поздний черновик студента сюда не попадает.</figcaption></figure>
+<h3>Один учебный путь</h3>
+<p>Преподаватель публикует материал или задание. Студент открывает его в «Учёбе», готовит черновик и отправляет версию с файлами. Отправка фиксирует содержание и условия приёма. Преподаватель сохраняет отзыв именно к этой версии, а студент возвращается к нему и при необходимости готовит исправление.</p>
+<div class="note"><p><strong>Результат работы отделён от официального итога.</strong> Отзыв и балл за ответ не меняют оценку по дисциплине. Официальные учебные факты поступают через проверяемый версионный импорт.</p></div>
+<p>В новой установке проверено сохранение отзыва к первой версии подготовленного ответа и его чтение студентом. Два приватных файла преподавательского материала открываются у студента нужной аудитории; второй студент получает отказ даже по прямому адресу.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>5</span></footer></section>
+
+<section class="sheet" id="service"><div class="page-body">
+<p class="eyebrow">От обращения до сохранённого ответа</p><h2>Служба работает<br>в границах факультета</h2>
+<p>Сотрудник видит заявки своего факультета, может уточнить вопрос у владельца и сохранить решение. Рядом находятся объявления и ресурсы обслуживаемых групп.</p>
+<figure class="screen"><img src="images/faculty-workspace.png" alt="Обзор факультетской службы с заявками, ответами, объявлениями и группами"><figcaption>12 ноября. Настоящий Chrome, отдельная учётная запись сотрудника. Обзор построен из той же разрешённой области, что очереди и прямые запросы.</figcaption></figure>
+<h3>Проверенный обмен</h3>
+<p>Студент подал заявку на два экземпляра. Сотрудник взял её в работу и запросил уточнение. Студент ответил, сотрудник рассмотрел ответ и завершил обработку. Владелец увидел сохранённые статус и историю; другой студент не получил эту заявку по прямой ссылке.</p>
+<p>Ответ на уточнение дополняет обращение. Исходный владелец, содержание подачи и факультет не переписываются. История хранит статус самого события, поэтому прежний этап не выглядит как новое решение.</p>
+<div class="note"><p><strong>Успех означает сохранение.</strong> Статус, история и уведомление записываются согласованно. После повторной подготовки демонстрации сохранённая заявка и отзыв остались прежними.</p></div>
+<p class="small">Прототип не выпускает юридически действительную справку. Полный снимок результата и порядок повторения доступны в <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/DEVELOPMENT_PROCESS.md#от-отдельных-экранов-к-связанным-ролям">истории создания в репозитории</a> и <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/DEMO.md">сценарии демонстрации</a>.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>6</span></footer></section>
+
+<section class="sheet" id="protection"><div class="page-body">
+<p class="eyebrow">Защита как часть рабочего пути</p><h2>Владелец, версия<br>и сохранённая история</h2>
+<p>Пароль проверяет Django; в БД хранится хеш. Сессия определяет пользователя. Сервер заново проверяет владельца и аудиторию каждого личного объекта: изменение номера в URL не даёт чужую заявку или файл.</p>
+<figure class="screen"><img src="images/version-feedback.png" alt="Отзыв преподавателя и результат работы у первой версии ответа"><figcaption>12 ноября. Реально сохранённый отзыв к версии 1. Более поздний черновик не подменяет отправленное содержание.</figcaption></figure>
+<div class="cols"><div><h3>Постоянные данные</h3><p>Учебный импорт не сбрасывает заявки, решения, прочтения и пароли. Отправка, история и уведомление согласуются транзакцией. Перезапуск сервера не заполняет базу заново.</p><p>Файлы и перекодированные фото находятся в PostgreSQL. При скачивании проверяется доступ; общей публичной папки с личными файлами нет.</p></div><div><h3>Границы защиты</h3><p>Тип, размер и структура вложений ограничены. Инспектор не называется антивирусом. Контакты группы публикуются только по отдельному согласию владельца.</p><p>При смене сеанса старые ответы и ввод очищаются. Обычная проверка действующего доступа не прерывает чтение.</p></div></div>
+<p class="small">Это меры прототипа, не сертификация. Технические контракты и роли описаны в <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/ARCHITECTURE.md">архитектуре</a>.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>7</span></footer></section>
+
+<section class="sheet" id="assistant"><div class="page-body">
+<p class="eyebrow">ИИ внутри продукта</p><h2>Справка доступна<br>и без локальной модели</h2>
+<div class="phone-copy"><figure><img src="images/assistant-mobile.png" alt="Мобильный помощник с готовыми вопросами при отключённом ИИ"><figcaption>12 ноября, 360 × 800. ИИ выключен в настройках. Панель остаётся внутри видимой области и над нижней навигацией.</figcaption></figure><div class="compact">
+<p>Ранее использовались Ollama 0.33.2 и Qwen3-4B-Instruct-2507 Q4_K_M. Модель выбирала разрешённую тему; сервер выдавал проверенный текст и ссылку. Доступа к записям и операциям модель не получала.</p>
+<p>В первом наборе из 12 вопросов было три ошибки понимания. После уточнения правил повтор дал 12 корректных выборов. Это результат конкретного набора, не общая оценка качества.</p>
+<p>При подготовке публикации выяснилось, что заполненные настройки ещё не означали доступный сервис. Добавлены состояния проверки, недоступности, отсутствующей модели и ошибки inference. Установка модели проверяется через <code>/api/tags</code>; пустая память <code>/api/ps</code> не означает её отсутствие.</p>
+<p>Готовые темы работают сразу. Новая установка по умолчанию не требует Ollama, GPU или загрузки весов. Здесь положительные ответы провайдера проверялись имитацией; настоящую Qwen заново не запускали.</p>
+</div></div>
+<p class="quote-label">Дословный фрагмент задания публикации</p>
+<blockquote>Availability and the provenance of a particular answer are separate: a predefined topic can return a FAQ answer while a model is available, and model presence alone is not a successful inference.</blockquote>
+<p class="small">Русское пояснение: доступность модели и происхождение ответа различаются. Нажатие готового вопроса не выдаётся за вызов ИИ. При отказе остаётся справка. <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/AI_ASSISTANT.md">Настройка, статусы и ограничения</a>.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>8</span></footer></section>
+
+<section class="sheet" id="people"><div class="page-body">
+<p class="eyebrow">Решения и проверяемый результат</p><h2>Вклад человека</h2>
+<p class="lead">Пользователь выбирал задачу и направление продукта, возвращал замечания по настоящим экранам и требовал исправлять поведение.</p>
+<p>Подтверждённый вклад: выбор кейса, предоставление исходных требований, подготовка заданий совместно с ChatGPT, перенос результатов между средами, просмотр работы Codex, свои снимки и обратная связь. Пользователь определил оформление, компактность, положение инструментов справа, сохранение чтения и отсутствие декоративных стрелок.</p>
+<p>Наблюдаемые код, технические документы и проверки выполнял Codex перечисленными инструментами. Пользователю не приписываются интервью, ручное программирование, часы работы или построчное утверждение исходников. Проверки независимых агентов — дополнительный разбор ИИ, не внешний человеческий аудит.</p>
+<h3>Что проверено для передачи</h3>
+<p>Отдельная выборка содержит исходники, миграции, собранный frontend, синтетические данные и нейтральную команду <code>prepare_demo</code>. На пустой PostgreSQL проверены новая виртуальная среда, четыре входа, обмен студент–служба, отзыв преподавателя и справка без Ollama. Повтор подготовки после этих действий сохранил все 74 таблицы и файл паролей.</p>
+<p>Управляемый локальный HTTP-сервер проверил отсутствующую модель, задержки, ошибки и восстановление. Настоящий браузер проверил панели на 1366 и 360 px. Запоздавшие ответы после смены владельца не должны переходить в новый сеанс; сервер и интерфейс проверены раздельно.</p>
+<p>Независимый разбор нашёл три пограничных случая: чужой файл паролей при новом заполнении, гонку готового вопроса с проверкой подключения и чрезмерно вложенный JSON. Внесены адресные исправления. Неудачные промежуточные прогоны сохранены в рабочем архиве.</p>
+<div class="note"><p><strong>Границы результата.</strong> Публичный сервер, доставка настоящих писем, доступ из российской сети, физические телефоны и конкурсная подача не подтверждены. Репозиторий сохраняет приватную видимость; доступ организаторам должен быть предоставлен владельцем отдельно.</p></div>
+<h3>Материалы для самостоятельной проверки</h3>
+<p><a href="https://github.com/AiratBastanov/MGIMOSlop">Репозиторий и описание продукта</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/SETUP.md">Полная установка и обычный перезапуск</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/DEMO.md">Демонстрация трёх ролей</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/VALIDATION.md">Проверки, среда и способы повторения</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/THIRD_PARTY_NOTICES.md">Сторонние компоненты</a> · <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/RIGHTS.md">Права на материалы</a></p>
+<p class="small muted">Редактируемый источник — creation-process.html. Все иллюстрации — подлинные снимки приложения; исходные размеры доступны в репозитории. Внешние руководства по промптингу и полный архив переписки не распространяются.</p>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>9</span></footer></section>
+</body></html>

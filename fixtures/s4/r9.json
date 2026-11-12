@@ -1,0 +1,442 @@
+{
+  "schema_version": 4,
+  "subset": "s4_studies_v4",
+  "dataset_id": "s1-schedule",
+  "dataset_revision": 9,
+  "parent_revision": 8,
+  "provenance": "synthetic",
+  "prepared_by": "Codex TASK05",
+  "preparation_reason": "Явная коррекция итога и связанного требования; отдельные незакрытые условия и изменения сессии",
+  "source_as_of": "2026-11-07T16:44:24.326203+00:00",
+  "valid_from": "2026-11-05T00:00:00+03:00",
+  "valid_until": "2026-12-07T00:00:00+03:00",
+  "operations": [
+    {
+      "operation": "change",
+      "entity_type": "final_result",
+      "expected_record_revision": 1,
+      "event_id": "EV-S4-ECON-CORRECT",
+      "change_type": "correction",
+      "before": {
+        "source_id": "FR-A-ECON",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_kind": "grade",
+        "grade": 2,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "after": {
+        "source_id": "FR-A-ECON",
+        "record_revision": 2,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_kind": "grade",
+        "grade": 3,
+        "pass_status": null,
+        "recorded_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "reason": "Исправление внесённого итога после проверки вымышленного источника: 2 → 3."
+    },
+    {
+      "operation": "change",
+      "entity_type": "requirement",
+      "expected_record_revision": 1,
+      "event_id": "EV-S4-FAIL-CLOSE",
+      "change_type": "close",
+      "before": {
+        "source_id": "REQ-A-FAIL",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_id": "FR-A-ECON",
+        "reason": "В источнике зафиксирована неудовлетворительная итоговая оценка 2 по прикладной экономике.",
+        "status": "open",
+        "opened_at": "2026-11-07T16:44:24.326203+00:00",
+        "due_at": "2026-11-10T18:00:00+03:00",
+        "closed_at": null
+      },
+      "after": {
+        "source_id": "REQ-A-FAIL",
+        "record_revision": 2,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_id": "FR-A-ECON",
+        "reason": "В источнике зафиксирована неудовлетворительная итоговая оценка 2 по прикладной экономике.",
+        "status": "closed",
+        "opened_at": "2026-11-07T16:44:24.326203+00:00",
+        "due_at": "2026-11-10T18:00:00+03:00",
+        "closed_at": "2026-11-07T16:44:24.326203+00:00"
+      },
+      "reason": "Закрыто только требование REQ-A-FAIL, связанное с исправленной неудовлетворительной оценкой."
+    },
+    {
+      "operation": "create",
+      "entity_type": "requirement",
+      "record": {
+        "source_id": "REQ-A-CALC",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_id": null,
+        "reason": "Не внесено подтверждение проверки расчёта по итоговой работе. Положительная оценка не закрывает это отдельное требование.",
+        "status": "open",
+        "opened_at": "2026-11-07T16:44:24.326203+00:00",
+        "due_at": "2026-11-10T18:00:00+03:00",
+        "closed_at": null
+      },
+      "event_id": "EV-S4-CREATE-REQ-A-CALC"
+    },
+    {
+      "operation": "create",
+      "entity_type": "requirement",
+      "record": {
+        "source_id": "REQ-A-APPENDIX",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "enrollment_id": "EN-A-ECON",
+        "result_id": null,
+        "reason": "В источнике не подтверждено наличие приложения к итоговой работе. Условие закрытия — отдельное подтверждение источника.",
+        "status": "open",
+        "opened_at": "2026-11-07T16:44:24.326203+00:00",
+        "due_at": null,
+        "closed_at": null
+      },
+      "event_id": "EV-S4-CREATE-REQ-A-APPENDIX"
+    },
+    {
+      "operation": "change",
+      "entity_type": "assessment",
+      "expected_record_revision": 1,
+      "event_id": "EV-S4-LAW-MOVE",
+      "change_type": "move",
+      "before": {
+        "source_id": "AS-A-LAW",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LAW",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-09T14:00:00+03:00",
+        "ends_at": "2026-11-09T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-S1",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "after": {
+        "source_id": "AS-A-LAW",
+        "record_revision": 2,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LAW",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-09T15:30:00+03:00",
+        "ends_at": "2026-11-09T17:00:00+03:00",
+        "room": "312",
+        "location_status": "provided",
+        "instructor_id": "I-S1",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "exam"
+      },
+      "reason": "Экзамен перенесён на 15:30; вместо аудитории 210 указана 312."
+    },
+    {
+      "operation": "change",
+      "entity_type": "assessment",
+      "expected_record_revision": 1,
+      "event_id": "EV-S4-LANG-CANCEL",
+      "change_type": "cancel",
+      "before": {
+        "source_id": "AS-A-LANG",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LANG",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-11T14:00:00+03:00",
+        "ends_at": "2026-11-11T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-A-LANG",
+        "instructor_status": "provided",
+        "status": "active",
+        "assessment_kind": "pass_fail"
+      },
+      "after": {
+        "source_id": "AS-A-LANG",
+        "record_revision": 2,
+        "source_updated_at": "2026-11-07T16:44:24.326203+00:00",
+        "course_id": "C-A-LANG",
+        "group_id": "G-MB21",
+        "period_id": "P-2026-autumn",
+        "starts_at": "2026-11-11T14:00:00+03:00",
+        "ends_at": "2026-11-11T15:30:00+03:00",
+        "room": "210",
+        "location_status": "provided",
+        "instructor_id": "I-A-LANG",
+        "instructor_status": "provided",
+        "status": "cancelled",
+        "assessment_kind": "pass_fail"
+      },
+      "reason": "Событие зачёта отменено в вымышленном источнике; новая дата пока не указана."
+    }
+  ],
+  "coverage": [
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-23",
+      "date_until": "2026-11-24",
+      "completeness": "complete",
+      "active_ids": [
+        "L-S1-23"
+      ],
+      "active_count": 1
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-24",
+      "date_until": "2026-11-25",
+      "completeness": "complete",
+      "active_ids": [],
+      "active_count": 0
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-25",
+      "date_until": "2026-11-26",
+      "completeness": "partial",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-26",
+      "date_until": "2026-11-27",
+      "completeness": "unknown",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-MB21",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-A-1107-1",
+        "L-A-1107-2",
+        "L-A-1107-3",
+        "L-A-1109-1",
+        "L-A-1109-2",
+        "L-A-1110-1",
+        "L-A-1110-2",
+        "L-A-1111-1",
+        "L-A-1111-2",
+        "L-A-1112-1",
+        "L-A-1112-2",
+        "L-A-1113-1",
+        "L-A-1113-2",
+        "L-A-1116-1",
+        "L-A-1116-2",
+        "L-A-1117-1",
+        "L-A-1117-2",
+        "L-A-1118-1",
+        "L-A-1118-2",
+        "L-A-1119-1",
+        "L-A-1119-2",
+        "L-A-1120-1",
+        "L-A-1120-2",
+        "L-A-1123-1",
+        "L-A-1123-2",
+        "L-A-1124-1",
+        "L-A-1124-2",
+        "L-A-1125-1",
+        "L-A-1125-2",
+        "L-A-1126-1",
+        "L-A-1126-2",
+        "L-A-1127-1",
+        "L-A-1128-1",
+        "L-A-1130-1",
+        "L-A-1130-2",
+        "L-A-1201-1",
+        "L-A-1201-2",
+        "L-A-1202-1",
+        "L-A-1202-2",
+        "L-A-1203-1",
+        "L-A-1203-2",
+        "L-A-1204-1",
+        "L-A-1204-2",
+        "L-A-1206-1",
+        "L-S2-23"
+      ],
+      "active_count": 45
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-EK11",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-07",
+      "date_until": "2026-12-07",
+      "completeness": "complete",
+      "active_ids": [
+        "L-B-1107-1",
+        "L-B-1107-2",
+        "L-B-1107-3",
+        "L-B-1109-1",
+        "L-B-1109-2",
+        "L-B-1110-1",
+        "L-B-1110-2",
+        "L-B-1111-1",
+        "L-B-1111-2",
+        "L-B-1112-1",
+        "L-B-1112-2",
+        "L-B-1113-1",
+        "L-B-1113-2",
+        "L-B-1116-1",
+        "L-B-1116-2",
+        "L-B-1117-1",
+        "L-B-1117-2",
+        "L-B-1118-1",
+        "L-B-1118-2",
+        "L-B-1119-1",
+        "L-B-1119-2",
+        "L-B-1120-1",
+        "L-B-1120-2",
+        "L-B-1123-1",
+        "L-B-1123-2",
+        "L-B-1124-1",
+        "L-B-1124-2",
+        "L-B-1125-1",
+        "L-B-1125-2",
+        "L-B-1126-1",
+        "L-B-1126-2",
+        "L-B-1127-1",
+        "L-B-1127-2",
+        "L-B-1130-1",
+        "L-B-1130-2",
+        "L-B-1201-1",
+        "L-B-1201-2",
+        "L-B-1202-1",
+        "L-B-1202-2",
+        "L-B-1203-1",
+        "L-B-1203-2",
+        "L-B-1204-1",
+        "L-B-1204-2",
+        "L-B-1206-1"
+      ],
+      "active_count": 44
+    }
+  ],
+  "content_sha256": "8e02a129d629ed0b22a3aefdb7dc2b5dc8d8847271fbf0b71e094385880de79b",
+  "academic_coverage": [
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "enrollment",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-A-DATA",
+        "EN-A-ECON",
+        "EN-A-LANG",
+        "EN-A-LAW",
+        "EN-A-NEG"
+      ],
+      "record_count": 5
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "final_result",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-A-DATA",
+        "FR-A-ECON",
+        "FR-A-LANG",
+        "FR-A-NEG"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "requirement",
+      "completeness": "complete",
+      "record_ids": [
+        "REQ-A-APPENDIX",
+        "REQ-A-CALC",
+        "REQ-A-FAIL"
+      ],
+      "record_count": 3
+    },
+    {
+      "student_id": "SP-A",
+      "period_id": "P-2026-autumn",
+      "entity_type": "assessment",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-A-DATA",
+        "AS-A-LANG",
+        "AS-A-LAW",
+        "AS-A-PAST"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "enrollment",
+      "completeness": "complete",
+      "record_ids": [
+        "EN-B-ECON",
+        "EN-B-HIST",
+        "EN-B-MATH",
+        "EN-B-MICRO"
+      ],
+      "record_count": 4
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "final_result",
+      "completeness": "complete",
+      "record_ids": [
+        "FR-B-HIST",
+        "FR-B-MATH"
+      ],
+      "record_count": 2
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "requirement",
+      "completeness": "complete",
+      "record_ids": [],
+      "record_count": 0
+    },
+    {
+      "student_id": "SP-B",
+      "period_id": "P-2026-autumn",
+      "entity_type": "assessment",
+      "completeness": "complete",
+      "record_ids": [
+        "AS-B-MICRO",
+        "AS-B-PAST"
+      ],
+      "record_count": 2
+    }
+  ]
+}

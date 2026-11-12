@@ -1,0 +1,23 @@
+{
+  "../static/fonts/GolosText-Regular.woff2": {
+    "file": "assets/GolosText-Regular-BKSWOpAy.woff2",
+    "src": "../static/fonts/GolosText-Regular.woff2"
+  },
+  "../static/fonts/GolosText-SemiBold.woff2": {
+    "file": "assets/GolosText-SemiBold-DGQ0aza9.woff2",
+    "src": "../static/fonts/GolosText-SemiBold.woff2"
+  },
+  "src/main.tsx": {
+    "file": "assets/main-DSpznOW8.js",
+    "name": "main",
+    "src": "src/main.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/main-BYK_9ng1.css"
+    ],
+    "assets": [
+      "assets/GolosText-Regular-BKSWOpAy.woff2",
+      "assets/GolosText-SemiBold-DGQ0aza9.woff2"
+    ]
+  }
+}

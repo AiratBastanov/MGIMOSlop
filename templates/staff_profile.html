@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Профиль сотрудника · Студенческий кабинет{% endblock %}
+{% block content %}
+<div class="profile-layout"><header class="profile-identity"><p class="eyebrow">Профиль {% if role == 'teacher' %}преподавателя{% else %}сотрудника{% endif %}</p>{% include 'partials/person.html' with avatar_only=True %}<h1>{{ name }}</h1><a class="text-link" href="/profile/edit/">Фото и уведомления</a></header><section class="profile-education"><div class="section-rule"><h2>Рабочая область</h2></div>{% if role == 'teacher' %}<p>Материалы студентов по действующим назначениям дисциплин и групп.</p><a class="text-link" href="/teacher/">Материалы и правила подачи</a>{% else %}<dl class="profile-details"><div><dt>Факультет</dt><dd>{{ faculty }}</dd></div><div><dt>Работа в кабинете</dt><dd>Обработка заявок и публикация ресурсов групп</dd></div></dl><p><a class="text-link" href="/staff/">Очередь заявок</a></p><p><a class="text-link" href="/staff/resources/">Ресурсы групп</a></p>{% endif %}</section></div>
+{% endblock %}

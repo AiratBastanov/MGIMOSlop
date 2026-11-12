@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Настройки профиля · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container settings-container">
+<header class="planner-heading"><div><p class="eyebrow">Личные настройки</p><h1>Настройки профиля</h1></div><a href="/profile/" class="text-link">Мой профиль</a></header>
+{% if saved %}<p role="status" class="state-success">Настройки сохранены.</p>{% endif %}
+{% if request.GET.verified %}<p role="status" class="state-success">Адрес подтверждён.</p>{% endif %}
+{% if request.GET.queued %}<p role="status" class="state-success">Письмо подтверждения в очереди.</p>{% endif %}
+<form id="profile-settings" method="post" enctype="multipart/form-data" class="settings-form" data-private-form>{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}">{{ form.version }}
+{% if form.errors %}<div class="error-summary" tabindex="-1" data-focus-errors role="alert"><h2>Проверьте настройки</h2>{{ form.non_field_errors }}<p>Ошибки указаны рядом с полями. Остальные значения сохранены в форме.</p></div>{% endif %}
+<fieldset><legend>Фото и видимость</legend>{% include 'partials/person.html' %}
+<div class="settings-row"><div class="field">{{ form.photo.label_tag }}{{ form.photo }}{{ form.photo.errors }}<p class="support">JPEG, PNG или WebP до 2 МБ. Сохраняется уменьшенная копия без метаданных.</p></div><div class="field">{{ form.photo_audience.label_tag }}{{ form.photo_audience }}{{ form.photo_audience.errors }}</div></div>
+<label class="check-option" for="{{ form.remove_photo.id_for_label }}">{{ form.remove_photo }}Удалить текущее фото</label>{{ form.remove_photo.errors }}
+<p class="support">«Моя группа» — одногруппники и назначенные преподаватели. Фото преподавателя доступно его назначенным студентам.</p>
+</fieldset>
+<fieldset><legend>Контактная почта</legend><div class="field">{{ form.contact_email.label_tag }}{{ form.contact_email }}{{ form.contact_email.errors }}</div>
+{% if preferences.contact_email %}<div class="email-state">{% if preferences.email_verified_at %}Адрес подтверждён{% else %}Адрес ожидает подтверждения{% endif %}: {{ preferences.contact_email }}{% if not preferences.email_verified_at %}<button type="submit" form="resend-email" class="button-secondary">Повторить письмо подтверждения</button>{% endif %}</div>{% endif %}
+<p class="support">После смены адреса сохраните настройки и подтвердите новый адрес. Локальное демо сохраняет письма для просмотра; внешняя доставка не подключена.</p>
+</fieldset>
+{% if role == 'student' %}<fieldset id="directory-settings" data-page-section="Контакты для группы"><legend>Контакты для группы</legend>
+<p class="support">Публикация добровольна. Контакты увидят только ваши текущие одногруппники.</p>
+<label class="check-option">{{ form.share_email }}Показывать группе подтверждённую контактную почту</label>{{ form.share_email.errors }}
+<p class="support">Для этого сначала подтвердите адрес в разделе «Контактная почта». При смене адреса публикация отключится.</p>
+<div class="field">{{ form.directory_phone.label_tag }}{{ form.directory_phone }}{{ form.directory_phone.errors }}</div>
+<label class="check-option">{{ form.share_phone }}Показывать группе мой телефон</label>{{ form.share_phone.errors }}
+</fieldset>{% endif %}
+<fieldset><legend>Каналы уведомлений</legend>
+<label class="check-option" for="{{ form.email_enabled.id_for_label }}">{{ form.email_enabled }}Получать новые уведомления по почте</label>{{ form.email_enabled.errors }}
+<div class="settings-row"><div><label class="check-option" for="{{ form.email_requests.id_for_label }}">{{ form.email_requests }}Статусы заявок</label>{{ form.email_requests.errors }}<label class="check-option" for="{{ form.email_academic.id_for_label }}">{{ form.email_academic }}Учёба и расписание</label>{{ form.email_academic.errors }}<label class="check-option" for="{{ form.email_announcements.id_for_label }}">{{ form.email_announcements }}Объявления</label>{{ form.email_announcements.errors }}</div><p class="support">Прочитанное переходит в историю через 24 часа; все входящие — не позднее 7 суток. История видна ещё 30 дней. Письма содержат ссылку на кабинет.</p></div>
+</fieldset>
+<div class="settings-save"><button type="submit">Сохранить настройки</button><p class="support">Учебные сведения и права меняются только через проверенный источник.</p></div>
+</form>
+{% if preferences.contact_email and not preferences.email_verified_at %}<form id="resend-email" method="post" action="/profile/verify-email/resend/">{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}"></form>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+# Optional document verification only; installed separately, not imported by the application.
+pypdf==7.0.0
+pypdfium2==5.15.1
+Pillow==13.0.0

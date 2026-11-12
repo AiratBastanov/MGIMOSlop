@@ -1,0 +1,1 @@
+{% if viewed_events %}{% csrf_token %}{{ viewed_events|json_script:'viewed-events-data' }}<div data-component="viewed-events" data-props="viewed-events-data"></div>{% endif %}

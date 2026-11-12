@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "subset": "s1_schedule_v1",
+  "dataset_id": "s1-schedule",
+  "dataset_revision": 2,
+  "parent_revision": 1,
+  "provenance": "synthetic",
+  "prepared_by": "Codex TASK02",
+  "preparation_reason": "Демонстрационный перенос на 10:40 и смена аудитории на 318",
+  "source_as_of": "2026-11-06T18:30:05.634810+00:00",
+  "valid_from": "2026-11-05T00:00:00+03:00",
+  "valid_until": "2026-12-07T00:00:00+03:00",
+  "operations": [
+    {
+      "operation": "change",
+      "entity_type": "lesson",
+      "expected_record_revision": 1,
+      "event_id": "EV-S1-MOVE",
+      "change_type": "move",
+      "before": {
+        "source_id": "L-S1-23",
+        "record_revision": 1,
+        "source_updated_at": "2026-11-06T18:30:05.634706+00:00",
+        "group_id": "G-S1",
+        "course_id": "C-S1",
+        "period_id": "P-2026-autumn",
+        "instructor_id": "I-S1",
+        "instructor_status": "provided",
+        "starts_at": "2026-11-23T09:00:00+03:00",
+        "ends_at": "2026-11-23T10:30:00+03:00",
+        "status": "active",
+        "room": "204",
+        "location_status": "provided"
+      },
+      "after": {
+        "source_id": "L-S1-23",
+        "record_revision": 2,
+        "source_updated_at": "2026-11-06T18:30:05.634810+00:00",
+        "group_id": "G-S1",
+        "course_id": "C-S1",
+        "period_id": "P-2026-autumn",
+        "instructor_id": "I-S1",
+        "instructor_status": "provided",
+        "starts_at": "2026-11-23T10:40:00+03:00",
+        "ends_at": "2026-11-23T12:10:00+03:00",
+        "status": "active",
+        "room": "318",
+        "location_status": "provided"
+      },
+      "reason": "Учебный пример переноса; все сведения вымышлены"
+    }
+  ],
+  "coverage": [
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-23",
+      "date_until": "2026-11-24",
+      "completeness": "complete",
+      "active_ids": [
+        "L-S1-23"
+      ],
+      "active_count": 1
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-24",
+      "date_until": "2026-11-25",
+      "completeness": "complete",
+      "active_ids": [],
+      "active_count": 0
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-25",
+      "date_until": "2026-11-26",
+      "completeness": "partial",
+      "active_ids": null,
+      "active_count": null
+    },
+    {
+      "entity_type": "lesson",
+      "group_id": "G-S1",
+      "period_id": "P-2026-autumn",
+      "date_from": "2026-11-26",
+      "date_until": "2026-11-27",
+      "completeness": "unknown",
+      "active_ids": null,
+      "active_count": null
+    }
+  ],
+  "content_sha256": "c377ebccdb2c4bcf893aa4e3de5e27e0ad45afb4abbf0e08fdd2a52bc24cda77"
+}

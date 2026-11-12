@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}Материалы и задания · Учёба{% endblock %}{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}<div class="content-container academic-container role-workspace">{% include 'partials/study_header.html' %}{% include 'partials/study_tabs.html' with view='materials' %}{% include 'workspaces/material_tabs.html' %}{% include 'workspaces/publication_rows.html' %}{% include 'partials/pagination.html' %}</div>{% endblock %}

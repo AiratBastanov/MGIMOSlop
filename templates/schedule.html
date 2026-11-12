@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Расписание · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container academic-container">
+{{ component_data|json_script:'component-props' }}
+<div data-component="schedule" data-props="component-props"><p role="status">Загружаем расписание…</p></div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% if page_notice %}<p role="status" class="form-note">{{ page_notice }}</p>{% endif %}
+<div class="notification-layout"><section class="notification-feed" aria-label="Уведомления вашей аудитории">
+{% for item in notifications %}
+<article class="notification-item {% if not item.is_read %}is-unread{% endif %}" id="notification-{{ item.id }}">
+  <div class="notification-kind"><p class="eyebrow">{{ item.title }}</p><time class="thread-time" datetime="{{ item.published_at|date:'c' }}">{{ item.published_at|date:'d.m · H:i' }}</time>{% if not item.is_read and item.can_read %}<span class="unread-label">Новое</span>{% endif %}</div>
+  {% if item.kind == 'schedule' or item.kind == 'assessment' %}
+    <h2>{{ item.current.course_name }}</h2>
+    {% include 'partials/compact_change.html' %}
+  {% elif item.kind == 'academic' or item.kind == 'result' or item.kind == 'requirement' or item.kind == 'enrollment' %}
+    <h2>{{ item.current.course_name }}</h2>
+    {% if item.before %}{% include 'partials/compact_change.html' %}{% elif item.kind == 'requirement' %}<p class="event-context">{{ item.after.status_label }}</p>{% with requirement=item.after %}{% include 'partials/requirement.html' %}{% endwith %}{% elif item.summary %}<p class="academic-event-summary">{{ item.summary }}</p>{% else %}{% include 'partials/compact_change.html' %}{% endif %}
+  {% elif item.kind == 'request' %}
+    <h2>{{ item.type_label }} · {{ item.reference }}</h2>
+    <p class="academic-event-summary">{% if item.is_historical %}На момент события: {% endif %}<span class="request-status status-{{ item.event_status }}">{{ item.event_status_label }}</span></p>
+    {% if item.explanation %}<p class="requirement-heading">{% if item.event_status == 'rejected' %}Причина отказа{% else %}Результат обработки{% endif %}</p><div class="prose">{{ item.explanation|linebreaks }}</div>{% endif %}
+    {% if item.ready_notice %}<p class="data-state">{{ item.ready_notice }}</p>{% endif %}
+    {% if item.is_historical %}<p class="historical-note">Историческое событие. Сейчас заявка: {{ item.current.status_label }}.</p>{% endif %}
+  {% else %}
+    {% if item.body %}<p class="announcement-excerpt">{{ item.body|truncatechars:180 }}</p>{% endif %}
+    {% if item.deadline_label %}<p class="deadline-copy">{{ item.deadline_label }}{% if item.due_at %} · {{ item.due_exact }}{% endif %}</p>{% endif %}
+  {% endif %}
+  {% if item.is_historical and item.kind != 'request' %}<p class="historical-note">Историческое событие. После этой публикации сведения изменились; текущая версия — по ссылке ниже.</p>{% endif %}
+  {% if item.kind == 'result' and item.current.has_open %}<div class="event-current-requirements"><p class="requirement-heading">Сейчас по дисциплине есть открытые требования</p>{% for requirement in item.current.open_requirements %}{% include 'partials/requirement.html' %}{% endfor %}</div>{% endif %}
+  {% if item.status_label and item.status_label != 'Опубликовано' %}<p class="historical-note">{{ item.status_label }}</p>{% endif %}
+  {% if item.source_message %}<p class="data-state">{{ item.source_message }}</p>{% endif %}
+  {% if item.warning %}<p class="data-state">{{ item.warning }}</p>{% endif %}
+  <div class="notification-actions"><a class="text-link" href="{{ item.target_url }}">{{ item.action_label }}</a>{% if item.is_read %}<span class="read-status">Прочитано</span>{% elif item.can_read %}<form method="post" action="{% url 'notification_read' item.id %}">{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}"><button class="button-quiet read-button" type="submit">Отметить прочитанным</button></form>{% endif %}</div>
+  <details class="event-details"><summary>История и подробности</summary><div class="disclosure-body">
+    <p class="publication">Опубликовано <time datetime="{{ item.published_at|date:'c' }}">{{ item.published_at|date:'d.m.Y · H:i' }}</time> МСК</p>
+    {% if item.kind == 'schedule' or item.kind == 'assessment' %}{% include 'partials/change_pair.html' %}{% endif %}
+    {% include 'partials/academic_payload.html' %}
+    {% if item.body %}<div class="prose">{{ item.body|linebreaks }}</div>{% endif %}
+    {% if item.reason %}<p class="support">Основание: {{ item.reason }}</p>{% endif %}
+    {% if item.history_url %}<a class="text-link" href="{{ item.history_url }}">Полная история объекта</a>{% endif %}
+  </div></details>
+</article>
+{% empty %}<div class="empty-state"><p class="eyebrow">Ваша лента</p><h2>{% if archive_mode %}В истории пока нет уведомлений{% else %}Актуальных уведомлений пока нет{% endif %}</h2>{% if role == "student" %}<a class="text-link" href="/study/">Результаты и открытые требования</a>{% elif role == "teacher" %}<a href="/teacher/">Обзор преподавателя</a>{% else %}<a href="/staff/">Обзор службы</a>{% endif %}</div>{% endfor %}
+</section></div>
+{% include "partials/pagination.html" %}
+<p class="below-note">{% if inbox_mode == 'history' %}В истории показаны прежние события; текущий статус смотрите в самом объекте.{% else %}Одна строка — последнее доступное обновление объекта.{% endif %} Прочтение не меняет статус самого объекта.</p>
+{% if not notification_only_requests %}{% include 'partials/source_info.html' %}{% endif %}

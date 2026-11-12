@@ -1,0 +1,48 @@
+{% load static frontend %}<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Студенческий кабинет{% endblock %}</title>
+<link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+<script src="{% static 'app.js' %}" defer></script>
+{% frontend_assets %}
+</head>
+<body{% if marker %} data-private="true" data-context="{{ marker }}" data-expires="{{ expires_at }}" data-role="{{ role }}"{% endif %}>
+<a class="skip-link" href="#main">К содержимому</a>
+<header class="site-header"><a class="wordmark" href="/"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M11 24 21 8"/></svg></span><span class="brand-name"><span class="brand-full">{% if role == "teacher" %}Кабинет преподавателя{% elif role == "staff" %}Кабинет службы{% else %}Студенческий кабинет{% endif %}</span><span class="brand-mobile">Кабинет</span><span class="brand-caption">{% if role == "teacher" %}Кабинет преподавателя{% elif role == "staff" %}Служба факультета{% else %}Личный учебный план{% endif %}</span></span></a><span class="concept">Конкурсный концепт</span></header>
+{% if marker %}
+<section id="privacy-state" class="privacy-state" data-state="pending" aria-labelledby="privacy-title" tabindex="-1">
+<div class="privacy-card">
+<p class="eyebrow">Защита личных данных</p><h1 id="privacy-title">Проверяем сеанс</h1>
+<p id="privacy-message" role="status">Содержимое скрыто до проверки доступа. Если проверка не завершится, включите JavaScript и обновите страницу.</p>
+<div class="actions"><button type="button" id="privacy-retry" hidden>Проверить снова</button><a class="text-link" id="privacy-fresh" href="/" hidden>Открыть кабинет</a></div>
+<noscript><p>Для безопасного просмотра требуется JavaScript. Включите его в настройках браузера и обновите страницу.</p></noscript>
+</div></section>
+<div id="private-content" class="private-concealed" inert aria-hidden="true">
+<div class="account-bar">
+<nav class="desktop-nav" aria-label="Основная навигация">
+{% if role == 'student' %}
+<a href="/today/" {% if section == 'today' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg><span>Сегодня</span></a>
+<a href="/schedule/" {% if section == 'schedule' or section == 'lesson' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-12 4h3m2 0h3m-8 3h3"/></svg><span>Расписание</span></a>
+<a href="/study/" {% if section == 'study' or section == 'enrollment' or section == 'assessment' or section == 'materials' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3V4Z"/></svg><span>Учёба</span></a>
+<a href="/requests/" {% if section == 'requests' or section == 'request_new' or section == 'request_detail' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 4h6"/></svg><span>Заявки</span></a>
+<a href="/notifications/" {% if section == 'notifications' or section == 'announcement' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14l-2-4V9a5 5 0 0 0-10 0v4l-2 4Zm5 3h4"/></svg><span>Уведомления</span><span class="count" {% if not unread %}hidden{% endif %} aria-label="непрочитанных: {{ unread }}">{{ unread }}</span></a>
+<a href="/profile/group/" {% if section == 'group' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-16a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v2"/></svg><span>Моя группа</span></a>
+{% else %}{% include 'workspaces/role_nav.html' %}{% endif %}
+</nav>
+<div class="account-actions"><details class="profile-menu"><summary aria-label="Открыть меню профиля">{% include 'partials/person.html' with avatar_only=True %}<span>Профиль</span></summary><div class="profile-menu-panel"><p class="menu-name">{{ name }}</p><a href="/profile/">Мой профиль</a><a href="/profile/edit/">Настройки профиля</a>{% if role == 'student' %}<a href="/profile/group/">Моя группа</a>{% endif %}<p class="support">Конкурсный концепт. Вымышленные данные.</p><form method="post" action="/logout/" data-logout>{% csrf_token %}<input type="hidden" name="context" value="{{ marker }}"><button class="button-quiet logout" type="submit">Выйти из кабинета</button></form></div></details></div>
+</div>
+{% endif %}
+<main id="main" class="{% block main_class %}workspace{% endblock %}" tabindex="-1">{% block content %}{% endblock %}</main>
+{% if marker %}
+<div data-component="page-tools"></div>
+{% if role == 'student' %}<nav class="bottom-nav" aria-label="Навигация на телефоне">
+<a href="/today/" {% if section == 'today' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg><span>Сегодня</span></a>
+<a href="/schedule/" {% if section == 'schedule' or section == 'lesson' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-12 4h3m2 0h3m-8 3h3"/></svg><span>Расписание</span></a>
+<a href="/study/" {% if section == 'study' or section == 'enrollment' or section == 'assessment' or section == 'materials' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3V4Z"/></svg><span>Учёба</span></a>
+<a href="/requests/" {% if section == 'requests' or section == 'request_new' or section == 'request_detail' %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 4h6"/></svg><span>Заявки</span></a>
+<a href="/notifications/" {% if section == 'notifications' or section == 'announcement' %}aria-current="page"{% endif %}><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14l-2-4V9a5 5 0 0 0-10 0v4l-2 4Zm5 3h4"/></svg><span class="mobile-count" {% if not unread %}hidden{% endif %} aria-label="непрочитанных: {{ unread }}">{{ unread }}</span></span><span>Входящие</span></a>
+</nav>{% else %}<nav class="bottom-nav role-bottom-nav" aria-label="Навигация на телефоне">{% include 'workspaces/role_nav.html' %}</nav>{% endif %}
+</div>{% endif %}
+<footer class="site-footer"><span>Только вымышленные данные</span><span>Учебный прототип · 2026</span></footer>
+</body></html>

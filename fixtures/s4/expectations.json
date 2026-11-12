@@ -1,0 +1,67 @@
+{
+  "basis": "Независимые семантические ожидания TASK05, указаны вручную; не вычислены проверяемыми selectors. Developer validation, не human approval.",
+  "prepared_at": "2026-11-07T16:44:24.326203+00:00",
+  "base_revision": 7,
+  "accepted_revision": 9,
+  "r8": {
+    "SP-A": {
+      "X": 3,
+      "Y": 1,
+      "Z": 1,
+      "N": 5
+    },
+    "SP-B": {
+      "X": 2,
+      "Y": 0,
+      "Z": 2,
+      "N": 4
+    }
+  },
+  "correction_clean_from_r8": {
+    "SP-A": {
+      "X": 4,
+      "Y": 0,
+      "Z": 1,
+      "N": 5
+    }
+  },
+  "r9": {
+    "SP-A": {
+      "X": 3,
+      "Y": 1,
+      "Z": 1,
+      "N": 5
+    },
+    "SP-B": {
+      "X": 2,
+      "Y": 0,
+      "Z": 2,
+      "N": 4
+    }
+  },
+  "r9_open_requirements": [
+    "REQ-A-APPENDIX",
+    "REQ-A-CALC"
+  ],
+  "r9_closed_requirements": [
+    "REQ-A-FAIL"
+  ],
+  "genuinely_unentered": [
+    "EN-A-LAW",
+    "EN-B-MICRO",
+    "EN-B-ECON"
+  ],
+  "next_A_assessment_after_preparation": {
+    "source_id": "AS-A-LAW",
+    "starts_at": "2026-11-09T15:30:00+03:00",
+    "room": "312"
+  },
+  "cancelled_assessment": "AS-A-LANG",
+  "unknown_optional_fields": "AS-A-DATA",
+  "complete_zero": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0,
+    "N": 0
+  }
+}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Новая заявка · Студенческий кабинет{% endblock %}
+{% block content %}
+<div class="request-new-workspace">
+<a class="text-link back-link" href="/requests/">Мои заявки</a>
+<header class="request-new-heading"><p class="eyebrow">Обращение в деканат</p><h1>Новая заявка</h1></header>
+{{ component_data|json_script:'component-props' }}
+<div data-component="request" data-props="component-props"><p role="status">Загружаем форму…</p></div>
+</div>
+{% endblock %}

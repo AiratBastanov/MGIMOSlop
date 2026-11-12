@@ -1,0 +1,4 @@
+<article class="lesson-row{% if lesson.status == 'cancelled' %} is-cancelled{% endif %}">
+<div class="time-column"><time datetime="{{ lesson.starts_at|date:'c' }}">{{ lesson.starts_at|date:'H:i' }}</time><span>{{ lesson.ends_at|date:'H:i' }}</span></div>
+<div class="lesson-row-body"><h3><a href="{{ lesson.url }}">{{ lesson.course_name }}</a></h3><p class="lesson-meta"><span>{{ lesson.room_label }}</span><span>{% if lesson.instructor_person %}{% include 'partials/person.html' with person=lesson.instructor_person %}{% else %}{{ lesson.instructor_name }}{% endif %}</span></p>{% if lesson.status == 'cancelled' %}<p class="change-tag">Занятие отменено</p>{% endif %}</div>
+</article>

@@ -1,0 +1,3 @@
+{% if error_summary %}<section class="error-summary" id="error-summary" tabindex="-1" aria-labelledby="error-summary-title" data-focus-errors>
+<h2 id="error-summary-title">Проверьте введённые данные</h2><ul>{% for error in error_summary %}<li><a href="#{{ error.target }}">{{ error.message }}</a></li>{% endfor %}</ul>
+</section>{% endif %}
