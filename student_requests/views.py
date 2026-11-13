@@ -78,6 +78,9 @@ def request_list(request):
 def request_new(request):
     error = None
     request_type = request.POST.get('request_type', REQUEST_TYPE) if request.method == 'POST' else request.GET.get('type', REQUEST_TYPE)
+    if request.method == 'GET' and request_type == 'exchange_plan_review':
+        if current_actor(request).role != 'student': raise AccessDenied('forbidden',403)
+        return redirect('/journeys/?template=exchange')
     if request.method == 'GET' and (set(request.GET) - {'type'} or len(request.GET.getlist('type')) > 1 or request_type not in REQUEST_TYPES):
         if current_actor(request).role != 'student':
             raise AccessDenied('forbidden', 403)
@@ -95,7 +98,7 @@ def request_new(request):
     selected = request_type if request_type in REQUEST_TYPES else REQUEST_TYPE
     form = RequestForm(request.POST if request.method == 'POST' else None, request_type=selected)
     data.update(form=form, request_type=selected, type_label=REQUEST_TYPES[selected],
-                request_catalog=[{'value': key, 'label': label} for key, label in REQUEST_TYPES.items()])
+                request_catalog=[{'value': key, 'label': label} for key, label in REQUEST_TYPES.items() if key in PAYLOAD_FIELDS])
     if request.method == 'POST':
         data['submission_token'] = request.POST.get('submission_token', '')
     if error:

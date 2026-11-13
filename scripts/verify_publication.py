@@ -22,7 +22,7 @@ PATTERNS = [rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',
             rb'AKIA[0-9A-Z]{16}']
 READER_DOCS = ['README.md', 'AGENTS.md', 'deploy/README.md',
                *['docs/' + name + '.md' for name in ('SETUP', 'DEMO', 'ARCHITECTURE', 'AI_ASSISTANT',
-                 'DEVELOPMENT_PROCESS', 'VALIDATION', 'RIGHTS', 'THIRD_PARTY_NOTICES')], 'docs/creation-process.html']
+                 'DEVELOPMENT_PROCESS', 'VALIDATION', 'RESEARCH_DECISIONS', 'RIGHTS', 'THIRD_PARTY_NOTICES')], 'docs/creation-process.html']
 
 
 def git(*args):
@@ -91,7 +91,7 @@ def main():
     for pattern in spec['include']:
         if not any(p.is_file() for p in ROOT.glob(pattern)):
             errors.append('missing include: ' + pattern)
-    for app in ('accounts', 'studies', 'student_requests', 'notifications', 'materials', 'profiles', 'workspaces', 'data_import'):
+    for app in ('accounts', 'studies', 'student_requests', 'notifications', 'materials', 'profiles', 'workspaces', 'data_import', 'journeys', 'consultations'):
         if not list((ROOT / app / 'migrations').glob('0*.py')):
             errors.append('missing migrations: ' + app)
     assets = json.loads((ROOT / 'static/frontend/manifest.json').read_text(encoding='utf-8'))

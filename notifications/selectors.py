@@ -41,7 +41,7 @@ def presentation_events(actor, *, now, mode='inbox'):
 
 def thread_events(query, actor):
     receipt = NotificationReceipt.objects.filter(user_id=actor.user_id, notification_id=OuterRef('pk'))
-    targets = [('application_event__teaching_revision__publication_id','teaching'), ('application_event__submission__material_id','submission'), ('application_event__review__revision__material_id','review'), ('application_event__clarification_message__clarification__request_id','clarification'), ('application_event__notice_revision__notice_id','notice'), ('application_event__resource_revision__resource_id','resource'), ('request_event__request_id', 'request'), ('schedule_change__lesson_id', 'lesson'),
+    targets = [('application_event__consultation_event__booking_id','consultation-booking'), ('application_event__consultation_event__slot_id','consultation-slot'), ('application_event__teaching_revision__publication_id','teaching'), ('application_event__submission__material_id','submission'), ('application_event__review__revision__material_id','review'), ('application_event__clarification_message__clarification__request_id','clarification'), ('application_event__notice_revision__notice_id','notice'), ('application_event__resource_revision__resource_id','resource'), ('request_event__request_id', 'request'), ('schedule_change__lesson_id', 'lesson'),
         ('announcement_change__announcement_id', 'announcement'), ('final_result_change__result__enrollment_id', 'result'),
         ('requirement_change__requirement_id', 'requirement'), ('assessment_change__assessment_id', 'assessment')]
     key = Case(*[When(**{field + '__isnull': False}, then=Concat(Value(prefix+':'), Cast(field, CharField())))
@@ -67,7 +67,7 @@ def inbox_page(actor, *, now, kind='all', archive=False, page_number=1, notifica
     if kind == 'requests':
         query = query.filter(Q(request_event__isnull=False)|Q(application_event__kind='clarification'))
     elif kind == 'schedule':
-        query = query.filter(schedule_change__isnull=False)
+        query = query.filter(Q(schedule_change__isnull=False)|Q(application_event__kind='consultation'))
     elif kind == 'academic':
         query = query.filter(Q(final_result_change__isnull=False)|Q(requirement_change__isnull=False)|Q(assessment_change__isnull=False)|Q(application_event__kind__in=['teaching','submission','review']))
     elif kind in ('announcements', 'deadlines'):

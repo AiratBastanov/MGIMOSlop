@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Консультации · Цифровой деканат{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container academic-container consultation-container">
+  {% csrf_token %}
+  {{ consultation_data|json_script:'consultation-data' }}
+  <div data-component="consultations" data-props="consultation-data"></div>
+  {% include 'workspaces/viewed.html' %}
+</div>
+{% endblock %}

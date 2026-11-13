@@ -47,6 +47,12 @@ def safe_next(value, role):
     if parsed.scheme or parsed.netloc or parsed.fragment or any(ord(char)<32 for char in value):
         return fallback
     path = parsed.path
+    if path=='/search/' and not parsed.query:
+        return value
+    if role=='student' and re.fullmatch(r'/journeys/(?:[1-9][0-9]*/)?',path) and set(parse_qs(parsed.query))<={'template'}:
+        return value
+    if re.fullmatch(r'/consultations/(?:bookings/[1-9][0-9]*/)?',path) and set(parse_qs(parsed.query))<={'assignment','course','request','slot','page','booking_page','rebook'}:
+        return value
     if path=='/notifications/':
         try:validate_notification_params(parse_qs(parsed.query,keep_blank_values=True,strict_parsing=True))
         except (ValueError,TypeError):return fallback

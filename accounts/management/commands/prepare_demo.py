@@ -26,7 +26,7 @@ LOCK = 749240117
 SOURCES = ('s1/r1.json', 's1/r2.json', 's2/r3.json', 's2/r4.json',
            's3/r5.json', 's3/r6.json', 's3/r7.json', 's4/r8.json', 's4/r9.json',
            'demo/directory.json', 'task14/r11.json')
-DOMAIN_APPS = ('accounts', 'data_import', 'studies', 'student_requests', 'notifications', 'materials', 'profiles', 'workspaces')
+DOMAIN_APPS = ('accounts', 'data_import', 'studies', 'student_requests', 'notifications', 'materials', 'profiles', 'workspaces', 'journeys', 'consultations')
 
 
 class Command(BaseCommand):
@@ -74,6 +74,7 @@ class Command(BaseCommand):
             check_integrity(head)
             if head.current_revision < 11:
                 raise CommandError('Нарушена целостность композиции. Автоматическое восстановление запрещено.')
+            call_command('prepare_connected_journeys',database=connection.settings_dict['NAME'],stdout=self.stdout)
             self.stdout.write('Демонстрация уже подготовлена. Данные, пароли и пользовательские действия сохранены.')
             return
 
@@ -103,6 +104,7 @@ class Command(BaseCommand):
         capture = protect_directory(settings.BASE_DIR / '.local/demo-mail') / 'email'
         provision_contacts(operator=EDITION, apply=True, capture_dir=capture)
         result = provision_workspaces(credentials, operator=EDITION, edition=EDITION)
+        call_command('prepare_connected_journeys',database=connection.settings_dict['NAME'],stdout=self.stdout)
         with transaction.atomic():
             guard = lock_guard()
             AccessAudit.objects.create(action='demo_composition_complete', operator=EDITION, revision=guard.revision)

@@ -7,6 +7,9 @@ from notifications import views as notification_views
 from accounts.support import support
 
 urlpatterns = [
+    path('',include('journeys.urls')),
+    path('',include('consultations.urls')),
+    path('',include('discovery.urls')),
     path('',include('workspaces.urls')),
     path('support/',support,name='support'),
     path('notifications/read-all/',notification_views.recipient_action,{'action':'read-all'},name='notification_read_all'),

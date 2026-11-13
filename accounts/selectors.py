@@ -511,6 +511,20 @@ def private_snapshot(request, *, section='profile', profile_id=None, notificatio
             if section=='notifications':
                 from workspaces.events import inbox
                 data.update(inbox(actor,now,notification_kind,notification_page_number,notification_id,inbox_mode or ('history' if archive else 'inbox')))
+        if actor.role=='student' and section in ('today','schedule'):
+            from consultations.selectors import calendar_events, student_upcoming
+            from journeys.selectors import journey_scope, summary as journey_summary
+            if section=='today':
+                data['consultations']=student_upcoming(actor,now)
+                next_journey=journey_scope(actor).order_by('-updated_at','-pk').first()
+                data['next_journey']=journey_summary(next_journey) if next_journey else None
+            else:
+                start_date=data['range_start']
+                start_time=moscow(now).replace(year=start_date.year,month=start_date.month,day=start_date.day,hour=0,minute=0,second=0,microsecond=0)
+                appointments=calendar_events(actor,now,start=start_time,end=start_time+timedelta(days=len(data['days'])))
+                for day in data['days']:
+                    day_start=start_time+timedelta(days=(day['date']-start_date).days)
+                    day['consultations']=[event for event in appointments if event['starts_at']<day_start+timedelta(days=1) and event['ends_at']>day_start]
         if extension:
             data.update(extension(actor, now))
     # Новый READ COMMITTED после materialized snapshot. Auth время намеренно свежее.

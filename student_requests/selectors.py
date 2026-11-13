@@ -29,6 +29,17 @@ def request_values(row):
             elif key == 'correction_area':
                 value = CORRECTION_AREAS.get(value, value)
             fields.append({'label': label, 'value': value})
+    if row.request_type == 'exchange_plan_review':
+        snapshot=row.payload_data
+        fields=[{'label':'Программа','value':snapshot['program']},
+            {'label':'Редакция плана','value':snapshot['journey_revision']},
+            {'label':'Основание','value':snapshot['source']}]
+        for item in snapshot['checks']:
+            fields.append({'label':item['label'],'value':'Отмечено студентом' if item['marked_by_student'] else 'Студент ещё не отметил'})
+        for item in snapshot['documents']:
+            fields.append({'label':item['category'],'value':item['need']+' · '+(item['source'] or 'Источник пока не указан')+' · '+('Отмечено студентом как подготовленное' if item['marked_by_student'] else 'Подготовка не отмечена')})
+        fields.extend([{'label':'Вопросы к плану','value':snapshot['questions'] or 'Не добавлены'},
+            {'label':'Явно переданная заметка','value':snapshot['shared_note'] or 'Личная заметка не передана'}])
     return {
         'id': row.pk, 'reference': row.reference, 'type': row.request_type,
         'type_label': REQUEST_TYPES.get(row.request_type, TYPE_LABEL),
@@ -50,6 +61,11 @@ def request_page(actor, request_id=None, status_filter='all', page_number=1, que
         if row is None:
             raise AccessDenied('not_found', 404)
         item = request_values(row)
+        from journeys.models import JourneySubmission
+        link=JourneySubmission.objects.select_related('revision').filter(request=row).first()
+        if link:
+            item['preparation_revision']=link.revision.version
+            if actor.role=='student': item['journey_url']=f'/journeys/{link.journey_id}/'
         if actor.role == 'staff':
             item.update(applicant_name=row.applicant_snapshot.get('name', row.owner.name),
                         applicant_group=row.applicant_snapshot.get('group', row.owner.group.name),

@@ -12,6 +12,11 @@ import {RequestForm} from './RequestForm';
 import {PageTools, RequestView} from './PageTools';
 import {Contact} from './Contact';
 import {WorkspaceEditor,ClarificationBox,ViewedEvents} from './WorkspaceEditor';
+import {Search} from './Search';
+import {Journey} from './Journey';
+import {Consultations} from './Consultations';
+import '../../static/consultations.css';
+import '../../static/journeys.css';
 
 class Boundary extends Component<{children:ReactNode},{failed:boolean}> {
   state={failed:false};
@@ -27,7 +32,7 @@ function mount(){if(!window.deanery.active)return;
     const data=props?JSON.parse(props.textContent||'{}'):null;
     if(data&&data.marker!==window.deanery.marker){window.deanery.discard('Контекст страницы изменился. Обновите кабинет.');return;}
     const root=createRoot(element);roots.set(element,root);
-    root.render(<Boundary>{element.dataset.component==='workspace-editor'?<WorkspaceEditor initial={data}/>:element.dataset.component==='clarification'?<ClarificationBox initial={data}/>:element.dataset.component==='viewed-events'?<ViewedEvents initial={data}/>:element.dataset.component==='contact'?<Contact value={element.dataset.value!} href={element.dataset.href!} label={element.dataset.label!}/>:element.dataset.component==='page-tools'?<PageTools/>:element.dataset.component==='request-view'?<RequestView/>:element.dataset.component==='schedule'?<Schedule initial={data}/>:element.dataset.component==='inbox'?<Inbox initial={data}/>:element.dataset.component==='request'?<RequestForm initial={data}/>:<MaterialEditor/>}</Boundary>);
+    root.render(<Boundary>{element.dataset.component==='search'?<Search initial={data}/>:element.dataset.component==='journey'?<Journey initial={data}/>:element.dataset.component==='consultations'?<Consultations initial={data}/>:element.dataset.component==='workspace-editor'?<WorkspaceEditor initial={data}/>:element.dataset.component==='clarification'?<ClarificationBox initial={data}/>:element.dataset.component==='viewed-events'?<ViewedEvents initial={data}/>:element.dataset.component==='contact'?<Contact value={element.dataset.value!} href={element.dataset.href!} label={element.dataset.label!}/>:element.dataset.component==='page-tools'?<PageTools/>:element.dataset.component==='request-view'?<RequestView/>:element.dataset.component==='schedule'?<Schedule initial={data}/>:element.dataset.component==='inbox'?<Inbox initial={data}/>:element.dataset.component==='request'?<RequestForm initial={data}/>:<MaterialEditor/>}</Boundary>);
   }
 }
 if(document.body.dataset.private&&window.deanery)installLifecycle(unmount,mount);

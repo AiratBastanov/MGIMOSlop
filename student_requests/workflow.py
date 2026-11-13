@@ -7,6 +7,7 @@ TYPE_LABEL = 'Справка об обучении'
 REQUEST_TYPES = {
     'study_certificate': 'Справка об обучении',
     'academic_correction': 'Исправление учебных данных',
+    'exchange_plan_review': 'Проверка плана подготовки к обмену',
 }
 CERTIFICATE_PURPOSES = {
     'scholarship': 'Для стипендии или льготы',
@@ -32,6 +33,7 @@ READY_NOTICE = 'Обработка в демонстрации завершен�
 READY_NOTICES = {
     'study_certificate': READY_NOTICE,
     'academic_correction': 'Обращение рассмотрено в демонстрации; учебные сведения меняются только проверенным импортом',
+    'exchange_plan_review': 'Рассмотрен план подготовки указанной редакции. Это не одобрение места на обмене и не проверка документов.',
 }
 STATUS_LABELS = {
     'submitted': 'Принята',

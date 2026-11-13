@@ -26,6 +26,8 @@ def event_scope(actor,now,archive=False):
     elif actor.role=='staff':
         allowed=Q(clarification_message__clarification__request__in=request_scope(actor),clarification_message__action='reply')
     else: raise AccessDenied('forbidden',403)
+    from consultations.selectors import event_scope as consultation_events
+    allowed |= Q(consultation_event__in=consultation_events(actor,now))
     return ApplicationEvent.objects.filter(allowed)
 
 
@@ -60,6 +62,9 @@ def values(notification,now):
         base.update(title='Объявление службы: '+rev.payload['title'],body='' if withdrawn else rev.payload['body'],
             target_url=f'/notices/{row.pk}/',is_historical=rev.pk!=row.published_revision_id,
             status_label='Объявление отозвано' if withdrawn else 'Срок показа завершён' if expired else 'Опубликовано')
+    elif e.consultation_event_id:
+        from consultations.selectors import notification_values
+        base.update(notification_values(notification,now))
     else:
         rev=e.resource_revision
         base.update(title='Ресурс группы: '+rev.payload['title'],body=rev.payload['description'],target_url='/profile/group/',

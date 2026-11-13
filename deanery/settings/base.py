@@ -18,7 +18,7 @@ DEBUG = False
 ALLOWED_HOSTS = setting('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 INSTALLED_APPS = [
     'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions',
-    'django.contrib.staticfiles', 'data_import', 'studies', 'notifications.apps.NotificationsConfig', 'accounts', 'student_requests', 'materials', 'profiles', 'workspaces', 'axes',
+    'django.contrib.staticfiles', 'data_import', 'studies', 'notifications.apps.NotificationsConfig', 'accounts', 'student_requests', 'materials', 'profiles', 'workspaces', 'journeys', 'consultations', 'axes',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

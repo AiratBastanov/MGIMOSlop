@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Решить вопрос · Студенческий кабинет{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}<div class="content-container academic-container journey-container">
+<a class="text-link back-link" href="/requests/">Мои заявки</a>
+{% csrf_token %}{{ journey_data|json_script:'journey-data' }}<div data-component="journey" data-props="journey-data"></div>
+</div>{% endblock %}

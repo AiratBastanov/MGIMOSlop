@@ -130,4 +130,5 @@ class ApplicationEvent(models.Model):
     clarification_message = models.OneToOneField(ClarificationMessage, null=True, on_delete=models.PROTECT)
     notice_revision = models.OneToOneField(StaffNoticeRevision, null=True, on_delete=models.PROTECT)
     resource_revision = models.OneToOneField('profiles.GroupResourceRevision', null=True, on_delete=models.PROTECT)
+    consultation_event = models.OneToOneField('consultations.ConsultationEvent', null=True, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)

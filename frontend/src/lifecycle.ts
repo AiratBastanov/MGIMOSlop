@@ -24,6 +24,9 @@ export async function api<T>(url: string, options: RequestInit = {}, timeoutMs=1
   if (!window.deanery.active) throw new RequestFailure(409,'Доступ проверяется. Повторите после проверки сеанса.');
   const generation = epoch;
   const controller = new AbortController(); pending.add(controller);
+  const cancel = () => controller.abort();
+  options.signal?.addEventListener('abort',cancel,{once:true});
+  if(options.signal?.aborted)controller.abort();
   const timeout = setTimeout(()=>controller.abort(),timeoutMs);
   try {
     const response = await fetch(url, {...options, signal:controller.signal, credentials:'same-origin', cache:'no-store',
@@ -41,7 +44,7 @@ export async function api<T>(url: string, options: RequestInit = {}, timeoutMs=1
     }
     if (response.status >= 500 || !data.marker) throw new RequestFailure(response.status,'Сервер не подтвердил результат.');
     return {data,status:response.status,ok:response.ok};
-  } finally { pending.delete(controller); clearTimeout(timeout); }
+  } finally { options.signal?.removeEventListener('abort',cancel); pending.delete(controller); clearTimeout(timeout); }
 }
 export function installLifecycle(unmount:()=>void, mount:()=>void) {
   const abort = () => { epoch++; pending.forEach(c=>c.abort()); pending.clear(); };
@@ -50,6 +53,29 @@ export function installLifecycle(unmount:()=>void, mount:()=>void) {
   document.addEventListener('private:discard', discard);
   document.addEventListener('private:replace', discard);
   document.addEventListener('private:ready', mount);
+  // Native Tab scrolling does not account for our fixed utilities in every
+  // browser. Reveal only a newly focused control that is actually occluded.
+  document.addEventListener('focusin', event => {
+    const target=event.target;
+    if(!(target instanceof HTMLElement)||!target.closest('.journey-container,.consultation-container,.search-workspace'))return;
+    const valid=contextFence();
+    requestAnimationFrame(()=>{
+      if(!valid()||document.activeElement!==target||!target.isConnected)return;
+      const rect=target.getBoundingClientRect();
+      let top=0,bottom=innerHeight,occluded=false;
+      for(const fixed of document.querySelectorAll<HTMLElement>('.site-header,.account-bar,.bottom-nav,.page-tools-dock')){
+        if(fixed.contains(target)||!fixed.getClientRects().length||getComputedStyle(fixed).visibility==='hidden')continue;
+        const box=fixed.getBoundingClientRect();
+        if(rect.left>=box.right||rect.right<=box.left)continue;
+        if(box.top<=0&&box.bottom<innerHeight/2)top=Math.max(top,box.bottom+12);
+        else if(box.top>innerHeight/2)bottom=Math.min(bottom,box.top-12);
+        if(rect.top<box.bottom&&rect.bottom>box.top)occluded=true;
+      }
+      if(!occluded)return;
+      const delta=rect.top<top?rect.top-top:rect.bottom>bottom?rect.bottom-bottom:0;
+      if(delta)window.scrollBy({top:delta,behavior:'instant'});
+    });
+  });
   window.deanery.busy = () => pending.size > 0;
   addEventListener('beforeunload', event => {
     if (dirtyOwners.size && !window.deanery.invalidated) { event.preventDefault(); event.returnValue = ''; }

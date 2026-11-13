@@ -22,3 +22,5 @@ node_modules/
 # Зависимости сборки; готовый static/frontend входит в поставку.
 frontend/node_modules/
 frontend/.vite/
+# Необработанные локальные видеозаписи остаются в закрытом архиве.
+docs/evidence/connected-journeys/**/*.webm

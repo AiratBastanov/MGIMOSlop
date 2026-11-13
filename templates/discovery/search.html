@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Поиск по кабинету{% endblock %}
+{% block main_class %}workspace workspace-centered{% endblock %}
+{% block content %}
+<div class="content-container academic-container search-workspace">
+  <header class="planner-heading"><div><p class="eyebrow">Найти нужное</p><h1>Поиск по кабинету</h1></div><a class="text-link" href="{% if role == 'student' %}/today/{% elif role == 'teacher' %}/teacher/{% else %}/staff/{% endif %}">К обзору</a></header>
+  <p class="support">Название дисциплины, номер заявки или нужное действие. Поиск показывает доступные вам сведения.</p>
+  {% csrf_token %}
+  {{ component_data|json_script:'search-data' }}
+  <div data-component="search" data-props="search-data"></div>
+</div>
+{% endblock %}

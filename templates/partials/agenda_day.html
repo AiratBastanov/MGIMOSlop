@@ -5,4 +5,5 @@
 {% for change in day.markers %}<p class="day-change"><a href="{{ change.url }}">{{ change.current.course_name }}</a>: {% if change.marker_type == 'cancelled' %}занятие отменено{% else %}перенесено на {{ change.after.date|date:'j E' }}, {{ change.after.time_label }}{% endif %}.</p>{% endfor %}
 {% if day.lessons %}{% if view == 'week' %}<details class="day-lessons" {% if day.date == selected_date %}open{% endif %}><summary>Занятия дня</summary>{% endif %}<p class="count-label day-count">{{ day.count_label }}</p>{% for lesson in day.lessons %}{% include 'partials/lesson_line.html' %}{% endfor %}{% if view == 'week' %}</details>{% endif %}{% endif %}
 {% if day.markers %}<details class="event-details"><summary>Прежнее время и история переносов</summary>{% for change in day.markers %}<p class="support">{{ change.current.course_name }} · Было: {{ change.before.time_label }}. <a href="{{ change.url }}">Полная история</a></p>{% endfor %}</details>{% endif %}
+{% for consultation in day.consultations %}{% include 'partials/consultation_line.html' %}{% endfor %}
 </div></section>

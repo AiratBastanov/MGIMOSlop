@@ -30,7 +30,8 @@ class Request(models.Model):
             models.UniqueConstraint(fields=['owner', 'submission_key'], name='request_owner_submission'),
             models.CheckConstraint(condition=Q(request_type__in=list(REQUEST_TYPES)), name='request_supported_type'),
             models.CheckConstraint(condition=(Q(payload_schema=1, request_type=REQUEST_TYPE, payload_data={}, applicant_snapshot={}) |
-                                              Q(payload_schema=2)), name='request_payload_schema'),
+                                              Q(payload_schema=2, request_type__in=['study_certificate','academic_correction']) |
+                                              Q(payload_schema=3, request_type='exchange_plan_review')), name='request_payload_schema'),
             models.CheckConstraint(condition=Q(status__in=list(STATUS_LABELS)), name='request_status'),
             models.CheckConstraint(condition=Q(version__gte=1), name='request_positive_version'),
             models.CheckConstraint(condition=Q(updated_at__gte=F('created_at')), name='request_time_order'),

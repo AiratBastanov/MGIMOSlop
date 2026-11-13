@@ -5,6 +5,8 @@
 <header class="detail-heading"><p class="eyebrow">Заявка № {{ request_item.reference }}</p><h1>{{ request_item.type_label }}</h1><p class="weekday">Подана <time datetime="{{ request_item.created_at|date:'c' }}">{{ request_item.created_at|date:'d.m.Y, H:i' }} МСК</time></p></header>
 {% if role == "student" %}{{ viewed_request|json_script:"viewed-request" }}{% endif %}<div data-component="request-view" data-request-id="{{ request_item.id }}" data-request-version="{{ request_item.version }}"></div>
 {% include 'partials/request_errors.html' %}
+{% if role == 'student' %}<nav class="journey-shortcuts" aria-label="Связанные действия">{% if request_item.journey_url %}<a href="{{ request_item.journey_url }}">Вернуться к подготовке</a>{% endif %}<a href="/consultations/?request={{ request_item.id }}">Консультация по заявке</a></nav>{% endif %}
+{% if request_item.preparation_revision %}<p class="data-state">Передана сохранённая редакция подготовки {{ request_item.preparation_revision }}. Личные изменения после отправки в неё не входят.</p>{% endif %}
 {% if conflict_message %}<section class="request-conflict" tabindex="-1" data-focus-errors><h2>Решение не применено</h2><p>{{ conflict_message }}</p><a class="text-link" href="{{ request_item.staff_url }}">Проверить актуальную заявку</a></section>{% endif %}
 <div class="request-detail-layout"><section id="request-current" data-page-section="Статус заявки" class="request-current" aria-labelledby="request-status-title">
 <p class="mini-label" id="request-status-title">Текущий статус</p><p class="request-current-status status-{{ request_item.status }}">{{ request_item.status_label }}</p>

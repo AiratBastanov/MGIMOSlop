@@ -112,7 +112,7 @@ def normalize_fields(fields):
 
 def validate_typed_payload(request_type, comment, fields):
     errors = {}
-    if request_type not in REQUEST_TYPES:
+    if request_type not in PAYLOAD_FIELDS:
         errors['request_type'] = 'Выберите тип из каталога заявок.'
     error = text_error(comment)
     if error:
@@ -162,10 +162,17 @@ def _create(*, profile, actor_id, key, request_type, comment, provenance='studen
         _validate_payload(request_type, comment)
         accepted_fingerprint = fingerprint(request_type, comment)
         snapshot = {}
-    else:
+    elif payload_schema == 2:
         validate_typed_payload(request_type, comment, payload_data)
         accepted_fingerprint = typed_fingerprint(request_type, comment, payload_data)
         snapshot = applicant_values(profile)
+    elif payload_schema == 3 and request_type == 'exchange_plan_review':
+        from journeys.services import validate_snapshot
+        validate_snapshot(payload_data)
+        accepted_fingerprint = hashlib.sha256(json.dumps({'schema':3,'type':request_type,'comment':comment,'fields':payload_data},ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        snapshot = applicant_values(profile)
+    else:
+        raise RequestError('invalid_input')
     now = timezone.now()
     row = Request.objects.create(owner=profile, servicing_faculty_id=profile.group.programme.faculty_id,
         submission_key=key, request_type=request_type, comment=comment,
@@ -174,6 +181,18 @@ def _create(*, profile, actor_id, key, request_type, comment, provenance='studen
         created_at=now, updated_at=now, provenance=provenance)
     _record_event(row, actor_id=actor_id, action='submit', from_status='', operator=operator)
     return row
+
+
+def create_journey_request(*, actor, key, snapshot=None, correction=None, comment=''):
+    """Called inside the journey's guard/session/parent transaction after preview verification."""
+    _require_role(actor, 'student')
+    if not transaction.get_connection().in_atomic_block:
+        raise RuntimeError('Journey submission requires an atomic operation')
+    if snapshot is not None:
+        return _create(profile=actor.identity.profile, actor_id=actor.user_id, key=key,
+            request_type='exchange_plan_review', comment='', payload_schema=3, payload_data=snapshot)
+    return _create(profile=actor.identity.profile, actor_id=actor.user_id, key=key,
+        request_type='academic_correction', comment=comment, payload_schema=2, payload_data=correction)
 
 
 def submit_request(request, marker, submission_token, request_type, comment, fields=None):
