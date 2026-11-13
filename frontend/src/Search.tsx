@@ -3,8 +3,8 @@ import type {KeyboardEvent} from 'react';
 import {api, body, contextFence} from './lifecycle';
 
 type Result = {key:string;kind:'action'|'object';category:string;title:string;context:string;url:string};
-type Source = {key:string;label:string;state:'ready'|'partial'|'unavailable';message:string};
-type SearchData = {marker:string;state:string;items:Result[];count:number;page:number;pages:number;page_size:number;partial:boolean;sources:Source[];suggestions:Result[];error?:string};
+type Source = {key:string;label:string;state:'ready'|'partial'|'unavailable';message:string;limited?:boolean};
+type SearchData = {marker:string;state:string;items:Result[];count:number;page:number;pages:number;page_size:number;partial:boolean;limited?:boolean;sources:Source[];suggestions:Result[];error?:string};
 type Initial = {marker:string;endpoint:string;suggestions:Result[]};
 
 export function Search({initial}:{initial:Initial}) {
@@ -64,9 +64,9 @@ export function Search({initial}:{initial:Initial}) {
       <label htmlFor="cabinet-search">Что найти?</label>
       <div className="search-controls"><input ref={input} id="cabinet-search" type="search" value={query} onChange={event=>change(event.target.value)} onKeyDown={select} maxLength={100} autoComplete="off" spellCheck={false} placeholder="Например, обмен или номер заявки" aria-controls="search-results"/><button type="submit">Найти</button></div>
     </form>
-    <div role="status" aria-live="polite" className="search-status">{loading?'Ищем доступные сведения…':phase==='ready'?`${data?.partial?'Совпадений в доступной выборке':'Найдено'}: ${data?.count}.`:''}</div>
+    <div role="status" aria-live="polite" className="search-status">{loading?'Ищем доступные сведения…':phase==='ready'?`${data?.limited?'Совпадений в ограниченном результате':data?.partial?'Совпадений в доступных сведениях':'Найдено'}: ${data?.count}.`:''}</div>
     {error&&<div className="save-recovery" role="alert"><p>{error}</p><button type="button" className="button-secondary" onClick={()=>find(query)}>Повторить поиск</button></div>}
-    {notices.length>0&&<div className="data-state"><p>Часть сведений неполна или недоступна.</p><ul>{notices.map(source=><li key={source.key}><strong>{source.label}.</strong> {source.message}</li>)}</ul></div>}
+    {notices.length>0&&<div className="data-state"><p>{notices.some(source=>!source.limited)?'Часть сведений неполна или недоступна.':'Результат ограничен числом совпадений.'}</p><ul>{notices.map(source=><li key={source.key}><strong>{source.label}.</strong> {source.message}</li>)}</ul></div>}
     <div id="search-results" aria-busy={loading}>
       {phase==='ready'&&<h2 ref={heading} tabIndex={-1}>Результаты поиска</h2>}
       {phase==='ready'&&items.length===0&&<div className="empty-state"><h3>{data?.partial?'В доступной выборке совпадений нет':'Совпадений нет'}</h3><p>Попробуйте часть названия, номер заявки или действие: «справка», «обмен», «консультация».</p></div>}

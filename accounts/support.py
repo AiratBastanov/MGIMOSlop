@@ -9,8 +9,9 @@ from django.views.decorators.debug import sensitive_post_parameters
 from accounts.access import current_actor
 from accounts.views import protected
 from accounts import support_provider as provider
+from studies.routes import ALL_ASSESSED_RESULTS_URL
 
-VERSION = '2026-11-13.1'
+VERSION = '2026-11-13.2'
 # IDs, text and route names are reviewed together. No academic records are sent.
 KNOWLEDGE = [
     ('search','student,teacher,staff','Как найти действие или запись, если не знаю раздел?','Откройте поиск в шапке кабинета. Введите часть названия, номер заявки или действие. Результаты разделяют действия и доступные записи; поиск ничего не отправляет и не бронирует. Сообщение о неполном источнике не означает отсутствия нужной записи.','search','Открыть поиск','Навигация',('поиск','искать','найти по номеру','номер заявки','найти заявку')),
@@ -47,6 +48,7 @@ def topics(role):
         if key=='clarification' and role=='staff':route='staff_queue';label='Очередь заявок'
         url=reverse(route)
         assert resolve(url).url_name == route
+        if key=='grades':url=ALL_ASSESSED_RESULTS_URL
         if key in ('exchange_prepare','correction_journey'):
             url+='?template='+('exchange' if key=='exchange_prepare' else 'correction')
         result.append(dict(id=key,question=question,answer=answer,url=url,label=label,category=category))

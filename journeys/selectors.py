@@ -51,12 +51,13 @@ def journey_values(actor,row,now):
             'Ожидается ответ' if latest and latest['status'] in ('submitted','in_progress') else
             'Следующие действия получены' if latest and latest['status']=='ready' else
             'Обращение отклонено · проверьте причину' if latest and latest['status']=='rejected' else 'Подготовка')
-    from consultations.selectors import booking_scope, booking_values
-    links=[]
+    from consultations.selectors import booking_scope, booking_values, personal_booking_chains
     own=booking_scope(actor,now)
-    for link in row.booking_links.select_related('booking','booking__slot').order_by('-pk')[:20]:
-        booking=own.filter(pk=link.booking_id).first()
-        if booking: links.append(booking_values(actor,booking,now,history=False))
+    links=personal_booking_chains(actor,now,row.booking_links.order_by('-pk').values_list('booking_id',flat=True)[:20])
+    for booking in links:
+        booking['url'] += f'?journey={row.pk}'
+        for old in booking['previous_bookings']:
+            old['url'] += f'?journey={row.pk}'
     options,messages=record_options(actor,now) if row.template_key=='correction' else ([],[])
     available_bookings=[booking_values(actor,b,now,history=False) for b in own.order_by('-pk')[:20]]
     return {**summary(row),'state':row.state,'template':template,'status_label':status,

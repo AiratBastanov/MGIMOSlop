@@ -51,7 +51,7 @@ def safe_next(value, role):
         return value
     if role=='student' and re.fullmatch(r'/journeys/(?:[1-9][0-9]*/)?',path) and set(parse_qs(parsed.query))<={'template'}:
         return value
-    if re.fullmatch(r'/consultations/(?:bookings/[1-9][0-9]*/)?',path) and set(parse_qs(parsed.query))<={'assignment','course','request','slot','page','booking_page','rebook'}:
+    if re.fullmatch(r'/consultations/(?:bookings/[1-9][0-9]*/)?',path) and set(parse_qs(parsed.query))<={'assignment','course','request','slot','page','booking_page','rebook','journey'}:
         return value
     if path=='/notifications/':
         try:validate_notification_params(parse_qs(parsed.query,keep_blank_values=True,strict_parsing=True))
@@ -279,8 +279,9 @@ def study(request):
         if current_actor(request).role != 'student':
             raise AccessDenied('forbidden',403)
         return public_error(request,400,'Неизвестный период или фильтр. Откройте раздел «Учёба».')
-    return render(request,'study.html',private_snapshot(request,section='study',period_id=period,
-        study_mode=view,study_filter=filter_name))
+    from studies.routes import ALL_ASSESSED_RESULTS_URL
+    return render(request,'study.html',{**private_snapshot(request,section='study',period_id=period,
+        study_mode=view,study_filter=filter_name), 'all_assessed_results_url': ALL_ASSESSED_RESULTS_URL})
 
 
 @require_GET

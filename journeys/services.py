@@ -148,6 +148,7 @@ def perform(request,marker,data,journey_id=None):
             if type(value) is not int or not 1<=value<=2147483647: raise MaterialError('Выберите свою сохранённую запись.')
             booking=booking_scope(actor,actor.checked_at).filter(pk=value).first()
             if not booking: raise AccessDenied('not_found',404)
-            JourneyBooking.objects.get_or_create(journey=row,booking=booking)
+            from .booking_links import associate
+            associate(actor,row,booking)
         else: raise MaterialError('Выберите допустимое действие.')
         return _record(actor,key,digest,row,outcome)

@@ -1,10 +1,13 @@
-"""Source adapters: scope first, bounded metadata second, matching/counts last.
+"""Scope → matching metadata in PostgreSQL → LIMIT → stable ranking/pages.
 
-Never read message bodies, attachments, contacts, private notes or student drafts.
-Call inside the established private read snapshot; its owner rechecks authority.
+No message bodies, files, contacts, private notes or unpublished payloads.
+Called inside the established private read snapshot with a final access check.
 """
 from django.apps import apps
-from django.db.models import F
+from django.db import connection
+from django.db.models import F, Value, Case, When, TextField, Exists, OuterRef, Q
+from django.db.models.functions import Cast, Coalesce, Left, Length, Greatest, LPad
+from django.db.models.fields.json import KeyTextTransform
 from accounts.selectors import visible_announcements
 from data_import.models import ImportRevision, AcademicCoverage
 from materials.selectors import assignment_scope
@@ -12,40 +15,36 @@ from profiles.models import GroupResource
 from profiles.selectors import group_resources, publisher_groups
 from student_requests.selectors import request_scope
 from student_requests.workflow import REQUEST_TYPES, STATUS_LABELS
-from studies.academic_selectors import enrollment_scope, result_values
-from studies.selectors import moscow
+from studies.academic_selectors import enrollment_scope
 from workspaces.selectors import teaching_scope, notice_scope
-from .catalog import (SOURCE_LIMIT, PAGE_SIZE, actions, entry, public, ranked, reference_id)
+from .catalog import SOURCE_LIMIT, PAGE_SIZE, actions, public, ranked, reference_id
+from .query import metadata, item, labels, join, date_text
 
 
 class Candidates:
-    def __init__(self):
-        self.items = []
-        self.sources = []
+    def __init__(self, tokens=()):
+        self.tokens, self.items, self.sources = tokens, [], []
 
-    def source(self, key, label, state='ready', message=''):
-        row = {'key': key, 'label': label, 'state': state, 'message': message}
+    def source(self, key, label, state='ready', message='', *, limited=False):
+        row = {'key': key, 'label': label, 'state': state, 'message': message, 'limited': limited}
         self.sources.append(row)
         return row
 
     def take(self, query, key, label):
-        # Query must already be scoped; the cap cannot reveal a foreign object.
+        # Adapter has already applied access and query-dependent matching.
         rows = list(query[:SOURCE_LIMIT + 1])
         more = len(rows) > SOURCE_LIMIT
         self.source(key, label, 'partial' if more else 'ready',
-                    'Показана ограниченная выборка доступных записей. Уточните запрос или откройте раздел.' if more else '')
+            f'В этом источнике больше {SOURCE_LIMIT} совпадений. Показаны первые {SOURCE_LIMIT}; уточните запрос.' if more else '',
+            limited=more)
         return rows[:SOURCE_LIMIT]
 
 
 def current_revision(actor, now):
-    if actor.role == 'student':
-        dataset = actor.identity.profile.dataset_id
-    elif actor.role == 'teacher':
-        dataset = actor.identity.instructor.dataset_id
-    else:
-        return None
+    dataset = (actor.identity.profile.dataset_id if actor.role == 'student' else
+               actor.identity.instructor.dataset_id if actor.role == 'teacher' else None)
     return ImportRevision.objects.filter(dataset_id=dataset, revision=F('dataset__current_revision'),
-        valid_from__lte=now, valid_until__gt=now).first()
+        valid_from__lte=now, valid_until__gt=now).first() if dataset else None
 
 
 def academic(actor, now, candidates, revision):
@@ -53,23 +52,24 @@ def academic(actor, now, candidates, revision):
         candidates.source('academic', 'Учебные сведения', 'unavailable',
             'Текущие учебные сведения не подтверждены источником. Поиск по ним временно недоступен.')
         return
-    rows = candidates.take(enrollment_scope(actor).select_related('course', 'period', 'finalresult')
-        .order_by('course__name', 'pk'), 'academic', 'Дисциплины и результаты')
-    coverage = list(AcademicCoverage.objects.filter(revision=revision, student_id=actor.profile_id,
-        period_id__in={row.period_id for row in rows}, entity_type__in=('enrollment', 'final_result'))
-        .values('period_id', 'entity_type', 'completeness')[:SOURCE_LIMIT * 2])
-    coverage_map = {(row['period_id'], row['entity_type']): row['completeness'] for row in coverage}
-    if not rows or any(coverage_map.get((row.period_id, domain)) != 'complete'
-                       for row in rows for domain in ('enrollment', 'final_result')):
-        candidates.sources[-1].update(state='partial',
-            message='Учебные сведения подтверждены не полностью. Отсутствие совпадения не означает отсутствия записи.')
-    for row in rows:
-        result = getattr(row, 'finalresult', None)
-        # Existing accepted scope, explicit dataset equality, existing result formatter.
-        result = result_values(result)['label'] if result and result.dataset_id == row.dataset_id else (
-            'Итог не внесён' if coverage_map.get((row.period_id, 'final_result')) == 'complete' else 'Итог не подтверждён')
-        candidates.items.append(entry('course:' + str(row.pk), row.course.name, 'Дисциплина',
-            f'{row.period.name} · {result}', f'/study/enrollments/{row.pk}/', keywords='учеба оценка результат'))
+    coverage = AcademicCoverage.objects.filter(revision=revision, student_id=actor.profile_id,
+        period_id=OuterRef('period_id'), completeness='complete')
+    scoped = enrollment_scope(actor).alias(
+        enrollment_complete=Exists(coverage.filter(entity_type='enrollment')),
+        final_complete=Exists(coverage.filter(entity_type='final_result')))
+    if not scoped.exists() or scoped.filter(Q(enrollment_complete=False) | Q(final_complete=False)).exists():
+        candidates.source('academic_coverage', 'Полнота учебных сведений', 'partial',
+            'Учебные сведения подтверждены не полностью. Отсутствие совпадения не означает отсутствия записи.')
+    # Только поисковая подпись существующего результата, не классификация/оценка.
+    recorded = Case(When(finalresult__result_kind='grade', then=Cast('finalresult__grade', TextField())),
+        When(finalresult__pass_status='passed', then=Value('Зачтено')), default=Value('Не зачтено'), output_field=TextField())
+    result = Case(When(finalresult__dataset_id=F('dataset_id'), then=recorded),
+        When(final_complete=True, then=Value('Итог не внесён')), default=Value('Итог не подтверждён'), output_field=TextField())
+    query = metadata(scoped.order_by('course__name', 'pk'), candidates.tokens,
+        title=F('course__name'), category=Value('Дисциплина'),
+        context=join(F('period__name'), Value(' · '), result), keywords=Value('учеба оценка результат'))
+    for row in candidates.take(query, 'academic', 'Дисциплины и результаты'):
+        candidates.items.append(item(row, 'course:', f'/study/enrollments/{row["pk"]}/'))
 
 
 def teaching(actor, now, candidates, revision):
@@ -78,61 +78,59 @@ def teaching(actor, now, candidates, revision):
             'Актуальность учебного источника не подтверждена; публикации по дисциплинам исключены из поиска.')
         return
     if actor.role == 'teacher':
-        for row in candidates.take(assignment_scope(actor, now).select_related('course', 'period', 'group')
-                .order_by('course__name', 'pk'), 'allocations', 'Мои дисциплины'):
-            candidates.items.append(entry('allocation:' + str(row.pk), row.course.name, 'Моя дисциплина',
-                f'{row.group.name} · {row.period.name}', f'/teacher/courses/{row.pk}/'))
-    # Search deliberately includes published objects only, even for their author.
-    query = teaching_scope(actor, now).filter(state='published', published_revision__isnull=False)
-    query = query.select_related('published_revision', 'assignment__course', 'assignment__period').order_by('-updated_at', '-pk')
+        query = metadata(assignment_scope(actor, now).order_by('course__name', 'pk'), candidates.tokens,
+            title=F('course__name'), category=Value('Моя дисциплина'),
+            context=join(F('group__name'), Value(' · '), F('period__name')))
+        for row in candidates.take(query, 'allocations', 'Мои дисциплины'):
+            candidates.items.append(item(row, 'allocation:', f'/teacher/courses/{row["pk"]}/'))
+    scoped = teaching_scope(actor, now).filter(state='published', published_revision__isnull=False)
+    query = metadata(scoped.order_by('-updated_at', '-pk'), candidates.tokens,
+        title=Coalesce(KeyTextTransform('title', 'published_revision__payload'), Value('Публикация'), output_field=TextField()),
+        category=labels('kind', {'task': 'Задание', 'resource': 'Материал преподавателя'}),
+        context=join(F('assignment__course__name'), Value(' · '), F('assignment__period__name')),
+        keywords=Left(Coalesce(KeyTextTransform('topic', 'published_revision__payload'), Value(''), output_field=TextField()), 200))
+    prefix = '/teacher/publications/' if actor.role == 'teacher' else '/study/teaching/'
     for row in candidates.take(query, 'teaching', 'Материалы и задания'):
-        payload = row.published_revision.payload
-        category = 'Задание' if row.kind == 'task' else 'Материал преподавателя'
-        prefix = '/teacher/publications/' if actor.role == 'teacher' else '/study/teaching/'
-        candidates.items.append(entry('teaching:' + str(row.pk), payload.get('title', 'Публикация'), category,
-            f'{row.assignment.course.name} · {row.assignment.period.name}', f'{prefix}{row.pk}/',
-            keywords=str(payload.get('topic', ''))[:200]))
+        candidates.items.append(item(row, 'teaching:', f'{prefix}{row["pk"]}/'))
 
 
 def requests(actor, candidates, query):
-    scoped = request_scope(actor)
-    exact = reference_id(query)
+    scoped, exact = request_scope(actor), reference_id(query)
     if exact is not None:
         scoped = scoped.filter(pk=exact)
-    # No comment, applicant snapshot or clarification text is read.
-    rows = candidates.take(scoped.only('id', 'request_type', 'status', 'updated_at').order_by('-created_at', '-pk'),
-                           'requests', 'Заявки')
-    for row in rows:
-        prefix = '/staff/requests/' if actor.role == 'staff' else '/requests/'
-        candidates.items.append(entry('request:' + str(row.pk), f'{row.reference} · {REQUEST_TYPES[row.request_type]}',
-            'Заявка', f'{STATUS_LABELS[row.status]} · {moscow(row.updated_at):%d.%m.%Y}', f'{prefix}{row.pk}/'))
+    number = Cast('pk', TextField())
+    query = metadata(scoped.order_by('-created_at', '-pk'), () if exact is not None else candidates.tokens,
+        title=join(Value('З-'), LPad(number, Greatest(Value(6), Length(number)), Value('0')),
+                   Value(' · '), labels('request_type', REQUEST_TYPES)), category=Value('Заявка'),
+        context=join(labels('status', STATUS_LABELS), Value(' · '), date_text('updated_at')))
+    prefix = '/staff/requests/' if actor.role == 'staff' else '/requests/'
+    for row in candidates.take(query, 'requests', 'Заявки'):
+        candidates.items.append(item(row, 'request:', f'{prefix}{row["pk"]}/'))
 
 
 def notices(actor, now, candidates):
-    query = notice_scope(actor, now).filter(state='published', published_revision__isnull=False)
-    for row in candidates.take(query.select_related('published_revision').order_by('-updated_at', '-pk'),
-                               'faculty_notices', 'Объявления службы'):
-        prefix = '/staff/notices/' if actor.role == 'staff' else '/notices/'
-        candidates.items.append(entry('notice:' + str(row.pk), row.published_revision.payload.get('title', 'Объявление'),
-            'Объявление службы', 'Доступная публикация факультета', f'{prefix}{row.pk}/'))
+    scoped = notice_scope(actor, now).filter(state='published', published_revision__isnull=False)
+    query = metadata(scoped.order_by('-updated_at', '-pk'), candidates.tokens,
+        title=Coalesce(KeyTextTransform('title', 'published_revision__payload'), Value('Объявление'), output_field=TextField()),
+        category=Value('Объявление службы'), context=Value('Доступная публикация факультета'))
+    prefix = '/staff/notices/' if actor.role == 'staff' else '/notices/'
+    for row in candidates.take(query, 'faculty_notices', 'Объявления службы'):
+        candidates.items.append(item(row, 'notice:', f'{prefix}{row["pk"]}/'))
     if actor.role == 'student':
-        for row in candidates.take(visible_announcements(actor, now=now).only('id', 'title', 'published_at')
-                .order_by('-published_at', '-pk'), 'announcements', 'Учебные объявления'):
-            candidates.items.append(entry('announcement:' + str(row.pk), row.title, 'Объявление',
-                f'Опубликовано {moscow(row.published_at):%d.%m.%Y}', f'/announcements/{row.pk}/'))
+        query = metadata(visible_announcements(actor, now=now).order_by('-published_at', '-pk'), candidates.tokens,
+            title=F('title'), category=Value('Объявление'), context=join(Value('Опубликовано '), date_text('published_at')))
+        for row in candidates.take(query, 'announcements', 'Учебные объявления'):
+            candidates.items.append(item(row, 'announcement:', f'/announcements/{row["pk"]}/'))
 
 
 def resources(actor, now, candidates):
-    if actor.role == 'student':
-        query = group_resources(actor, now)
-    else:
-        query = GroupResource.objects.filter(group__in=publisher_groups(actor), archived=False,
-            available_from__lte=now, available_until__gt=now)
-    for row in candidates.take(query.only('id', 'title', 'category', 'group_id').order_by('title', 'pk'),
-                               'resources', 'Ресурсы группы'):
-        url = '/profile/group/#group-resources' if actor.role == 'student' else f'/staff/resources/{row.pk}/'
-        candidates.items.append(entry('resource:' + str(row.pk), row.title, 'Ресурс группы',
-            row.get_category_display(), url))
+    scoped = group_resources(actor, now) if actor.role == 'student' else GroupResource.objects.filter(
+        group__in=publisher_groups(actor), archived=False, available_from__lte=now, available_until__gt=now)
+    query = metadata(scoped.order_by('title', 'pk'), candidates.tokens, title=F('title'),
+        category=Value('Ресурс группы'), context=labels('category', dict(GroupResource._meta.get_field('category').choices)))
+    for row in candidates.take(query, 'resources', 'Ресурсы группы'):
+        url = '/profile/group/#group-resources' if actor.role == 'student' else f'/staff/resources/{row["pk"]}/'
+        candidates.items.append(item(row, 'resource:', url))
 
 
 def journeys(actor, candidates):
@@ -140,11 +138,11 @@ def journeys(actor, candidates):
         candidates.source('journeys', 'Мои ситуации', 'unavailable', 'Подготовка ситуаций временно недоступна.')
         return
     from journeys.selectors import journey_scope
-    labels = {'exchange': 'Подготовиться к учебному обмену', 'correction': 'Проверить неточность в учебных сведениях'}
-    rows = journey_scope(actor).only('id', 'template_key', 'version').order_by('-pk')
-    for row in candidates.take(rows, 'journeys', 'Мои ситуации'):
-        candidates.items.append(entry('journey:' + str(row.pk), labels[row.template_key], 'Моя ситуация',
-            f'Сохранённая подготовка · редакция {row.version}', f'/journeys/{row.pk}/'))
+    titles = {'exchange': 'Подготовиться к учебному обмену', 'correction': 'Проверить неточность в учебных сведениях'}
+    query = metadata(journey_scope(actor).order_by('-pk'), candidates.tokens, title=labels('template_key', titles),
+        category=Value('Моя ситуация'), context=join(Value('Сохранённая подготовка · редакция '), Cast('version', TextField())))
+    for row in candidates.take(query, 'journeys', 'Мои ситуации'):
+        candidates.items.append(item(row, 'journey:', f'/journeys/{row["pk"]}/'))
 
 
 def consultations(actor, now, candidates):
@@ -152,42 +150,46 @@ def consultations(actor, now, candidates):
         candidates.source('consultations', 'Консультации', 'unavailable', 'Запись на консультации временно недоступна.')
         return
     from consultations.selectors import discovery_records
-    result = discovery_records(actor, now, limit=SOURCE_LIMIT)
-    candidates.source('consultations', 'Консультации', 'partial' if result.get('partial') else 'ready',
-        'Просмотрена ограниченная выборка записей; все доступные даты открываются в консультациях.' if result.get('partial') else '')
-    for row in result['items'][:SOURCE_LIMIT]:
-        candidates.items.append(entry('consultation:' + str(row['id']), row['title'], 'Консультация', row['context'], row['url']))
+    discovery_records(actor, now, candidates)
 
 
 def search(actor, now, query, tokens, page=1):
     suggestions = actions(actor.role)
     if not query:
         return {'marker': actor.marker, 'state': 'ready', 'items': [], 'count': 0, 'page': 1, 'pages': 1,
-            'page_size': PAGE_SIZE, 'partial': False, 'sources': [], 'suggestions': [public(item) for item in suggestions]}
-    candidates = Candidates()
+            'page_size': PAGE_SIZE, 'partial': False, 'limited': False, 'sources': [], 'suggestions': [public(item) for item in suggestions]}
+    # The read snapshot owns this LOCAL setting; a cancelled query rolls it back.
+    with connection.cursor() as cursor:
+        cursor.execute("SET LOCAL statement_timeout = '2000ms'")
+    candidates = Candidates(tokens)
     candidates.items.extend(suggestions)
-    revision = current_revision(actor, now)
-    if actor.role == 'student':
-        academic(actor, now, candidates, revision)
-        teaching(actor, now, candidates, revision)
-        requests(actor, candidates, query)
-        notices(actor, now, candidates)
-        resources(actor, now, candidates)
-        journeys(actor, candidates)
-    elif actor.role == 'teacher':
-        teaching(actor, now, candidates, revision)
-    else:
-        requests(actor, candidates, query)
-        notices(actor, now, candidates)
-        resources(actor, now, candidates)
-    consultations(actor, now, candidates)
     exact = reference_id(query)
-    matches = ([item for item in candidates.items if item['key'] == 'request:' + str(exact)]
+    if exact is not None:
+        if actor.role in ('student', 'staff'):
+            requests(actor, candidates, query)
+    else:
+        revision = current_revision(actor, now)
+        if actor.role == 'student':
+            academic(actor, now, candidates, revision)
+            teaching(actor, now, candidates, revision)
+            requests(actor, candidates, query)
+            notices(actor, now, candidates)
+            resources(actor, now, candidates)
+            journeys(actor, candidates)
+        elif actor.role == 'teacher':
+            teaching(actor, now, candidates, revision)
+        else:
+            requests(actor, candidates, query)
+            notices(actor, now, candidates)
+            resources(actor, now, candidates)
+        consultations(actor, now, candidates)
+    matches = ([row for row in candidates.items if row['key'] == 'request:' + str(exact)]
                if exact is not None else ranked(candidates.items, query, tokens))
     count = len(matches)
     pages = max(1, (count + PAGE_SIZE - 1) // PAGE_SIZE)
     selected = min(page, pages)
-    return {'marker': actor.marker, 'state': 'ready', 'items': [public(item) for item in matches[(selected - 1) * PAGE_SIZE:selected * PAGE_SIZE]],
+    return {'marker': actor.marker, 'state': 'ready', 'items': [public(row) for row in matches[(selected - 1) * PAGE_SIZE:selected * PAGE_SIZE]],
         'count': count, 'page': selected, 'pages': pages, 'page_size': PAGE_SIZE,
-        'partial': any(row['state'] != 'ready' for row in candidates.sources), 'sources': candidates.sources,
-        'suggestions': [public(item) for item in suggestions]}
+        'partial': any(row['state'] != 'ready' for row in candidates.sources),
+        'limited': any(row['limited'] for row in candidates.sources), 'sources': candidates.sources,
+        'suggestions': [public(row) for row in suggestions]}

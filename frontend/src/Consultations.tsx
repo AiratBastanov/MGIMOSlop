@@ -13,7 +13,7 @@ type Audience={id:number;label:string;kind:string};
 export type ConsultationData={marker:string;role:string;slots:Slot[];bookings:Booking[];audiences:Audience[];
   endpoint:string;state_url?:string;page:number;pages:number;count:number;booking_page?:number;
   booking_pages?:number;booking_count?:number;selected_booking?:number;selected_slot?:number;
-  request_context?:RelatedRequest|null;preferred_assignment?:number;source_message?:string;error?:string;message?:string};
+  request_context?:RelatedRequest|null;journey_context?:{id:number;title:string;url:string}|null;preferred_assignment?:number;source_message?:string;error?:string;message?:string};
 type Result={marker:string;state:string;message?:string;error?:string;field?:string;booking_id?:number;slot_id?:number;url?:string};
 type Fields=Record<string,string|number>;
 type Choice={action:'book'|'rebook'|'cancel'|'close'|'cancel_slot'|'venue'|'complete';slot:Slot;booking?:Booking};
@@ -147,13 +147,14 @@ export function Consultations({initial}:{initial:ConsultationData}){
     if(choice.booking)fields.booking=choice.booking.id;
     if(choice.action==='book'||choice.action==='rebook'){
       fields.question=question;fields.academic_ack=ack?'1':'0';
+      if(data.journey_context)fields.journey=data.journey_context.id;
       const related=choice.booking?.request||data.request_context;
       if(shareRequest&&choice.slot.kind==='staff'&&related)fields.request=related.id;
       if(choice.action==='rebook')fields.slot_version=choice.slot.version;
     }
     if(choice.action==='venue'){fields.venue=venue;fields.meeting_url=meetingUrl;}
     const messages={book:'Запись сохранена. Время, ведущий и место указаны в «Моих записях».',rebook:'Перенос сохранён. Прежняя запись осталась в истории, новая подтверждена.',cancel:'Запись отменена. История консультации сохранена.',close:'Время закрыто для новых записей.',cancel_slot:'Консультация отменена. Участнику сохранено уведомление.',venue:'Место встречи обновлено. Участнику сохранено уведомление.',complete:'Ведущий отметил консультацию проведённой. Эта отметка сохранена в истории.'};
-    void send(fields,messages[choice.action]);
+    void send(fields,messages[choice.action]+(data.journey_context&&(choice.action==='book'||choice.action==='rebook')?' Встреча связана с вашей личной подготовкой.':''));
   }
   async function beginRebook(booking:Booking){
     setMoving(booking);setChoice(null);setMessage('Выберите новое время. Прежняя запись сохранится, если новое время занять не получится.');
@@ -167,6 +168,7 @@ export function Consultations({initial}:{initial:ConsultationData}){
     <header className="planner-heading"><div><p className="eyebrow">{student?'Поддержка в учёбе':data.role==='teacher'?'Преподаватель':'Служба факультета'}</p><h1>{student?'Консультации':'Приём и консультации'}</h1><p className="support">Время по Москве · одна запись на каждое время</p></div>{!student&&<button type="button" className="button-secondary" disabled={locked} aria-expanded={showCreate} onClick={()=>setShowCreate(!showCreate)}>{showCreate?'Скрыть форму':'Предложить время'}</button>}</header>
     <nav className="consultation-navigation" aria-label="Разделы консультаций"><a href="#consultation-mine">{student?'Мои записи':'Записавшиеся'}</a><a href="#consultation-available">{student?'Доступное время':'Моё время приёма'}</a>{student?<><a href="/journeys/">Решить вопрос</a><a href="/requests/">Мои заявки</a><a href="/schedule/">Расписание</a></>:<a href={data.role==='teacher'?'/teacher/courses/':'/staff/'}>{data.role==='teacher'?'Мои дисциплины':'Рабочее место службы'}</a>}</nav>
     <p className="support">Встречи проходят внутри конкурсного прототипа на вымышленных данных.</p>
+    {data.journey_context&&<div className="data-state"><p>Запись будет связана с личной подготовкой «{data.journey_context.title}». План и личные заметки ведущему не передаются.</p><a href={data.journey_context.url}>Вернуться к подготовке</a></div>}
     {data.request_context&&<p className="support">Вы пришли из <a href={data.request_context.url}>заявки {data.request_context.reference}</a>. Связь с заявкой можно выбрать перед подтверждением встречи со службой.</p>}
     {student&&data.source_message&&<p className="support">{data.source_message}</p>}
 
@@ -185,6 +187,7 @@ export function Consultations({initial}:{initial:ConsultationData}){
 
     {choice&&<section className="consultation-confirmation" aria-labelledby="consultation-confirm-title"><h2 ref={confirmation} tabIndex={-1} id="consultation-confirm-title">{choiceTitle}</h2><h3>{choice.slot.topic}</h3><SlotFacts slot={choice.slot}/>
       {choice.action==='rebook'&&choice.booking&&<p className="data-state">Перенос с {period(choice.booking.slot)}. Прежняя запись отменится только после сохранения новой.</p>}
+      {data.journey_context&&(choice.action==='book'||choice.action==='rebook')&&<p className="support">После подтверждения встреча появится в подготовке «{data.journey_context.title}». Повторно связывать её не нужно.</p>}
       <form className="consultation-form" onSubmit={e=>{e.preventDefault();confirmChoice();}}><fieldset className="consultation-fieldset" disabled={locked}>
         {(choice.action==='book'||choice.action==='rebook')&&<><ConflictNote conflict={choice.slot.conflict}/><div className="field"><label htmlFor="consultation-question">Вопрос ведущему, необязательно</label><textarea id="consultation-question" maxLength={1000} rows={4} value={question} aria-invalid={fieldError==='question'} onChange={e=>setQuestion(e.target.value)}/><p className="support">До 1000 символов. Вопрос будет виден ведущему этой встречи.</p></div>
           {related&&choice.slot.kind==='staff'&&<label className="check-option"><input type="checkbox" checked={shareRequest} onChange={e=>setShareRequest(e.target.checked)}/>Связать с заявкой {related.reference}. Ведущий увидит только заявку, доступную его факультетской службе.</label>}

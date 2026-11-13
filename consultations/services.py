@@ -16,6 +16,7 @@ from student_requests.selectors import request_scope
 from workspaces.common import https_link, emit
 from .models import ConsultationSlot, Booking, ConsultationEvent, ConsultationOperation
 from .selectors import slot_scope, booking_scope, current_assignments, conflict_state, SLOT_LABELS, BOOKING_LABELS
+from journeys.booking_links import owned_journey, associate
 
 
 class BookingError(MaterialError):
@@ -64,15 +65,21 @@ def _receipt_authority(actor, result, now):
         allowed = slot_scope(actor, now).filter(pk=result.get('slot_id')).exists()
     if not allowed:
         raise AccessDenied('not_found', 404)
+    if result.get('journey_id'):
+        journey = owned_journey(actor, result['journey_id'])
+        if not journey.booking_links.filter(booking_id=result['booking_id']).exists():
+            raise AccessDenied('not_found', 404)
 
 
-def _record(actor, key, digest, *, booking=None, slot=None):
+def _record(actor, key, digest, *, booking=None, slot=None, journey=None):
     result = {'state': 'saved'}
     if booking:
         result.update(booking_id=booking.pk, slot_id=booking.slot_id,
                       url=f'/consultations/bookings/{booking.pk}/')
     else:
         result.update(slot_id=slot.pk, url=f'/consultations/?slot={slot.pk}')
+    if journey:
+        result.update(journey_id=journey.pk, journey_url=f'/journeys/{journey.pk}/')
     ConsultationOperation.objects.create(user_id=actor.user_id, key=key, fingerprint=digest, result=result)
     return {**result, 'marker': actor.marker}
 
@@ -235,6 +242,7 @@ def _book(request, marker, guard, actor, data, key, digest):
         raise BookingError(conflicts['message'], field='academic_ack', status=409)
     question = text(data.get('question', ''), field='question', limit=1000)
     shared = _shared_request(actor, target, data)
+    journey = owned_journey(actor, data['journey']) if 'journey' in data else None
     # Отмена старой и получение новой выполняются одной транзакцией. Любой
     # конфликт/ошибка возвращает старую запись полностью вместе с её событиями.
     if old:
@@ -244,8 +252,10 @@ def _book(request, marker, guard, actor, data, key, digest):
         _event(actor, slots[old.slot_id], 'transferred', old)
     row = Booking.objects.create(slot=target, student_id=actor.profile_id, starts_at=target.starts_at,
         ends_at=target.ends_at, question=question, request=shared, academic_ack=ack, replaces=old)
+    if journey:
+        associate(actor, journey, row)
     _event(actor, target, 'booked', row)
-    return _record(actor, key, digest, booking=row)
+    return _record(actor, key, digest, booking=row, journey=journey)
 
 
 def _booking_action(request, marker, guard, actor, data, key, digest):
@@ -282,7 +292,7 @@ def _booking_action(request, marker, guard, actor, data, key, digest):
 
 def perform(request, marker, data):
     allowed = {'action', 'operation', 'context', 'csrfmiddlewaretoken', 'version', 'slot_version', 'slot', 'booking',
-               'audience', 'starts_at', 'ends_at', 'topic', 'venue', 'meeting_url', 'question', 'request', 'academic_ack'}
+               'audience', 'starts_at', 'ends_at', 'topic', 'venue', 'meeting_url', 'question', 'request', 'academic_ack', 'journey'}
     try:
         with transaction.atomic():
             guard = lock_guard()
@@ -292,6 +302,8 @@ def perform(request, marker, data):
             action = data.get('action', '')
             if action not in ('create', 'close', 'cancel_slot', 'venue', 'book', 'rebook', 'cancel', 'complete'):
                 raise BookingError('Выберите доступное действие.')
+            if 'journey' in data and action not in ('book', 'rebook'):
+                raise BookingError('Подготовка связывается при подтверждении записи.')
             key, digest, result = _operation(actor, data)
             if result:
                 # Проверяется исход операции и действующее право, а не время,

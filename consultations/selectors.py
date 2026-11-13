@@ -3,6 +3,7 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 from django.core.paginator import Paginator
+from django.db import connection
 from django.db.models import Exists, F, OuterRef, Q
 
 from accounts.access import AccessDenied
@@ -118,7 +119,7 @@ def slot_values(actor, row, now, *, snapshot=None, exclude_booking=None):
     host_allowed = actor.role != 'student' and row.host_id == actor.identity.pk and slot_scope(actor, now).filter(pk=row.pk).exists()
     return {'id': row.pk, 'version': row.version, 'kind': row.kind, 'topic': row.topic,
         'starts_at': moscow(row.starts_at).isoformat(), 'ends_at': moscow(row.ends_at).isoformat(),
-        'time_label': f'{moscow(row.starts_at):%d.%m.%Y %H:%M}–{moscow(row.ends_at):%H:%M} МСК',
+        'time_label': slot_values_time(row),
         'host': host, 'venue': row.venue, 'meeting_url': row.meeting_url, 'audience': audience,
         'state': row.state, 'state_label': SLOT_LABELS[row.state],
         'available': row.state == 'open' and row.starts_at > now and not occupied,
@@ -167,6 +168,58 @@ def _bookings(query):
                                 'slot__assignment__group', 'slot__faculty')
 
 
+def personal_booking_chains(actor, now, booking_ids):
+    """Текущие встречи для явных личных связей, включая старые якоря.
+
+    UNION завершает обход даже при цикле; replaces/личные связи не меняются.
+    Статус берётся с листа: его отмена не восстанавливает прежнюю встречу.
+    """
+    if actor.role != 'student':
+        raise AccessDenied('forbidden', 403)
+    ids = list(dict.fromkeys(booking_ids))
+    if not ids:
+        return []
+    with connection.cursor() as cursor:
+        cursor.execute('''WITH RECURSIVE chain(id, replaces_id) AS (
+            SELECT id, replaces_id FROM consultations_booking WHERE student_id=%s AND id=ANY(%s)
+            UNION
+            SELECT b.id, b.replaces_id FROM consultations_booking b JOIN chain c
+                ON b.replaces_id=c.id OR b.id=c.replaces_id WHERE b.student_id=%s
+        ) SELECT id FROM chain''', [actor.profile_id, ids, actor.profile_id])
+        chain_ids = [row[0] for row in cursor.fetchall()]
+    rows = {row.pk: row for row in _bookings(booking_scope(actor, now).filter(pk__in=chain_ids)).prefetch_related('events')}
+    children = {row.replaces_id: row.pk for row in rows.values() if row.replaces_id in rows}
+    snapshot = schedule_snapshot(actor, now)
+    result, seen = [], set()
+    for anchor in ids:
+        if anchor not in rows:
+            continue
+        current, visited = anchor, set()
+        while current in children and current not in visited:
+            visited.add(current)
+            current = children[current]
+        if current in seen or current in visited:
+            continue
+        seen.add(current)
+        value = booking_values(actor, rows[current], now, snapshot=snapshot)
+        previous, parent = [], rows[current].replaces_id
+        while parent in rows:
+            old = rows[parent]
+            previous.append({'id': old.pk, 'url': f'/consultations/bookings/{old.pk}/',
+                'state_label': BOOKING_LABELS[old.state], 'time_label': slot_values_time(old.slot),
+                'history': [{'label': EVENT_LABELS[e.action], 'at': moscow(e.created_at).isoformat()}
+                            for e in sorted(old.events.all(), key=lambda e: (e.created_at, e.pk))]})
+            parent = old.replaces_id
+        value['previous_bookings'] = list(reversed(previous))
+        result.append(value)
+    return result
+
+
+def slot_values_time(row):
+    start, end = moscow(row.starts_at), moscow(row.ends_at)
+    return f'{start:%d.%m.%Y %H:%M}–' + (f'{end:%d.%m.%Y %H:%M}' if start.date() != end.date() else f'{end:%H:%M}') + ' МСК'
+
+
 def _int(params, key, default=None):
     value = params.get(key, default)
     if value is None or value == '':
@@ -177,9 +230,13 @@ def _int(params, key, default=None):
 
 
 def page_data(actor, now, params, booking_id=None):
-    allowed = {'page', 'booking_page', 'assignment', 'course', 'kind', 'request', 'slot', 'rebook'}
+    allowed = {'page', 'booking_page', 'assignment', 'course', 'kind', 'request', 'slot', 'rebook', 'journey'}
     if set(params) - allowed or params.get('kind', '') not in ('', 'teacher', 'staff'):
         raise AccessDenied('invalid_query', 400)
+    journey_context = None
+    if 'journey' in params:
+        from journeys.booking_links import owned_journey, context
+        journey_context = context(owned_journey(actor, params['journey']))
     query = available_slots(actor, now) if actor.role == 'student' else slot_scope(actor, now)
     course = _int(params, 'course')
     if course:
@@ -233,6 +290,7 @@ def page_data(actor, now, params, booking_id=None):
         'audiences': audiences, 'page': selected.number, 'pages': slots.num_pages, 'count': slots.count,
         'booking_page': booking_page.number, 'booking_pages': booking_pages.num_pages, 'booking_count': booking_pages.count,
         'selected_booking': booking_id, 'selected_slot': selected_slot, 'request_context': request_context,
+        'journey_context': journey_context,
         'now': moscow(now).isoformat(), 'preferred_assignment': assignment,
         'preferred_course': course,
         'source_message': snapshot['source']['message'] if snapshot else ''}
@@ -260,18 +318,21 @@ def student_upcoming(actor, now):
     return calendar_events(actor, now, start=now)[:3]
 
 
-def discovery_records(actor, now, limit=200):
-    limit = max(1, min(int(limit), 200))
-    bookings = list(_bookings(booking_scope(actor, now)).order_by('-starts_at', '-pk')[:limit + 1])
-    slots = list(_select(available_slots(actor, now) if actor.role == 'student' else slot_scope(actor, now))
-                 .order_by('starts_at', 'pk')[:limit + 1])
-    items = [{'id': f'booking:{r.pk}', 'title': r.slot.topic,
-        'context': f'{BOOKING_LABELS[r.state]} · {moscow(r.starts_at):%d.%m.%Y %H:%M} МСК',
-        'url': f'/consultations/bookings/{r.pk}/'} for r in bookings[:limit]]
-    items += [{'id': f'slot:{r.pk}', 'title': r.topic,
-        'context': f'Консультация · {moscow(r.starts_at):%d.%m.%Y %H:%M} МСК · {SLOT_LABELS[r.state]}',
-        'url': f'/consultations/?slot={r.pk}'} for r in slots[:limit]]
-    return {'items': items[:limit], 'partial': len(bookings) + len(slots) > limit}
+def discovery_records(actor, now, candidates):
+    from django.db.models import Value
+    from discovery.query import metadata, item, labels, join, date_text
+    # Independent matching limits: unrelated booking history cannot starve slots.
+    bookings = metadata(booking_scope(actor, now).order_by('-starts_at', '-pk'), candidates.tokens,
+        title=F('slot__topic'), category=Value('Консультация'),
+        context=join(labels('state', BOOKING_LABELS), Value(' · '), date_text('starts_at', time=True), Value(' МСК')))
+    for row in candidates.take(bookings, 'consultation_bookings', 'Записи на консультации'):
+        candidates.items.append(item(row, 'consultation:booking:', f'/consultations/bookings/{row["pk"]}/'))
+    scoped = available_slots(actor, now) if actor.role == 'student' else slot_scope(actor, now)
+    slots = metadata(scoped.order_by('starts_at', 'pk'), candidates.tokens,
+        title=F('topic'), category=Value('Консультация'), context=join(Value('Консультация · '),
+            date_text('starts_at', time=True), Value(' МСК · '), labels('state', SLOT_LABELS)))
+    for row in candidates.take(slots, 'consultation_slots', 'Время консультаций'):
+        candidates.items.append(item(row, 'consultation:slot:', f'/consultations/?slot={row["pk"]}'))
 
 
 def notification_values(notification, now):

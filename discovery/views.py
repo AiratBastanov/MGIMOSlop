@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.db import OperationalError
 from django.shortcuts import render
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_GET, require_POST
@@ -33,5 +34,11 @@ def search_results(request):
         query, tokens, page = parse_query(request.POST.get('q', ''), request.POST.get('page', '1'))
     except ValueError as exc:
         return JsonResponse({'marker': actor.marker, 'state': 'invalid', 'error': str(exc)}, status=400)
-    data = private_snapshot(request, extension=lambda active, now: {'search': search(active, now, query, tokens, page)})['search']
+    try:
+        data = private_snapshot(request, extension=lambda active, now: {'search': search(active, now, query, tokens, page)})['search']
+    except OperationalError as exc:
+        if getattr(exc.__cause__, 'sqlstate', None) != '57014':
+            raise
+        return JsonResponse({'marker': actor.marker, 'state': 'unavailable',
+            'error': 'Поиск не завершён за отведённое время. Уточните запрос или повторите позже.'}, status=503)
     return component_response(request, data)
