@@ -104,7 +104,7 @@ def history_values(change, current, instructors):
             'is_historical':change.after['record_revision'] != current['record_revision']}
 
 
-def schedule_snapshot(actor, now):
+def schedule_snapshot(actor, now, *, source_only=False):
     """Вызывается только внутри private_snapshot; сначала scope, затем материализация.
 
     Это небольшой принятый набор, без отдельного кеша и без ORM в шаблоне.
@@ -121,13 +121,13 @@ def schedule_snapshot(actor, now):
                 'update_message':'Источник недоступен; подготовленные сведения ещё не поступили.' if attempt and attempt.outcome == 'source_unavailable' else ''},
                 'lessons':[],'history':[],'coverage':[],'periods':{},'now':now}
     revision = ImportRevision.objects.get(dataset=head,revision=head.current_revision)
-    lessons = list(Lesson.objects.filter(dataset_id=dataset_id,group_id=actor.group_id)
+    lessons = [] if source_only else list(Lesson.objects.filter(dataset_id=dataset_id,group_id=actor.group_id)
         .select_related('course','instructor').order_by('starts_at','source_id'))
     current = {lesson.pk:lesson_values(lesson) for lesson in lessons}
     from profiles.selectors import person_for_instructor
     for lesson in lessons:
         current[lesson.pk]['instructor_person'] = person_for_instructor(actor,lesson.instructor_id,current[lesson.pk]['instructor_name'])
-    changes = list(ScheduleChange.objects.filter(dataset_id=dataset_id,
+    changes = [] if source_only else list(ScheduleChange.objects.filter(dataset_id=dataset_id,
         lesson__dataset_id=dataset_id,lesson__group_id=actor.group_id)
         .order_by('recorded_at','event_id'))
     referenced_instructors = {row.get('instructor_id') for change in changes for row in (change.before,change.after)}

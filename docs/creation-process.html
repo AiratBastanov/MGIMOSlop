@@ -15,19 +15,20 @@
 p,figure,blockquote,table{margin-bottom:3mm}.screen img{max-height:114mm}th,td{padding-top:2.5mm;padding-bottom:2.5mm}
 body{line-height:1.44}.sheet{padding-top:14mm;padding-bottom:18mm}h2{margin-bottom:5mm}
 #service .screen img{max-height:110mm}
+#reading .phone-copy{grid-template-columns:60mm 1fr}#reading .phone-copy img{width:60mm}
 @media print{html{background:white}.sheet{margin:0;box-shadow:none}a{color:#2059a4}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @media screen and (max-width:820px){.sheet{margin:4mm auto}}
 </style>
 </head>
 <body>
 <section class="sheet" id="problem"><div class="page-body">
-<p class="eyebrow">Конкурсный прототип · история создания · 13 ноября 2026</p>
+<p class="eyebrow">Конкурсный прототип · история создания · 14 ноября 2026</p>
 <h1>Цифровой<br>деканат</h1>
 <p class="lead">Найти нужное, подготовить вопрос, получить консультацию и вернуться к ответу.</p>
 <p>Студенту нужно сопоставить расписание, учебные условия и статус обращения. Проектная гипотеза — собрать эти действия в связанном личном пространстве. Интервью и измерение эффекта внедрения не проводились.</p>
-<figure class="screen"><img src="images/student-today.png" alt="Текущий кабинет студента: следующий урок, день и открытые требования"><figcaption>12 ноября. Настоящий Chrome, 1366 × 900. Все люди и учебные записи вымышлены. Просроченное требование видно вместе с причиной.</figcaption></figure>
+<figure class="screen"><img src="images/student-today.png" alt="Текущий кабинет студента: следующий урок, день и открытые требования"><figcaption>14 ноября. Настоящий Chrome, 1366 × 900, обычный вид. Поиск находится над разделами. Все люди и учебные записи вымышлены.</figcaption></figure>
 <p>Пять разделов: <strong>Сегодня, Расписание, Учёба, Заявки, Уведомления.</strong> На телефоне они остаются внизу. Поиск, сохранённая подготовка и консультации соединяют действия внутри этой навигации.</p>
-<nav class="contents" aria-label="Содержание"><a href="#tools">Инструменты и задания · 2</a><a href="#early">Развитие интерфейса · 3</a><a href="#correction">Ошибка и исправление · 4</a><a href="#teacher">Преподаватель · 5</a><a href="#service">Факультетская служба · 6</a><a href="#connected">Связанный путь студента · 7</a><a href="#collaboration">Перенос и проверка · 8</a><a href="#protection">Хранение и защита · 9</a><a href="#assistant">Необязательный ИИ · 10</a><a href="#people">Человек и проверка · 11</a></nav>
+<nav class="contents" aria-label="Содержание"><a href="#tools">Инструменты и задания · 2</a><a href="#early">Развитие интерфейса · 3</a><a href="#correction">Ошибка и исправление · 4</a><a href="#teacher">Преподаватель · 5</a><a href="#service">Факультетская служба · 6</a><a href="#connected">Связанный путь студента · 7</a><a href="#collaboration">Перенос и проверка · 8</a><a href="#protection">Хранение и защита · 9</a><a href="#assistant">Необязательный ИИ · 10</a><a href="#people">Человек и проверка · 11</a><a href="#reading">Чтение и отклик · 12</a></nav>
 </div><footer class="footer"><span>Не официальный сервис вуза</span><span>1</span></footer></section>
 
 <section class="sheet" id="tools"><div class="page-body">
@@ -154,4 +155,15 @@ body{line-height:1.44}.sheet{padding-top:14mm;padding-bottom:18mm}h2{margin-bott
 <p><a href="https://github.com/AiratBastanov/MGIMOSlop">Репозиторий и описание продукта</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/SETUP.md">Полная установка и обычный перезапуск</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/DEMO.md">Демонстрация трёх ролей</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/VALIDATION.md">Проверки, среда и способы повторения</a><br><a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/THIRD_PARTY_NOTICES.md">Сторонние компоненты</a> · <a href="https://github.com/AiratBastanov/MGIMOSlop/blob/main/docs/RIGHTS.md">Права на материалы</a></p>
 <p class="small muted">Редактируемый источник — creation-process.html. Все иллюстрации — подлинные снимки приложения; исходные размеры доступны в репозитории. Внешние руководства по промптингу и полный архив переписки не распространяются.</p>
 </div><footer class="footer"><a href="#problem">К содержанию</a><span>11</span></footer></section>
+<section class="sheet" id="reading"><div class="page-body">
+<p class="eyebrow">Обратная связь · 14 ноября 2026</p><h2>Чтение и понятный отклик</h2>
+<p>Четыре замечания исправлены в действующем кабинете: верхний поиск, соседние статус и кнопка, наблюдаемая загрузка уведомлений и обратимый режим чтения.</p>
+<figure class="screen"><img src="images/reading-navigation.png" alt="Поиск над разделами кабинета, статус и небольшая кнопка Показать рядом"><figcaption>Настоящий Chrome, фрагмент окна 1366 × 900. Центр рабочей области сохранён; поиск ведёт на прежнюю защищённую страницу.</figcaption></figure>
+<div class="phone-copy"><figure><img src="images/reading-settings.png" alt="Настройки чтения: размер, контрастная палитра, интервалы и Обычный вид"><figcaption>Панель при ширине 360 px и тексте 125%. Это живые настройки, не отдельная копия страниц.</figcaption></figure><div class="compact">
+<p><strong>Один шаг туда и обратно.</strong> «Для слабовидящих» сразу включает крупный контрастный текст. «Обычный вид» возвращает оформление; ввод и выбранный файл остаются.</p>
+<p><strong>Измерение до исправления.</strong> Переключения занимали 2,32–2,74 с без сообщения ожидания. После адресной оптимизации — 1,61–2,16 с в том же небольшом наборе; отклик виден в первом кадре.</p>
+<p><strong>Исправления после осмотра.</strong> Устранены слабый контраст старых подписей и перенос цифр даты в календаре. Проверены Chrome/Firefox, узкое окно, клавиатура и настоящий zoom Chrome.</p>
+<p class="small muted">Это локальные технические наблюдения. Пользовательская приёмка, реальный экранный диктор и полная сертификация доступности отдельно не подтверждены.</p>
+</div></div>
+</div><footer class="footer"><a href="#problem">К содержанию</a><span>12</span></footer></section>
 </body></html>

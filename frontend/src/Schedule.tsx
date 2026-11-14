@@ -41,14 +41,14 @@ function Calendar({selected,onSelect,onClose}: {selected:string;onSelect:(v:stri
     {(!/^\d{4}$/.test(yearInput)||Number(yearInput)<1901||Number(yearInput)>2099)&&<p className="field-error" role="status">Введите год от 1901 до 2099.</p>}
     <div className="calendar-month-controls"><button type="button" className="button-secondary" disabled={cursor.startsWith('1901-01')} onClick={()=>{focusDate.current=false;setCursor(monthMove(cursor,-1));}}>Пред. месяц</button><button type="button" className="button-secondary" disabled={cursor.startsWith('2099-12')} onClick={()=>{focusDate.current=false;setCursor(monthMove(cursor,1));}}>След. месяц</button></div>
     <h3 className="calendar-month" aria-live="polite">{label(cursor,{month:'long',year:'numeric'})}</h3>
-    <table className="calendar-grid" role="grid" aria-label="Календарь"><thead><tr>{['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d=><th scope="col" key={d}>{d}</th>)}</tr></thead><tbody>
+    <div className="calendar-grid-scroll"><table className="calendar-grid" role="grid" aria-label="Календарь"><thead><tr>{['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d=><th scope="col" key={d}>{d}</th>)}</tr></thead><tbody>
       {Array.from({length:Math.ceil((total+offset)/7)},(_,week)=><tr key={week}>{Array.from({length:7},(_,n)=>{
         const number=week*7+n-offset+1;
         if(number<1||number>total)return <td key={n}/>;
         const value=iso(new Date(month.getFullYear(),month.getMonth(),number,12));
         return <td key={n} aria-selected={value===selected}><button type="button" tabIndex={value===cursor?0:-1} aria-label={label(value,{day:'numeric',month:'long',year:'numeric'})} aria-pressed={value===selected} onKeyDown={e=>keys(e,value)} onFocus={()=>{focusDate.current=false;setCursor(value);}} onClick={()=>onSelect(value)}>{number}</button></td>;
       })}</tr>)}
-    </tbody></table><p className="calendar-selection-note">Выбрано: {label(selected,{day:'numeric',month:'long',year:'numeric'})}. Просмотр месяца не меняет дату — нажмите нужный день.</p><p id="calendar-bounds" className="support">1901–2099. Доступность занятий проверяется после выбора дня.</p><p className="support">Стрелки — дни; Page Up / Page Down — месяцы, с Shift — годы. Enter — выбрать.</p>
+    </tbody></table></div><p className="calendar-selection-note">Выбрано: {label(selected,{day:'numeric',month:'long',year:'numeric'})}. Просмотр месяца не меняет дату — нажмите нужный день.</p><p id="calendar-bounds" className="support">1901–2099. Доступность занятий проверяется после выбора дня.</p><p className="support">Стрелки — дни; Page Up / Page Down — месяцы, с Shift — годы. Enter — выбрать.</p>
   </dialog>;
 }
 

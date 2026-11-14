@@ -136,7 +136,7 @@ def request_page(actor, request_id=None, status_filter='all', page_number=1, que
             item.update(applicant_name=row.applicant_snapshot.get('name', row.owner.name),
                         applicant_group=row.applicant_snapshot.get('group', row.owner.group.name))
         rows.append(item)
-    filter_options = [('all', 'Все'), ('pending', 'Ожидают решения'), *STATUS_LABELS.items()]
+    filter_options = [('all', 'Все'), ('pending', 'Без решения'), *STATUS_LABELS.items()]
     base = '/staff/requests/' if actor.role == 'staff' else '/requests/'
     def page_url(number):
         return base + '?' + urlencode({**filters,'status': status_filter, 'page': number})

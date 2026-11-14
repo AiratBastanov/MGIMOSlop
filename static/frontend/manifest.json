@@ -8,12 +8,12 @@
     "src": "../static/fonts/GolosText-SemiBold.woff2"
   },
   "src/main.tsx": {
-    "file": "assets/main-CpfOifqq.js",
+    "file": "assets/main-DnCHPZJ2.js",
     "name": "main",
     "src": "src/main.tsx",
     "isEntry": true,
     "css": [
-      "assets/main-k7nmVT8P.css"
+      "assets/main-BqWy4N9q.css"
     ],
     "assets": [
       "assets/GolosText-Regular-BKSWOpAy.woff2",

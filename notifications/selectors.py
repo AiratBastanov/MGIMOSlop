@@ -74,7 +74,9 @@ def inbox_page(actor, *, now, kind='all', archive=False, page_number=1, notifica
         query = query.filter(Q(announcement_change__isnull=False)|Q(application_event__kind__in=['notice','resource']))
         if kind == 'deadlines':
             query = query.filter(Q(announcement_change__announcement__due_at__isnull=False)|Q(application_event__notice_revision__payload__due_at__isnull=False))
-    query = (query.annotate(is_read=Exists(NotificationRead.objects.filter(user_id=actor.user_id,notification_id=OuterRef('pk')))) if mode=='trash' else thread_events(query, actor)).select_related('schedule_change', 'announcement_change__announcement',
+    # Inbox already selected the latest authorized event of each thread before
+    # applying personal state. A second window over those rows is redundant.
+    query = (query.annotate(is_read=Exists(NotificationRead.objects.filter(user_id=actor.user_id,notification_id=OuterRef('pk')))) if mode in ('trash','inbox') else thread_events(query, actor)).select_related('schedule_change', 'announcement_change__announcement',
         'final_result_change__result', 'requirement_change__requirement', 'assessment_change__assessment', 'request_event__request', 'application_event'
     ).order_by('-available_at', '-published_at', '-pk')
     page = Paginator(query, 10).get_page(page_number)
@@ -84,8 +86,18 @@ def inbox_page(actor, *, now, kind='all', archive=False, page_number=1, notifica
     clear_token = signing.dumps({'user': actor.user_id, 'marker': actor.marker, 'receipt_max': cutoff,
         'at': now.isoformat()}, salt='inbox-clear')
     from .inbox_actions import snapshot_token
+    if mode == 'inbox':
+        # This exact authorized snapshot supplies both unread and the signed
+        # read-all operation; late events are still outside the token.
+        active = list(inbox_events(actor,now=now).annotate(read=Exists(
+            NotificationRead.objects.filter(user_id=actor.user_id,notification_id=OuterRef('pk')))).values_list('pk','read'))
+        unread = sum(not read for _,read in active)
+        read_all_token = snapshot_token(actor,[pk for pk,_ in active],'read-all')
+    else:
+        unread = inbox_unread(actor,now)
+        read_all_token = ''
     return {'page_obj': page, 'events': list(page.object_list), 'notification_count': page.paginator.count,
         'inbox_mode':mode,'page_notice':'Такой страницы нет. Показана последняя доступная страница.' if str(page_number)!=str(page.number) else '',
-        'read_all_token':snapshot_token(actor,list(inbox_events(actor,now=now).values_list('pk',flat=True)),'read-all'),
+        'read_all_token':read_all_token,'unread':unread,
         'page_previous_url': url(page.previous_page_number()) if page.has_previous() else '',
         'page_next_url': url(page.next_page_number()) if page.has_next() else '', 'clear_token': clear_token}

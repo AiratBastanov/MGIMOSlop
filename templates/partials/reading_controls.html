@@ -1,0 +1,16 @@
+<div class="reading-controls" aria-label="Вид страницы">
+  <button type="button" class="reading-launcher" id="reading-toggle" aria-expanded="false" aria-controls="reading-settings">Для слабовидящих</button>
+  <button type="button" class="reading-return" data-reading-reset>Обычный вид</button>
+</div>
+<section id="reading-settings" class="reading-settings" popover="auto" aria-labelledby="reading-heading">
+  <header><h2 id="reading-heading">Настройки чтения</h2><button type="button" class="button-quiet" id="reading-close">Закрыть</button></header>
+  <p class="support" id="reading-storage">Настройка для этого браузера. Личные данные не сохраняются.</p>
+  <label for="reading-size">Размер текста</label>
+  <select id="reading-size"><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select>
+  <label for="reading-palette">Контрастная палитра</label>
+  <select id="reading-palette"><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
+  <label for="reading-spacing">Интервалы для чтения</label>
+  <select id="reading-spacing"><option value="normal">Обычные</option><option value="increased">Больше</option></select>
+  <p class="reading-preview">Пример: расписание, результаты и заявки остаются на своих местах.</p>
+  <button type="button" class="button-secondary" data-reading-reset>Обычный вид</button>
+</section>

@@ -1,0 +1,125 @@
+/* Global utilities remain in document order; the existing workspace centering stays. */
+.site-header{height:auto;max-height:55dvh;overflow-y:auto;padding-bottom:14px}
+.account-bar{top:var(--shell-header-height,210px);overflow-y:auto;overflow-x:hidden;gap:14px}
+.account-bar>.header-search{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;flex:none;margin:0;min-height:44px;padding:10px 12px}
+.desktop-nav{flex:none}
+.account-actions{flex:none}
+.profile-menu-panel{position:static;width:auto;max-width:100%;margin-top:8px}
+.reading-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.reading-controls button{font:inherit;font-size:.875rem;line-height:1.4;min-height:44px;padding:9px 10px;white-space:normal;overflow-wrap:anywhere;border:1px solid #a9bfd9;background:var(--surface);color:var(--blue-dark);border-radius:8px;flex:1 1 auto}
+.reading-return{display:none}
+:root[data-reading] .reading-return{display:inline-flex}
+.reading-settings{margin:auto;border:2px solid var(--control);border-radius:12px;background:var(--surface);color:var(--ink);padding:18px;width:min(28rem,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;box-shadow:0 8px 30px #10223f33}
+.reading-settings::backdrop{background:transparent;pointer-events:none}
+.reading-settings>header{display:flex;align-items:start;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:12px}
+.reading-settings h2{font-size:1.25rem;margin:0}
+.reading-settings label{display:block;margin-top:14px}
+.reading-settings select{width:100%;min-width:0}
+.reading-settings .support{margin-bottom:12px}
+.reading-preview{margin-block:18px;padding:12px;border:1px solid var(--control)}
+.calendar-grid-scroll{max-width:100%;overflow:auto}
+.student-request-filter{display:flex;align-items:flex-end;gap:14px;padding:16px;background:#e4eefc;border-radius:10px}
+.student-request-filter>div{min-width:0;max-width:100%}
+.student-request-filter label{display:block;margin-bottom:4px}
+.student-request-filter select{width:100%;min-width:min(17em,100%);min-height:44px}
+.student-request-filter>button{flex:0 0 auto;width:auto;max-width:100%;min-height:44px;padding-inline:20px}
+.inbox-feedback{margin-bottom:12px;min-height:4.5em}
+.inbox-feedback>p{margin:0;min-height:1.55em}
+.inbox-feedback>button{margin-top:8px}
+.inbox-loading{display:flex;align-items:center;gap:10px;font-weight:600}
+.loading-indicator{display:inline-block;flex:none;width:1em;height:1em;border:2px solid currentColor;border-inline-end-color:transparent;border-radius:50%;animation:reading-progress .8s linear infinite}
+.view-switch button[data-requested=true]{outline:2px dashed var(--blue);outline-offset:-4px}
+@keyframes reading-progress{to{transform:rotate(360deg)}}
+@media(max-width:760px){
+  .site-header{position:relative;width:100%;height:auto;max-height:none;overflow:visible;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+  .site-header .wordmark{align-self:center}
+  .site-header .brand-name{display:block;max-width:none}
+  .site-header .concept{position:static;max-width:none;margin:0;line-height:1.4;font-size:.6875rem}
+  .reading-controls{flex:1 1 100%;margin:0;gap:8px}
+  .reading-controls button{flex:1 1 8em;font-size:.875rem}
+  .account-bar{position:relative;top:auto;left:auto;right:auto;bottom:auto;width:100%;height:auto;padding:10px 14px;display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;overflow:visible;gap:12px}
+  .account-bar>.header-search{width:auto;flex:1 1 8em}
+  .header-search svg{display:block}
+  .account-actions{margin:0;padding:0;flex:0 1 auto;max-width:100%}
+  .profile-menu>summary{font-size:.875rem;justify-content:flex-start;min-height:44px;padding:4px;gap:8px}
+  .profile-menu>summary>span{display:inline;white-space:normal}
+  .profile-menu-panel{position:absolute;top:100%;bottom:auto;left:auto;right:0;width:min(18rem,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:65dvh;overflow:auto}
+  .workspace,body:not([data-private]) .workspace{padding-top:22px;margin-top:0}
+  body:not([data-private]) .site-header{display:flex;flex-wrap:wrap}
+}
+
+/* Enhanced palettes use the same semantic content and CSS tokens. */
+:root[data-reading]{--paper:#fff;--surface:#fff;--ink:#111;--muted:#333;--navy:#111;--blue:#003b80;--blue-dark:#003b80;--selected:#dbeafe;--line:#555;--control:#444;--accent:#573000;--accent-pale:#fff1d1;--success:#104828;--success-pale:#e5f6eb;--error:#79001b;--error-pale:#fff0f2;--reading-on-accent:#fff;--sidebar:clamp(228px,17rem,340px);color-scheme:light}
+:root[data-reading=dark]{--paper:#111;--surface:#111;--ink:#fff;--muted:#ddd;--navy:#fff;--blue:#b6d9ff;--blue-dark:#b6d9ff;--selected:#283d50;--line:#bbb;--control:#ddd;--accent:#ffe1a6;--accent-pale:#352a12;--success:#b6f5cf;--success-pale:#163625;--error:#ffcbd4;--error-pale:#3d1720;--reading-on-accent:#111;color-scheme:dark}
+html[data-reading-size='100']{font-size:100%}
+html[data-reading-size='125']{font-size:125%}
+html[data-reading-size='150']{font-size:150%}
+html[data-reading-size='200']{font-size:200%}
+:root[data-reading] body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}
+:root[data-reading] :is(.site-header,.account-bar,.bottom-nav){background:var(--surface);color:var(--ink);border:1px solid var(--control)}
+:root[data-reading] :is(.wordmark,.wordmark:hover,.desktop-nav>a,.bottom-nav>a,.profile-menu>summary){color:var(--ink)}
+:root[data-reading] :is(.concept,.brand-caption,.support,.eyebrow,.weekday,.publication,.thread-time,.historical-note,.source-info,.source-details,.read-status,.below-note,.menu-name,.field-help,.form-note,.person-caption,.assistant-mode,.request-reference){color:var(--muted)}
+:root[data-reading] :is(.desktop-nav>a:hover,.profile-menu>summary:hover){background:var(--selected);color:var(--ink)}
+:root[data-reading] :is(.desktop-nav>a[aria-current],.bottom-nav>a[aria-current]){background:var(--selected);color:var(--ink);outline:2px solid var(--ink);outline-offset:-3px;text-decoration:underline;text-underline-offset:.2em}
+:root[data-reading] :is(a,.text-link,.button-quiet,.filter-trigger){color:var(--blue);text-decoration:underline;text-underline-offset:.15em}
+:root[data-reading] :is(button,input,select,textarea,.button-secondary,.button-quiet,.reading-launcher,.reading-return){font-family:inherit;line-height:1.5;min-height:44px;max-width:100%;color:var(--ink);border-color:var(--control);background:var(--surface)}
+:root[data-reading] :is(button,.button-primary,.button-secondary){white-space:normal;overflow-wrap:anywhere;height:auto}
+:root[data-reading] :is(button[type=submit],.button-primary,.assistant-control){background:var(--blue);color:var(--reading-on-accent);border:2px solid var(--blue)}
+:root[data-reading] :is(input,textarea)::placeholder{color:var(--muted);opacity:1}
+:root[data-reading] :is(button,input,select,textarea):disabled{opacity:1;color:var(--muted);border-style:dashed}
+:root[data-reading] :is(.surface,.role-filters,.student-request-filter,.calendar-dialog,.calendar-popover,.filter-content,.profile-menu-panel,.request-list,.request-row,.request-current,.request-history,.request-empty,.privacy-card,.empty-state,.save-recovery,.data-state,.source-info,.notification-item,.course-row,.assessment-row,.lesson-row,.agenda-day,.spotlight,.today-attention,.publication-preview,.assistant-answer,.page-tool-panel,.journey-step,.journey-card,.consultation-card,.preparation-summary){background:var(--surface);color:var(--ink);border-color:var(--control);box-shadow:none}
+:root[data-reading] :is(.view-switch,.pagination,.study-tabs,.date-workbench,.month-strip,.week-overview,.notification-layout,.course-list,.request-view-tools){background:var(--paper);color:var(--ink);border-color:var(--control)}
+:root[data-reading] :is(.view-switch [aria-pressed=true],[aria-selected=true],.study-tabs [aria-current],.month-day[aria-current],.calendar-day[aria-current]){background:var(--selected);color:var(--ink);outline:2px solid var(--ink);outline-offset:-3px}
+:root[data-reading] :is(.tag,.badge,.count,.mobile-count,.request-status,.result-badge,.course-result,.grade-badge,.unread-label,.status-label,.status-submitted,.status-in_progress,.status-ready,.status-rejected){background:var(--selected);color:var(--ink);border:1px solid var(--control);height:auto;min-width:0;white-space:normal}
+:root[data-reading] :is(.field-error,.error-summary,.state-error,.source-warning){color:var(--error);background:var(--error-pale);border-color:var(--error)}
+:root[data-reading] :is(.state-success,.success-message){color:var(--success);background:var(--success-pale);border-color:var(--success)}
+:root[data-reading] :is(.grade-satisfactory,.result-satisfactory,.tone-satisfactory){color:var(--accent);background:var(--accent-pale)}
+:root[data-reading] :is(.time-until,.spotlight-date){color:var(--muted)}
+:root[data-reading] .attention-deadline strong{color:var(--accent);background:var(--accent-pale)}
+:root[data-reading] :is(.request-comment,.profile-intro,.task-rules,.assignment-context,.journey-context,.journey-feedback,.consultation-calendar,.consultation-calendar-entry,.task-deadline){background:var(--surface);color:var(--ink);border-color:var(--control)}
+:root[data-reading] :is(.day-status,.day-status-empty){background:var(--selected);color:var(--ink);white-space:normal}
+:root[data-reading] :is(.local-tabs [aria-current],.month-strip [aria-current]){background:var(--selected);color:var(--ink);outline:2px solid var(--ink);outline-offset:-3px}
+:root[data-reading] .month-strip [aria-current] :is(strong,span){color:inherit}
+:root[data-reading] .agenda-fragment .selected-day{animation:none}
+:root[data-reading] .skip-link{background:var(--surface);color:var(--blue);border:2px solid var(--control)}
+:root[data-reading] .brand-symbol{background:var(--surface);color:var(--ink);border-color:var(--control)}
+:root[data-reading] .brand-symbol svg{stroke:var(--ink)}
+:root[data-reading] .calendar-grid{min-width:14rem}
+:root[data-reading] .calendar-grid button{white-space:nowrap;overflow-wrap:normal}
+:root[data-reading] :focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 5px var(--surface)}
+:root[data-reading] :is(h1,h2,h3,p,li,label,summary,th,td,a,button){overflow-wrap:anywhere}
+:root[data-reading] :is(.planner-heading,.section-rule,.calendar-heading,.date-step,.inbox-toolbar,.actions,.editor-actions){flex-wrap:wrap;min-width:0}
+:root[data-reading] :is(.planner-heading>*,.section-rule>*,.actions>*){min-width:0;max-width:100%}
+:root[data-reading] :is(.date-step>button,.date-step>button>span,.study-tabs a,.clear-inbox,.inbox-component .view-switch button){white-space:normal}
+:root[data-reading] :is(.reading-settings,.reading-controls){font-size:1rem}
+:root[data-reading] .reading-controls button{font-size:.875rem}
+:root[data-reading-spacing=increased] body{line-height:1.7;letter-spacing:.04em;word-spacing:.12em}
+:root[data-reading-spacing=increased] :is(input,select,textarea,button){letter-spacing:inherit;word-spacing:inherit}
+:root[data-reading-spacing=increased] :is(p,li){line-height:1.7}
+:root[data-reading-spacing=increased] p+p{margin-top:1.4em}
+@media(max-width:760px){
+  :root[data-reading]{--sidebar:0px}
+  :root[data-reading] .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch}
+  :root[data-reading] .bottom-nav>a{font-size:.6875rem;overflow-wrap:anywhere;min-width:0}
+  :root[data-reading] .workspace{padding-inline:12px}
+  :root[data-reading] .profile-menu>summary{font-size:.875rem}
+  :root[data-reading] :is(.spotlight-grid,.lesson-row,.course-heading,.request-row){display:flex;flex-wrap:wrap;gap:12px}
+  :root[data-reading] :is(.spotlight-fact,.lesson-row-body,.course-heading>h2){flex-basis:100%}
+  :root[data-reading] .page-tools-dock{bottom:calc(var(--bottom-nav-height,72px) + 12px)}
+  :root[data-reading] .site-header .wordmark{flex:1 1 100%}
+  :root[data-reading] .site-header .concept{flex:1 1 100%}
+  :root:is([data-reading-size='150'],[data-reading-size='200']) .bottom-nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+  :root:is([data-reading-size='150'],[data-reading-size='200']) body[data-role=student] .bottom-nav{grid-template-columns:repeat(6,minmax(0,1fr))}
+  :root:is([data-reading-size='150'],[data-reading-size='200']) body[data-role=student] .bottom-nav>a{grid-column:span 2}
+  :root:is([data-reading-size='150'],[data-reading-size='200']) body[data-role=student] .bottom-nav>a:nth-last-child(-n+2){grid-column:span 3}
+  :root:is([data-reading-size='150'],[data-reading-size='200']) .calendar-selectors{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.loading-indicator{animation:none;border-style:dotted;border-inline-end-color:currentColor}}
+@media(forced-colors:active){
+  :root[data-reading]{--paper:Canvas;--surface:Canvas;--ink:CanvasText;--muted:CanvasText;--blue:LinkText;--blue-dark:LinkText;--navy:CanvasText;--line:ButtonText;--control:ButtonText;--selected:Canvas;--reading-on-accent:Canvas}
+  .reading-controls button,.header-search,.view-switch button,.bottom-nav>a,.desktop-nav>a{border:1px solid ButtonText}
+  :root[data-reading] :focus-visible,:focus-visible{outline:3px solid Highlight}
+  :root[data-reading] :is([aria-pressed=true],[aria-selected=true],[aria-current]){outline:2px solid Highlight;outline-offset:-3px}
+  .loading-indicator{animation:none;border:2px dotted CanvasText}
+}
+@media print{.reading-controls,.reading-settings{display:none!important}}

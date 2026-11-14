@@ -354,17 +354,16 @@ def private_snapshot(request, *, section='profile', profile_id=None, notificatio
                 raise AccessDenied('not_found',404)
             data.update(name=profile.name,group=profile.group.name,year=profile.year,
                 programme=profile.group.programme.name,faculty=profile.group.programme.faculty.name)
-            active_query = visible_notifications(actor,now=now).annotate(is_read=Exists(
-                NotificationRead.objects.filter(user_id=actor.user_id,notification_id=OuterRef('pk'))))
             from notifications.selectors import inbox_unread
-            data['unread'] = inbox_unread(actor, now)
+            if section != 'notifications':
+                data['unread'] = inbox_unread(actor, now)
             data['notifications'] = []
             schedule = None
             academic = None
-            if section in ('today','schedule','lesson','notifications'):
+            if section in ('today','schedule','lesson'):
                 schedule = schedule_snapshot(actor,now)
                 data['source'] = schedule['source']
-            if section in ('today','study','enrollment','assessment','notifications'):
+            if section in ('today','study','enrollment','assessment'):
                 academic = academic_snapshot(actor,now)
                 data['academic_source'] = academic['source']
                 if section in ('study','enrollment','assessment'):
@@ -480,6 +479,13 @@ def private_snapshot(request, *, section='profile', profile_id=None, notificatio
                 data.update(page)
                 if notification_id is not None and not events:
                     raise AccessDenied('not_found',404)
+                # Same transaction/now and source completeness; projections only
+                # for event families on this ten-row page. Source dates remain.
+                schedule = schedule_snapshot(actor,now,source_only=not any(item.schedule_change_id for item in events))
+                data['source'] = schedule['source']
+                if any(item.final_result_change_id or item.requirement_change_id or item.assessment_change_id for item in events):
+                    academic = academic_snapshot(actor,now)
+                    data['academic_source'] = academic['source']
                 data['notifications'] = [notification_values(item,now,schedule,academic) for item in events]
                 for item in data['notifications']:
                     from notifications.inbox_actions import snapshot_token
@@ -507,7 +513,8 @@ def private_snapshot(request, *, section='profile', profile_id=None, notificatio
                 data.update(request_page(actor,request_id=request_id,status_filter=request_filter,page_number=request_page_number,queue_filters=request_queue_filters))
         if actor.role != 'student':
             from notifications.selectors import inbox_unread
-            data['unread']=inbox_unread(actor,now)
+            if section != 'notifications':
+                data['unread']=inbox_unread(actor,now)
             if section=='notifications':
                 from workspaces.events import inbox
                 data.update(inbox(actor,now,notification_kind,notification_page_number,notification_id,inbox_mode or ('history' if archive else 'inbox')))

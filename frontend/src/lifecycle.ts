@@ -57,14 +57,15 @@ export function installLifecycle(unmount:()=>void, mount:()=>void) {
   // browser. Reveal only a newly focused control that is actually occluded.
   document.addEventListener('focusin', event => {
     const target=event.target;
-    if(!(target instanceof HTMLElement)||!target.closest('.journey-container,.consultation-container,.search-workspace'))return;
+    if(!(target instanceof HTMLElement)||!target.closest('#main')||target.closest('dialog[open],[popover]'))return;
     const valid=contextFence();
     requestAnimationFrame(()=>{
       if(!valid()||document.activeElement!==target||!target.isConnected)return;
       const rect=target.getBoundingClientRect();
       let top=0,bottom=innerHeight,occluded=false;
       for(const fixed of document.querySelectorAll<HTMLElement>('.site-header,.account-bar,.bottom-nav,.page-tools-dock')){
-        if(fixed.contains(target)||!fixed.getClientRects().length||getComputedStyle(fixed).visibility==='hidden')continue;
+        const style=getComputedStyle(fixed);
+        if(fixed.contains(target)||!fixed.getClientRects().length||style.visibility==='hidden'||style.position!=='fixed')continue;
         const box=fixed.getBoundingClientRect();
         if(rect.left>=box.right||rect.right<=box.left)continue;
         if(box.top<=0&&box.bottom<innerHeight/2)top=Math.max(top,box.bottom+12);

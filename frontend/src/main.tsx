@@ -17,6 +17,7 @@ import {Journey} from './Journey';
 import {Consultations} from './Consultations';
 import '../../static/consultations.css';
 import '../../static/journeys.css';
+import '../../static/reading.css';
 
 class Boundary extends Component<{children:ReactNode},{failed:boolean}> {
   state={failed:false};
