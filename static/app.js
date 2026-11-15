@@ -49,6 +49,71 @@
   window.deanery = {marker, validate: (...args) => validate(...args), discard: text => discard(text),
     get active() { return verified && !invalidated && !concealed && Date.now() < expiry; },
     get invalidated() { return invalidated; }, busy: () => false};
+  // The profile stays inside the private lifecycle subtree. Native top layer
+  // escapes sidebar clipping without moving account data into a global portal.
+  const profileTrigger = content.querySelector('.profile-trigger');
+  const profilePanel = content.querySelector('#profile-panel');
+  if (profileTrigger && profilePanel) {
+    const native = typeof profilePanel.showPopover === 'function';
+    if (!native) { profilePanel.hidden = true; content.append(profilePanel); }
+    let frame = 0;
+    const opened = () => native ? profilePanel.matches(':popover-open') : !profilePanel.hidden;
+    function closeProfile(restore = false) {
+      if (opened()) { if (native) profilePanel.hidePopover(); else profilePanel.hidden = true; }
+      profileTrigger.setAttribute('aria-expanded', 'false');
+      if (restore && window.deanery.active) profileTrigger.focus({preventScroll:true});
+    }
+    function placeProfile() {
+      frame = 0;
+      if (!opened() || !profileTrigger.isConnected) return;
+      const r = profileTrigger.getBoundingClientRect(), viewport = window.visualViewport;
+      const x = viewport?.offsetLeft || 0, y = viewport?.offsetTop || 0;
+      const width = viewport?.width || innerWidth, height = viewport?.height || innerHeight;
+      const edge = 12, gap = 8, low = y + edge, high = y + height - edge;
+      if (r.bottom <= low || r.top >= high) { closeProfile(); return; }
+      profilePanel.style.maxWidth = `${Math.max(0, width - edge * 2)}px`;
+      const above = Math.max(0, r.top - gap - low), below = Math.max(0, high - r.bottom - gap);
+      const naturalHeight = profilePanel.scrollHeight + 2;
+      const desktop = matchMedia('(min-width:761px)').matches;
+      const up = desktop ? above >= naturalHeight || above >= below : !(below >= naturalHeight || below >= above);
+      profilePanel.style.maxHeight = `${up ? above : below}px`;
+      const box = profilePanel.getBoundingClientRect();
+      profilePanel.style.left = `${Math.max(x + edge, Math.min(r.left, x + width - edge - box.width))}px`;
+      profilePanel.style.top = `${Math.max(low, Math.min(up ? r.top - gap - box.height : r.bottom + gap, high - box.height))}px`;
+    }
+    function scheduleProfile() { if (opened() && !frame) frame = requestAnimationFrame(placeProfile); }
+    profileTrigger.addEventListener('click', event => {
+      event.preventDefault();
+      if (!window.deanery.active) return;
+      if (opened()) { closeProfile(); return; }
+      if (native) profilePanel.showPopover({source:profileTrigger}); else profilePanel.hidden = false;
+      profileTrigger.setAttribute('aria-expanded','true');
+      placeProfile();
+      if (event.detail === 0) profilePanel.querySelector('a')?.focus({preventScroll:true});
+    });
+    profilePanel.addEventListener('toggle', () => profileTrigger.setAttribute('aria-expanded', String(opened())));
+    const outside = event => { if (opened() && !profilePanel.contains(event.target) && !profileTrigger.contains(event.target)) closeProfile(); };
+    const escape = event => { if (opened() && event.key === 'Escape') { event.preventDefault(); closeProfile(true); } };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('focusin', outside);
+    document.addEventListener('keydown', escape);
+    addEventListener('scroll', scheduleProfile, true);
+    addEventListener('resize', scheduleProfile);
+    visualViewport?.addEventListener('resize', scheduleProfile);
+    visualViewport?.addEventListener('scroll', scheduleProfile);
+    document.addEventListener('presentation:change', scheduleProfile);
+    document.addEventListener('private:conceal', () => closeProfile());
+    const observer = new ResizeObserver(scheduleProfile);
+    observer.observe(profileTrigger); observer.observe(profilePanel);
+    document.addEventListener('private:discard', () => {
+      closeProfile(); cancelAnimationFrame(frame); observer.disconnect();
+      document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside);
+      document.removeEventListener('keydown', escape);
+      removeEventListener('scroll', scheduleProfile, true); removeEventListener('resize', scheduleProfile);
+      visualViewport?.removeEventListener('resize', scheduleProfile); visualViewport?.removeEventListener('scroll', scheduleProfile);
+      document.removeEventListener('presentation:change', scheduleProfile);
+    }, {once:true});
+  }
   const focusedErrors = new WeakSet();
   function closePrivateLayers() {
     for (const menu of content.querySelectorAll('.profile-menu[open]')) menu.open = false;

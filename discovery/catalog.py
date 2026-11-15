@@ -2,6 +2,7 @@
 import re
 import unicodedata
 from studies.routes import ALL_ASSESSED_RESULTS_URL
+from accounts.navigation import navigation
 
 QUERY_LIMIT = 100
 TOKEN_LIMIT = 8
@@ -10,6 +11,7 @@ SOURCE_LIMIT = 200
 
 # Deliberately explicit, reviewed service language, not inferred eligibility.
 SYNONYMS = (
+    frozenset(('расписание', 'расписания', 'пары', 'пара', 'пару')),
     frozenset(('справка', 'справку', 'справки', 'справок', 'certificate')),
     frozenset(('обмен', 'обмена', 'обмену', 'exchange', 'learning', 'agreement', 'cv', 'мотивация', 'транскрипт')),
     frozenset(('консультация', 'консультации', 'консультацию', 'консультаций', 'записаться', 'прием', 'приема', 'встреча', 'appointment')),
@@ -17,7 +19,7 @@ SYNONYMS = (
     frozenset(('исправление', 'исправить', 'неточность', 'неточности', 'ошибка', 'ошибку', 'коррекция')),
     frozenset(('задание', 'задания', 'заданий', 'домашнее', 'работа', 'task')),
 )
-STOP_WORDS = frozenset(('как', 'где', 'мне', 'мой', 'мои', 'на', 'в', 'во', 'к', 'ко', 'по', 'об', 'о', 'для', 'и'))
+STOP_WORDS = frozenset(('как', 'где', 'мне', 'мой', 'мои', 'мое', 'моя', 'на', 'в', 'во', 'к', 'ко', 'по', 'об', 'о', 'для', 'и'))
 
 
 def normalize(value):
@@ -64,18 +66,28 @@ def actions(role):
         )
     elif role == 'teacher':
         rows = (
-            ('courses', 'Открыть мои дисциплины', 'Текущие назначения, публикации и задания', '/teacher/courses/', 'курс дисциплина задания материал'),
-            ('review', 'Проверить отправленные работы', 'Очередь работ в ваших назначениях', '/teacher/review/', 'проверка работа отзыв'),
             ('consultation', 'Организовать консультацию', 'Время приёма для своих учебных групп', '/consultations/', 'консультация запись прием встреча'),
         )
-    else:
+    elif role == 'staff':
         rows = (
-            ('requests', 'Открыть заявки факультета', 'Очередь, уточнения и сохранённые решения', '/staff/requests/', 'справка заявление обмен план заявки'),
             ('consultation', 'Организовать приём студентов', 'Время консультации для своего факультета', '/consultations/', 'консультация запись прием встреча'),
-            ('notices', 'Открыть объявления службы', 'Публикации в пределах своего факультета', '/staff/notices/', 'объявление новости'),
         )
-    return [entry('action:' + key, title, 'Действие', context, url, kind='action', keywords=keywords)
-            for key, title, context, url, keywords in rows]
+    else:
+        return []
+    result = [entry('action:' + key, title, 'Действие', context, url, kind='action', keywords=keywords)
+              for key, title, context, url, keywords in rows]
+    links = navigation(role)
+    seen = {item['url'] for item in result}
+    for link in (*links['primary'], *links['profile']):
+        if link['url'] in seen:
+            continue
+        seen.add(link['url'])
+        title = 'Открыть расписание' if link['key'] == 'schedule' else 'Открыть раздел «' + link['label'] + '»'
+        item = entry('action:' + link['key'], title, 'Раздел', 'Перейти в раздел кабинета',
+                     link['url'], kind='action', keywords=link['keywords'])
+        item['_section'] = link['label']
+        result.append(item)
+    return result
 
 
 def token_score(token, title_words, metadata_words):
@@ -104,6 +116,8 @@ def ranked(items, query, tokens):
         if not all(scores):
             continue
         score = sum(scores) + (20 if normalize(item['title']) == query else 0)
+        if normalize(item.get('_section', '')) == query:
+            score += 30
         # Matching verified actions stay reachable even when many personal
         # records repeat the same service word. Exact references are handled
         # separately by the scoped adapter and still return only that request.

@@ -56,14 +56,13 @@ export function Inbox({initial}:{initial:InboxData}){
     return()=>{removeEventListener('popstate',back);document.removeEventListener('private:conceal',cancel);activeRead.current?.controller.abort();attempt.current=null;serial.current++;};
   },[]);
   const requestedMode=requested?new URL(requested,location.origin).searchParams.get('mode'):null;
-  const loading=reading?(requestedMode==='history'?'Загружаем историю…':'Загружаем входящие…'):'';
+  const loading=reading?`${requestedMode==='history'?'Загружаем историю.':'Загружаем входящие.'} Пока показаны ${data.mode==='history'?'история':'входящие'}.`:'';
   return <div className="inbox-component content-container notifications-container">
     <header className="planner-heading"><div><p className="eyebrow">События вашего кабинета</p><h1>Уведомления</h1><p className="weekday">{data.mode==='history'?'История · ':''}Всего: {data.count}</p></div>
       <div className="view-switch" aria-label="Лента уведомлений">{[['inbox','Входящие'],['history','История']].map(([mode,label])=><button key={mode} type="button" disabled={writing} aria-pressed={data.mode===mode} data-requested={requestedMode===mode||undefined} onClick={()=>load(url(data.kind,mode))}>{label}</button>)}</div>
     </header>
-    <div className="inbox-feedback"><p className={reading?'inbox-loading':'inline-status'} role="status" aria-live="polite" aria-atomic="true">{reading&&<span className="loading-indicator" aria-hidden="true"/>}{loading||message}</p>
+    <div className="inbox-feedback" data-visible={Boolean(reading||message)}><p className={reading?'inbox-loading':message?'inbox-message':'sr-only'} role="status" aria-live="polite" aria-atomic="true">{reading&&<span className="loading-indicator" aria-hidden="true"/>}{loading||message}</p>
       {failed&&<button type="button" className="button-secondary" disabled={busy} onClick={()=>load(failed,true,false,true)}>Повторить загрузку</button>}
-      <p className="support">На экране: {data.mode==='history'?'история':'входящие'}.</p>
     </div>
     <div className="inbox-toolbar"><div ref={filter} className="filter-popover"><button ref={filterTrigger} type="button" className="filter-trigger" aria-expanded={filterOpen} aria-controls="notification-filter" onClick={()=>setFilterOpen(!filterOpen)}>Фильтр: {kinds.find(k=>k[0]===data.kind)?.[1]}</button><div id="notification-filter" className="filter-content" hidden={!filterOpen}><label htmlFor="notification-kind">Категория</label><select id="notification-kind" value={data.kind} disabled={busy} onChange={e=>{setMessage('');void load(url(e.target.value));}}>{kinds.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></div></div>
       {data.mode==='inbox'&&<button type="button" className="button-quiet clear-inbox" disabled={busy||uncertain||!data.unread} onClick={()=>action('/notifications/read-all/',{snapshot:data.read_all_token})}>Прочитать все</button>}

@@ -22,7 +22,8 @@ PATTERNS = [rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',
             rb'AKIA[0-9A-Z]{16}']
 READER_DOCS = ['README.md', 'AGENTS.md', 'deploy/README.md',
                *['docs/' + name + '.md' for name in ('SETUP', 'DEMO', 'ARCHITECTURE', 'AI_ASSISTANT',
-                 'DEVELOPMENT_PROCESS', 'VALIDATION', 'RESEARCH_DECISIONS', 'RIGHTS', 'THIRD_PARTY_NOTICES')], 'docs/creation-process.html']
+                 'DEVELOPMENT_PROCESS', 'VALIDATION', 'RESEARCH_DECISIONS', 'RIGHTS', 'THIRD_PARTY_NOTICES')], 'docs/creation-process.html',
+               *[p.relative_to(ROOT).as_posix() for p in (ROOT / 'docs/video').glob('*.md')]]
 
 
 def git(*args):
@@ -146,6 +147,14 @@ def main():
 
     outgoing = 0
     if args.outgoing:
+        # Removed files in earlier outgoing commits still travel in the push.
+        named_objects = git('rev-list', '--objects', args.outgoing, '--not', '--remotes').decode('utf-8').splitlines()
+        for line in named_objects:
+            if ' ' not in line:
+                continue
+            historical = Path(line.split(' ', 1)[1])
+            if set(historical.parts) & FORBIDDEN or historical.suffix.lower() in {'.dump', '.zip', '.har', '.eml', '.sqlite3', '.gguf', '.safetensors', '.log', '.webm', '.bak', '.db', '.pem', '.key'}:
+                errors.append('forbidden outgoing history path: ' + historical.as_posix())
         tracked = set(git('ls-tree', '-r', '--name-only', args.outgoing).decode('utf-8').splitlines())
         if tracked != selected:
             errors.extend('commit extra: ' + p for p in sorted(tracked - selected))

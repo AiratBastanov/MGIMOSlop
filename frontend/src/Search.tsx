@@ -73,6 +73,6 @@ export function Search({initial}:{initial:Initial}) {
       {items.length>0&&<ul className="search-results" ref={list} onKeyDown={select}>{items.map(item=><li key={item.key}><p className="eyebrow">{item.kind==='action'?'Действие':item.category}</p><h3><a href={item.url}>{item.title}</a></h3><p className="support">{item.context}</p></li>)}</ul>}
       {data&&data.pages>1&&<nav className="pagination" aria-label="Страницы поиска"><button type="button" className="button-secondary" disabled={loading||data.page<=1} onClick={()=>find(query,data.page-1,true)}>Предыдущая</button><span>{data.page} из {data.pages}</span><button type="button" disabled={loading||data.page>=data.pages} onClick={()=>find(query,data.page+1,true)}>Следующая</button></nav>}
     </div>
-    {!loading&&phase!=='error'&&<section className="search-actions"><h2>{phase==='empty'?'Частые действия':'Перейти к действию'}</h2><ul>{initial.suggestions.map(item=><li key={item.key}><a href={item.url}>{item.title}</a><p className="support">{item.context}</p></li>)}</ul></section>}
+    {phase==='empty'&&<section className="search-actions"><h2>Действия и разделы</h2><ul>{initial.suggestions.map(item=><li key={item.key}><a href={item.url}>{item.title}</a><p className="support">{item.context}</p></li>)}</ul></section>}
   </section>;
 }

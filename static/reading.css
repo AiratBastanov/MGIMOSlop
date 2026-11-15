@@ -4,7 +4,9 @@
 .account-bar>.header-search{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;flex:none;margin:0;min-height:44px;padding:10px 12px}
 .desktop-nav{flex:none}
 .account-actions{flex:none}
-.profile-menu-panel{position:static;width:auto;max-width:100%;margin-top:8px}
+.profile-trigger{width:100%;border:0;background:transparent;text-align:left;font-weight:600}
+.profile-menu-panel{position:fixed;inset:auto;margin:0;width:18rem;max-width:calc(100vw - 24px);overflow:auto;overscroll-behavior:contain;color:var(--ink)}
+.profile-menu-panel::backdrop{background:transparent;pointer-events:none}
 .reading-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .reading-controls button{font:inherit;font-size:.875rem;line-height:1.4;min-height:44px;padding:9px 10px;white-space:normal;overflow-wrap:anywhere;border:1px solid #a9bfd9;background:var(--surface);color:var(--blue-dark);border-radius:8px;flex:1 1 auto}
 .reading-return{display:none}
@@ -23,10 +25,12 @@
 .student-request-filter label{display:block;margin-bottom:4px}
 .student-request-filter select{width:100%;min-width:min(17em,100%);min-height:44px}
 .student-request-filter>button{flex:0 0 auto;width:auto;max-width:100%;min-height:44px;padding-inline:20px}
-.inbox-feedback{margin-bottom:12px;min-height:4.5em}
-.inbox-feedback>p{margin:0;min-height:1.55em}
+.inbox-feedback{position:fixed;right:88px;bottom:24px;z-index:35;max-width:min(30rem,calc(100vw - 32px));pointer-events:none}
+.inbox-feedback[data-visible=true]{padding:12px 16px;background:var(--surface);color:var(--ink);border:1px solid var(--control);border-radius:8px;box-shadow:0 4px 16px #142b4b22}
+.inbox-feedback>p{margin:0}
 .inbox-feedback>button{margin-top:8px}
-.inbox-loading{display:flex;align-items:center;gap:10px;font-weight:600}
+.inbox-feedback button{pointer-events:auto}
+.inbox-loading{display:flex;align-items:center;gap:10px}
 .loading-indicator{display:inline-block;flex:none;width:1em;height:1em;border:2px solid currentColor;border-inline-end-color:transparent;border-radius:50%;animation:reading-progress .8s linear infinite}
 .view-switch button[data-requested=true]{outline:2px dashed var(--blue);outline-offset:-4px}
 @keyframes reading-progress{to{transform:rotate(360deg)}}
@@ -41,9 +45,9 @@
   .account-bar>.header-search{width:auto;flex:1 1 8em}
   .header-search svg{display:block}
   .account-actions{margin:0;padding:0;flex:0 1 auto;max-width:100%}
-  .profile-menu>summary{font-size:.875rem;justify-content:flex-start;min-height:44px;padding:4px;gap:8px}
-  .profile-menu>summary>span{display:inline;white-space:normal}
-  .profile-menu-panel{position:absolute;top:100%;bottom:auto;left:auto;right:0;width:min(18rem,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:65dvh;overflow:auto}
+  .profile-trigger{font-size:.875rem;justify-content:flex-start;min-height:44px;padding:4px;gap:8px}
+  .profile-trigger>span{display:inline;white-space:normal}
+  .inbox-feedback{right:16px;bottom:calc(var(--bottom-nav-height) + 16px)}
   .workspace,body:not([data-private]) .workspace{padding-top:22px;margin-top:0}
   body:not([data-private]) .site-header{display:flex;flex-wrap:wrap}
 }
@@ -57,9 +61,9 @@ html[data-reading-size='150']{font-size:150%}
 html[data-reading-size='200']{font-size:200%}
 :root[data-reading] body{background:var(--paper);color:var(--ink);overflow-wrap:anywhere}
 :root[data-reading] :is(.site-header,.account-bar,.bottom-nav){background:var(--surface);color:var(--ink);border:1px solid var(--control)}
-:root[data-reading] :is(.wordmark,.wordmark:hover,.desktop-nav>a,.bottom-nav>a,.profile-menu>summary){color:var(--ink)}
+:root[data-reading] :is(.wordmark,.wordmark:hover,.desktop-nav>a,.bottom-nav>a,.profile-trigger){color:var(--ink)}
 :root[data-reading] :is(.concept,.brand-caption,.support,.eyebrow,.weekday,.publication,.thread-time,.historical-note,.source-info,.source-details,.read-status,.below-note,.menu-name,.field-help,.form-note,.person-caption,.assistant-mode,.request-reference){color:var(--muted)}
-:root[data-reading] :is(.desktop-nav>a:hover,.profile-menu>summary:hover){background:var(--selected);color:var(--ink)}
+:root[data-reading] :is(.desktop-nav>a:hover,.profile-trigger:hover){background:var(--selected);color:var(--ink)}
 :root[data-reading] :is(.desktop-nav>a[aria-current],.bottom-nav>a[aria-current]){background:var(--selected);color:var(--ink);outline:2px solid var(--ink);outline-offset:-3px;text-decoration:underline;text-underline-offset:.2em}
 :root[data-reading] :is(a,.text-link,.button-quiet,.filter-trigger){color:var(--blue);text-decoration:underline;text-underline-offset:.15em}
 :root[data-reading] :is(button,input,select,textarea,.button-secondary,.button-quiet,.reading-launcher,.reading-return){font-family:inherit;line-height:1.5;min-height:44px;max-width:100%;color:var(--ink);border-color:var(--control);background:var(--surface)}
@@ -102,7 +106,7 @@ html[data-reading-size='200']{font-size:200%}
   :root[data-reading] .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch}
   :root[data-reading] .bottom-nav>a{font-size:.6875rem;overflow-wrap:anywhere;min-width:0}
   :root[data-reading] .workspace{padding-inline:12px}
-  :root[data-reading] .profile-menu>summary{font-size:.875rem}
+  :root[data-reading] .profile-trigger{font-size:.875rem}
   :root[data-reading] :is(.spotlight-grid,.lesson-row,.course-heading,.request-row){display:flex;flex-wrap:wrap;gap:12px}
   :root[data-reading] :is(.spotlight-fact,.lesson-row-body,.course-heading>h2){flex-basis:100%}
   :root[data-reading] .page-tools-dock{bottom:calc(var(--bottom-nav-height,72px) + 12px)}
