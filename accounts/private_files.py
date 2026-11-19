@@ -7,7 +7,7 @@ from django.conf import settings
 
 def demo_state_dir():
     root = settings.BASE_DIR / '.local'
-    return root / 'hosted-demo' if settings.RENDER_HOSTING else root
+    return root / 'hosted-demo' if settings.HOSTING_PROVIDER else root
 
 
 def protect_directory(path):

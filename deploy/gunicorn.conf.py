@@ -1,6 +1,6 @@
 import os
 
-if os.environ.get('DEANERY_HOSTING') == 'render':
+if os.environ.get('DEANERY_HOSTING') in ('render', 'host67'):
     bind = '0.0.0.0:' + str(int(os.environ.get('PORT', '10000')))
     workers = 1
     threads = 2

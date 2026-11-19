@@ -4,19 +4,21 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import re
+import sys
 from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from deanery.hosting import assigned_hostname
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-url', default='http://127.0.0.1:8000')
     parser.add_argument('--credentials')
-    parser.add_argument('--hosted', action='store_true', help='Проверить точный HTTPS-домен из RENDER_EXTERNAL_HOSTNAME.')
+    parser.add_argument('--hosted', action='store_true', help='Проверить точный HTTPS-домен выбранной площадки.')
     parser.add_argument('--after-restart', type=Path, help='Повторно прочитать заявку, отзыв и файлы по предыдущему checks.json.')
     parser.add_argument('--output', required=True)
     parser.add_argument('--read-only', action='store_true', help='Only login/read/helper; no new request or review.')
@@ -24,9 +26,12 @@ def main():
     args = parser.parse_args()
     credentials_path = Path(args.credentials or '.local/demo-credentials.json')
     if args.hosted:
-        host = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')
-        if not re.fullmatch(r'[a-z0-9-]+\.onrender\.com', host) or args.base_url != 'https://' + host:
-            parser.error('Нужен точный HTTPS-адрес сервиса из Render.')
+        try:
+            host = assigned_hostname(os.environ.get('DEANERY_HOSTING', 'render'))
+        except ValueError as error:
+            parser.error(str(error))
+        if args.base_url != 'https://' + host:
+            parser.error('Нужен точный HTTPS-адрес выбранного сервиса.')
         if args.credentials:
             parser.error('Для внешнего сервиса используются только учётные данные выделенной установки.')
         credentials_path = ROOT / '.local/hosted-demo/demo-credentials.json'
@@ -65,7 +70,8 @@ def main():
     def login(page, user):
         route = '/schedule/?date=2026-11-23&view=week' if user == 'student_a' else '/login/'
         page.goto(args.base_url + route)
-        assert urlsplit(page.url).path == '/login/'
+        login_url = urlsplit(page.url)
+        assert login_url[:2] == urlsplit(args.base_url)[:2] and login_url.path == '/login/'
         page.get_by_label('Логин', exact=True).fill(user)
         page.get_by_label('Пароль', exact=True).fill(credentials[user])
         page.get_by_role('button', name='Войти', exact=False).click()

@@ -4,9 +4,9 @@ from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[2]
-RENDER_HOSTING = os.environ.get('DEANERY_HOSTING') == 'render'
+HOSTING_PROVIDER = os.environ.get('DEANERY_HOSTING', '')
 config_path = Path(os.environ.get('DEANERY_CONFIG', BASE_DIR / '.local' / 'app.json'))
-config = json.loads(config_path.read_text(encoding='utf-8')) if not RENDER_HOSTING and config_path.exists() else {}
+config = json.loads(config_path.read_text(encoding='utf-8')) if not HOSTING_PROVIDER and config_path.exists() else {}
 
 def setting(name, default=None):
     value = os.environ.get(name, config.get(name, default))
@@ -37,7 +37,7 @@ TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
               'DIRS': [BASE_DIR / 'templates'], 'APP_DIRS': True,
               'OPTIONS': {'context_processors': ['django.template.context_processors.request']}}]
 WSGI_APPLICATION = 'deanery.wsgi.application'
-if RENDER_HOSTING:
+if HOSTING_PROVIDER:
     from .neon import direct_database
     DATABASES = {'default': direct_database(setting('DATABASE_URL'))}
 else:

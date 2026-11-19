@@ -1,16 +1,14 @@
 from .base import *  # noqa: F403
 
-if RENDER_HOSTING:
-    import re
+if HOSTING_PROVIDER:
+    from deanery.hosting import assigned_hostname
     if len(SECRET_KEY) < 50:
         raise RuntimeError('Требуется постоянный случайный DJANGO_SECRET_KEY не короче 50 символов.')
-    host = setting('RENDER_EXTERNAL_HOSTNAME')
-    if not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.onrender\.com', host):
-        raise RuntimeError('Требуется домен сервиса из RENDER_EXTERNAL_HOSTNAME.')
+    host = assigned_hostname(HOSTING_PROVIDER)
     ALLOWED_HOSTS = [host]
     PUBLIC_BASE_URL = 'https://' + host
     CSRF_TRUSTED_ORIGINS = [PUBLIC_BASE_URL]
-    MIDDLEWARE = ['deanery.ingress.render_https', MIDDLEWARE[0],
+    MIDDLEWARE = ['deanery.ingress.hosted_https', MIDDLEWARE[0],
                   'whitenoise.middleware.WhiteNoiseMiddleware', *MIDDLEWARE[1:]]
     WHITENOISE_IMMUTABLE_FILE_TEST = r'^/static/frontend/assets/[^/]+-[A-Za-z0-9_-]{8}\.[^/.]+$'
     WHITENOISE_MAX_AGE = 0
