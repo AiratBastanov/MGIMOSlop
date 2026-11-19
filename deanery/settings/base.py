@@ -4,8 +4,9 @@ from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[2]
+RENDER_HOSTING = os.environ.get('DEANERY_HOSTING') == 'render'
 config_path = Path(os.environ.get('DEANERY_CONFIG', BASE_DIR / '.local' / 'app.json'))
-config = json.loads(config_path.read_text(encoding='utf-8')) if config_path.exists() else {}
+config = json.loads(config_path.read_text(encoding='utf-8')) if not RENDER_HOSTING and config_path.exists() else {}
 
 def setting(name, default=None):
     value = os.environ.get(name, config.get(name, default))
@@ -36,14 +37,18 @@ TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
               'DIRS': [BASE_DIR / 'templates'], 'APP_DIRS': True,
               'OPTIONS': {'context_processors': ['django.template.context_processors.request']}}]
 WSGI_APPLICATION = 'deanery.wsgi.application'
-DATABASES = {'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': setting('DB_NAME'), 'USER': setting('DB_USER'),
-    'PASSWORD': setting('DB_PASSWORD'), 'HOST': setting('DB_HOST', '127.0.0.1'),
-    'PORT': setting('DB_PORT', '55432'), 'CONN_MAX_AGE': 0,
-    'OPTIONS': {'connect_timeout': 3, 'options': '-c statement_timeout=10000 -c lock_timeout=5000'},
-    'TEST': {'NAME': 'deanery_test'},
-}}
+if RENDER_HOSTING:
+    from .neon import direct_database
+    DATABASES = {'default': direct_database(setting('DATABASE_URL'))}
+else:
+    DATABASES = {'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': setting('DB_NAME'), 'USER': setting('DB_USER'),
+        'PASSWORD': setting('DB_PASSWORD'), 'HOST': setting('DB_HOST', '127.0.0.1'),
+        'PORT': setting('DB_PORT', '55432'), 'CONN_MAX_AGE': 0,
+        'OPTIONS': {'connect_timeout': 3, 'options': '-c statement_timeout=10000 -c lock_timeout=5000'},
+        'TEST': {'NAME': 'deanery_test'},
+    }}
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from accounts import views
 from student_requests import views as request_views
-from deanery.views import status_page
+from deanery.views import liveness, status_page
 from profiles import views as profile_views
 from notifications import views as notification_views
 from accounts.support import support
@@ -50,6 +50,7 @@ urlpatterns = [
     path('notifications/<int:notification_id>/read/',views.read_notification,name='notification_read'),
     path('context/',views.context,name='context'),
     path('health/ready/',status_page,name='health'),
+    path('health/live/',liveness,name='liveness'),
 ]
 handler404 = 'accounts.views.not_found'
 handler500 = 'accounts.views.server_error'

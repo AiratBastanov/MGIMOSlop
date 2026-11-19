@@ -1,8 +1,10 @@
-"""Browser smoke for a disposable local demonstration. Credentials stay local."""
+"""Browser verification of a local or explicitly selected hosted synthetic demo."""
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
+import re
 from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright, expect
@@ -13,17 +15,34 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-url', default='http://127.0.0.1:8000')
-    parser.add_argument('--credentials', default='.local/demo-credentials.json')
+    parser.add_argument('--credentials')
+    parser.add_argument('--hosted', action='store_true', help='Проверить точный HTTPS-домен из RENDER_EXTERNAL_HOSTNAME.')
+    parser.add_argument('--after-restart', type=Path, help='Повторно прочитать заявку, отзыв и файлы по предыдущему checks.json.')
     parser.add_argument('--output', required=True)
     parser.add_argument('--read-only', action='store_true', help='Only login/read/helper; no new request or review.')
     parser.add_argument('--provider-state', choices=('disabled', 'unavailable'), default='disabled')
     args = parser.parse_args()
-    if urlsplit(args.base_url).hostname not in ('127.0.0.1', 'localhost'):
+    credentials_path = Path(args.credentials or '.local/demo-credentials.json')
+    if args.hosted:
+        host = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')
+        if not re.fullmatch(r'[a-z0-9-]+\.onrender\.com', host) or args.base_url != 'https://' + host:
+            parser.error('Нужен точный HTTPS-адрес сервиса из Render.')
+        if args.credentials:
+            parser.error('Для внешнего сервиса используются только учётные данные выделенной установки.')
+        credentials_path = ROOT / '.local/hosted-demo/demo-credentials.json'
+        expect.set_options(timeout=20000)
+    elif urlsplit(args.base_url).hostname not in ('127.0.0.1', 'localhost'):
         parser.error('Проверка предназначена только для локального демо.')
+    previous = None
+    if args.after_restart:
+        previous = json.loads(args.after_restart.read_text(encoding='utf-8'))
+        if previous['origin'] != args.base_url or not {'request', 'material', 'files'} <= previous['saved'].keys():
+            parser.error('Нужен результат полного первого прогона на этом же адресе.')
+        args.read_only = True
     out = Path(args.output)
     out.mkdir(parents=True, exist_ok=False)
-    credentials = json.loads(Path(args.credentials).read_text(encoding='utf-8'))
-    facts = {'checks': [], 'saved': {}, 'screenshots': []}
+    credentials = json.loads(credentials_path.read_text(encoding='utf-8'))
+    facts = {'origin': args.base_url, 'checks': [], 'saved': {}, 'screenshots': []}
 
     def fact(name):
         facts['checks'].append(name)
@@ -31,8 +50,9 @@ def main():
         print(name, flush=True)
 
     def ready(page):
+        expect(page.locator('#private-content:not([inert])')).to_be_visible()
         expect(page.locator('#privacy-state')).to_be_hidden()
-        page.wait_for_function('window.deanery?.active === true')
+        assert page.evaluate('window.deanery.active')
         for el in page.locator('[data-component]').all():
             expect(el).not_to_be_empty()
         page.evaluate('document.fonts.ready')
@@ -43,11 +63,15 @@ def main():
         ready(page)
 
     def login(page, user):
-        page.goto(args.base_url + '/login/')
+        route = '/schedule/?date=2026-11-23&view=week' if user == 'student_a' else '/login/'
+        page.goto(args.base_url + route)
+        assert urlsplit(page.url).path == '/login/'
         page.get_by_label('Логин', exact=True).fill(user)
         page.get_by_label('Пароль', exact=True).fill(credentials[user])
         page.get_by_role('button', name='Войти', exact=False).click()
         ready(page)
+        if user == 'student_a':
+            expect(page).to_have_url(args.base_url + route)
 
     def capture(page, name):
         page.screenshot(path=str(out / name))
@@ -77,6 +101,14 @@ def main():
             s, b, t, f = (pages[name] for name in ('student_a', 'student_b', 'teacher_demo', 'staff_demo'))
             goto(s, '/today/'); capture(s, 'student-today.png')
             goto(s, '/study/'); capture(s, 'student-studies.png')
+            goto(s, '/study/?view=results&period=all&filter=assessed')
+            goto(s, '/notifications/')
+            s.locator('.header-search').click(); ready(s)
+            s.locator('#cabinet-search').fill('Расписание')
+            s.get_by_role('button', name='Найти', exact=True).click()
+            s.locator('#search-results a[href="/schedule/"]').click(); ready(s)
+            expect(s).to_have_url(args.base_url + '/schedule/')
+            fact('Глубокая ссылка после входа, оценки, уведомления и переход к расписанию из поиска')
             goto(s, '/schedule/?date=2026-11-23&view=week')
             expect(s.locator('main')).to_contain_text('2026')
             goto(b, '/profile/'); expect(b.locator('main')).to_contain_text('Тимур Светлов')
@@ -87,10 +119,15 @@ def main():
             s.get_by_role('link', name='[Демо] Материал с двумя файлами', exact=True).click(); ready(s)
             files = s.locator('.publication-content .attachment-list a')
             assert files.count() == 2
+            fingerprints = {}
             for link in files.all():
-                url = args.base_url + link.get_attribute('href')
-                assert contexts['student_a'].request.get(url).status == 200
+                path = link.get_attribute('href')
+                url = args.base_url + path
+                response = contexts['student_a'].request.get(url)
+                assert response.status == 200 and response.body()
+                fingerprints[path] = hashlib.sha256(response.body()).hexdigest()
                 assert contexts['student_b'].request.get(url).status == 404
+            facts['saved']['files'] = fingerprints
             fact('Учебные экраны, отдельные профили, группа и два приватных файла преподавателя')
 
             # Every built asset is served by Django, not a separate Vite process.
@@ -102,6 +139,16 @@ def main():
                 assert response.status == 200
                 assert hashlib.sha256(response.body()).digest() == hashlib.sha256((ROOT / 'static/frontend' / asset).read_bytes()).digest()
             fact('Готовые JS, CSS и шрифты совпадают с опубликованной сборкой')
+
+            if previous:
+                saved = previous['saved']
+                assert saved['files'] == fingerprints
+                goto(s, f"/requests/{int(saved['request'])}/")
+                expect(s.locator('.request-current-status')).to_have_text('Готова')
+                expect(s.locator('main')).to_contain_text('Демонстрация завершена.')
+                goto(s, f"/study/materials/{int(saved['material'])}/")
+                expect(s.locator('.material-feedback').first).to_contain_text('Аргумент и примеры согласованы.')
+                fact('После рестарта сохранились четыре пароля, ответ службы, отзыв и SHA-256 двух файлов')
 
             if not args.read_only:
                 goto(s, '/requests/new/')
@@ -166,6 +213,15 @@ def main():
                 fact(f'Помощник {width}px: немодальная панель, сохранены ввод и позиция при проверках сеанса')
             s.set_viewport_size({'width': 360, 'height': 800})
             goto(s, '/today/'); capture(s, 'student-mobile.png')
+            s.locator('#reading-toggle').click()
+            s.locator('#reading-palette').select_option('dark')
+            s.locator('#reading-close').click()
+            s.reload(); ready(s)
+            expect(s.locator('html')).to_have_attribute('data-reading', 'dark')
+            s.locator('.reading-return').click()
+            assert s.locator('html').get_attribute('data-reading') is None
+            assert s.locator('.bottom-nav a').count() == 5
+            fact('На ширине 360 px работают пять разделов, сохранение режима чтения и возврат')
             fact('Снимки текущего интерфейса сделаны в реальном браузере')
         finally:
             (out / 'checks.json').write_text(json.dumps(facts, ensure_ascii=False, indent=2), encoding='utf-8')

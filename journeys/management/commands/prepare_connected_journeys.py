@@ -1,5 +1,5 @@
 import json
-from django.conf import settings
+from accounts.private_files import demo_state_dir
 from django.core.management.base import BaseCommand,CommandError
 from django.db import connection,transaction
 from accounts.access import AccessDenied
@@ -14,7 +14,7 @@ class Command(BaseCommand):
         parser.add_argument('--operator',default='connected-demonstration')
     def handle(self,*args,**options):
         if options['database']!=connection.settings_dict['NAME']:raise CommandError('Имя --database не совпадает с настроенной БД.')
-        path=settings.BASE_DIR/'.local/demo-credentials.json'
+        path=demo_state_dir()/'demo-credentials.json'
         try:
             with transaction.atomic():
                 consultations=prepare_consultations(path,operator=options['operator'])

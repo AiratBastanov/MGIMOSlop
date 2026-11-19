@@ -2,7 +2,7 @@
 from datetime import datetime,time
 from zoneinfo import ZoneInfo
 from pathlib import Path
-from django.conf import settings
+from accounts.private_files import demo_state_dir
 from django.core.management.base import BaseCommand,CommandError
 from django.db import transaction
 from accounts.access import lock_guard
@@ -17,7 +17,7 @@ class Command(BaseCommand):
     help='Добавить teacher_demo и отсутствующие учебные назначения, не меняя существующие настройки и действия.'
 
     def add_arguments(self,parser):
-        parser.add_argument('--credentials',default=str(settings.BASE_DIR/'.local'/'demo-credentials.json'))
+        parser.add_argument('--credentials',default=str(demo_state_dir()/'demo-credentials.json'))
         parser.add_argument('--operator',required=True)
 
     def handle(self,*args,**options):

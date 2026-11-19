@@ -1,5 +1,15 @@
-bind = '127.0.0.1:8000'
-workers = 2
+import os
+
+if os.environ.get('DEANERY_HOSTING') == 'render':
+    bind = '0.0.0.0:' + str(int(os.environ.get('PORT', '10000')))
+    workers = 1
+    threads = 2
+    forwarded_allow_ips = ''
+    secure_scheme_headers = {}
+    forwarder_headers = ''
+else:
+    bind = '127.0.0.1:8000'
+    workers = 2
 timeout = 30
 accesslog = '-'
 errorlog = '-'

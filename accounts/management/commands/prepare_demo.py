@@ -10,7 +10,7 @@ from django.db import connection, transaction
 
 from accounts.access import lock_guard
 from accounts.models import AccessAudit, AuthorizationGuard
-from accounts.private_files import protect_directory
+from accounts.private_files import demo_state_dir, protect_directory
 from accounts.provisioning import provision
 from data_import.contracts import ImportRejected
 from data_import.models import Dataset, ImportRevision
@@ -53,9 +53,11 @@ class Command(BaseCommand):
                 cursor.execute('SELECT pg_advisory_unlock(%s)', [LOCK])
 
     def prepare(self):
+        state = demo_state_dir()
+        credentials = state / 'demo-credentials.json'
         started = AccessAudit.objects.filter(action='demo_composition_started', operator=EDITION).exists()
         if not started:
-            if (settings.BASE_DIR / '.local/demo-credentials.json').exists():
+            if credentials.exists():
                 raise CommandError('Файл демопаролей уже принадлежит другой установке. Используйте отдельную копию проекта; файл сохранён.')
             # Migrations create framework permissions; every application table must be empty.
             from django.contrib.auth import get_user_model
@@ -64,7 +66,7 @@ class Command(BaseCommand):
                     or any(model.objects.exists() for label in DOMAIN_APPS
                            for model in apps.get_app_config(label).get_models() if model is not AuthorizationGuard)):
                 raise CommandError('Нужна пустая БД после migrate или незавершённая установка этой композиции. Существующие данные сохранены.')
-            protect_directory(settings.BASE_DIR / '.local')
+            protect_directory(state)
             with transaction.atomic():
                 guard, _ = AuthorizationGuard.objects.get_or_create(pk=1)
                 lock_guard()
@@ -78,7 +80,6 @@ class Command(BaseCommand):
             self.stdout.write('Демонстрация уже подготовлена. Данные, пароли и пользовательские действия сохранены.')
             return
 
-        credentials = settings.BASE_DIR / '.local/demo-credentials.json'
         protect_directory(credentials.parent)
         if Dataset.objects.exists() and get_head().current_revision > 11:
             raise CommandError('Источник продвинулся во время незавершённой установки. Старые примеры не применены.')
@@ -101,7 +102,7 @@ class Command(BaseCommand):
         bootstrap_examples(operator=EDITION)
         call_command('provision_group_resources', operator=EDITION, stdout=self.stdout)
         provision_directory(operator=EDITION)
-        capture = protect_directory(settings.BASE_DIR / '.local/demo-mail') / 'email'
+        capture = protect_directory(state / 'demo-mail') / 'email'
         provision_contacts(operator=EDITION, apply=True, capture_dir=capture)
         result = provision_workspaces(credentials, operator=EDITION, edition=EDITION)
         call_command('prepare_connected_journeys',database=connection.settings_dict['NAME'],stdout=self.stdout)
@@ -109,4 +110,4 @@ class Command(BaseCommand):
             guard = lock_guard()
             AccessAudit.objects.create(action='demo_composition_complete', operator=EDITION, revision=guard.revision)
         self.stdout.write('Подготовлены два студента, преподаватель, служба, учебные факты, группа, приватные файлы, задания и уточнение заявки.')
-        self.stdout.write('Локальные пароли: .local/demo-credentials.json. Не включайте файл в репозиторий.')
+        self.stdout.write(f'Файл демопаролей: {credentials.relative_to(settings.BASE_DIR)}.')

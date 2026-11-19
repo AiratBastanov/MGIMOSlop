@@ -1,0 +1,3 @@
+-r production.txt
+whitenoise==6.12.0
+certifi==2026.10.23

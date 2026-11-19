@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "public_instructions": [
     "# Работа с проектом «Цифровой деканат»",
     "",
@@ -18,14 +18,14 @@
     ""
   ],
   "include": [
-    "manage.py", "README.md", "AGENTS.md", ".env.example", ".gitignore", ".gitattributes",
+    "manage.py", "README.md", "AGENTS.md", ".env.example", ".gitignore", ".gitattributes", ".dockerignore", "render.yaml",
     "accounts/**/*.py", "data_import/**/*.py", "deanery/**/*.py", "materials/**/*.py",
     "notifications/**/*.py", "profiles/**/*.py", "student_requests/**/*.py", "studies/**/*.py", "workspaces/**/*.py",
     "consultations/**/*.py", "journeys/**/*.py", "discovery/**/*.py",
     "templates/**/*.html", "static/**/*", "fixtures/**/*.json", "requirements/*.txt", "requirements/*.in",
     "frontend/src/**/*", "frontend/package.json", "frontend/package-lock.json", "frontend/tsconfig.json", "frontend/vite.config.ts",
-    "tests/*.py", "deploy/*.example", "deploy/gunicorn.conf.py", "deploy/README.md",
-    "scripts/create_local_database.py", "scripts/run_tests.py", "scripts/export_publication.py", "scripts/publication-files.json",
+    "tests/*.py", "deploy/*.example", "deploy/gunicorn.conf.py", "deploy/Dockerfile", "deploy/README.md", "deploy/RENDER.md",
+    "scripts/create_local_database.py", "scripts/prepare_hosted_demo.py", "scripts/run_tests.py", "scripts/export_publication.py", "scripts/publication-files.json",
     "scripts/verify_publication.py", "scripts/verify_demo.py", "scripts/render_creation_process.py",
     "scripts/record_demo.py", "scripts/render_demo_video.py",
     "docs/SETUP.md", "docs/DEMO.md", "docs/ARCHITECTURE.md", "docs/AI_ASSISTANT.md",

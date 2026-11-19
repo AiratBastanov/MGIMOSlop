@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: digital-deanery
+    runtime: docker
+    plan: free
+    region: frankfurt
+    repo: https://github.com/AiratBastanov/MGIMOSlop
+    branch: main
+    dockerfilePath: ./deploy/Dockerfile
+    autoDeployTrigger: "off"
+    healthCheckPath: /health/live/
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SECRET_KEY
+        sync: false

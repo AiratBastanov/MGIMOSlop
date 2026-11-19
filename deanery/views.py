@@ -1,8 +1,13 @@
 from django.db import connection, DatabaseError
 from django.db.migrations.executor import MigrationExecutor
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.views.decorators.http import require_safe
 from django.utils import timezone
+
+@require_safe
+def liveness(request):
+    return HttpResponse('ok\n', content_type='text/plain')
 
 @require_safe
 def status_page(request):

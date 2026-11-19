@@ -61,6 +61,7 @@ notepad .\.local\demo-credentials.json
 
 ## Документация
 
+- [Размещение на Render Free и Neon Free](deploy/RENDER.md)
 - [Установка и перезапуск](docs/SETUP.md)
 - [Демонстрация трёх ролей](docs/DEMO.md)
 - [Архитектура и границы доступа](docs/ARCHITECTURE.md)

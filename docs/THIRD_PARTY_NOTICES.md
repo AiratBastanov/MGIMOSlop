@@ -17,6 +17,7 @@
 | TypeScript 5.9.3, Vite 7.3.7 | Проверка и сборка; [Apache-2.0](licenses/task11/typescript/LICENSE.txt), [Vite MIT и bundled notices](licenses/task11/vite/LICENSE.md) |
 | Golos Text | Локальные шрифты; [SIL Open Font License](licenses/Golos-Text/OFL.txt) |
 | Gunicorn 26.2.0, Caddy 2.11.4 | Схема Linux; [MIT](licenses/gunicorn/LICENSE), [Apache-2.0](licenses/Caddy/LICENSE) |
+| WhiteNoise 6.12.0, certifi 2026.10.23 | Статические файлы и доверенные корневые сертификаты для Neon. [WhiteNoise MIT](licenses/whitenoise-6.12.0/LICENSE) · [Лицензия certifi](licenses/certifi-2026.10.23/LICENSE) |
 | Playwright 1.64.1 | Браузерные проверки и экспорт PDF; [Apache-2.0](licenses/playwright/LICENSE), [драйвер и компоненты](licenses/playwright-driver/LICENSE) |
 | pypdfium2 5.15.1 / PDFium | Проверка отрисовки PDF; [полный комплект уведомлений](licenses/pypdfium2-5.15.1/) |
 

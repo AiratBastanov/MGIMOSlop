@@ -2,6 +2,12 @@
 import os
 from pathlib import Path
 import subprocess
+from django.conf import settings
+
+
+def demo_state_dir():
+    root = settings.BASE_DIR / '.local'
+    return root / 'hosted-demo' if settings.RENDER_HOSTING else root
 
 
 def protect_directory(path):

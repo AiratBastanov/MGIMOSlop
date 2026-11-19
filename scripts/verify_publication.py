@@ -19,8 +19,8 @@ LIMIT = 100 * 1024 * 1024
 FORBIDDEN = {'.local', '.git', '.venv', 'node_modules', '__pycache__', 'evidence', 'pgdata', 'staticfiles'}
 PATTERNS = [rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',
             rb'gh[pousr]_[A-Za-z0-9]{30,}', rb'github_pat_[A-Za-z0-9_]{50,}',
-            rb'AKIA[0-9A-Z]{16}']
-READER_DOCS = ['README.md', 'AGENTS.md', 'deploy/README.md',
+            rb'AKIA[0-9A-Z]{16}', rb'postgres(?:ql)?://[^\s/@:]+:[^\s/@]+@[A-Za-z0-9.-]+']
+READER_DOCS = ['README.md', 'AGENTS.md', 'deploy/README.md', 'deploy/RENDER.md',
                *['docs/' + name + '.md' for name in ('SETUP', 'DEMO', 'ARCHITECTURE', 'AI_ASSISTANT',
                  'DEVELOPMENT_PROCESS', 'VALIDATION', 'RESEARCH_DECISIONS', 'RIGHTS', 'THIRD_PARTY_NOTICES')], 'docs/creation-process.html',
                *[p.relative_to(ROOT).as_posix() for p in (ROOT / 'docs/video').glob('*.md')]]
@@ -37,6 +37,10 @@ def secrets_from(path):
     def visit(data, sensitive=False):
         if isinstance(data, dict):
             for key, val in data.items():
+                if key == 'DATABASE_URL' and isinstance(val, str):
+                    password = urlsplit(val).password
+                    if password:
+                        found.extend([val.encode(), unquote(password).encode()])
                 visit(val, sensitive or credentials or bool(re.search('password|secret|token', key, re.I)))
         elif isinstance(data, list):
             for val in data: visit(val, sensitive)
