@@ -2,7 +2,7 @@
 
 [Локальная установка Windows](../docs/SETUP.md) · [Архитектура](../docs/ARCHITECTURE.md)
 
-Демонстрация работает на Render Free с отдельной PostgreSQL в Neon Free. [Открыть приложение](https://digital-deanery.onrender.com/) · [Версия, запуск и резервное копирование](RENDER.md)
+Демонстрация работает в бесплатном контейнере 67hosting в российском регионе. Отдельная PostgreSQL находится в Neon Free. [Открыть приложение](https://digital-deanery-641d.host67.com/) · [Версия, запуск и резервное копирование](RENDER.md)
 
 Ниже описан отдельный вариант для собственного узла с Caddy. Его проверяли на предыдущей версии в локальном Docker/Linux с Python 3.14.10, PostgreSQL 17.11, Gunicorn 26.2.0 и Caddy 2.11.4. Для установки по этой инструкции Docker необязателен.
 
